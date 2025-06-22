@@ -317,30 +317,49 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     </div>
   );
 
+  const handleClose = () => {
+    // Allow users to skip onboarding by clicking outside or pressing escape
+    onComplete({});
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleClose();
+    }
+  };
+
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '20px'
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        padding: '32px',
-        maxWidth: '600px',
-        width: '100%',
-        maxHeight: '90vh',
-        overflowY: 'auto',
-        position: 'relative'
-      }}>
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '20px'
+      }}
+      onClick={handleClose}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+    >
+      <div 
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          padding: '32px',
+          maxWidth: '600px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Progress Bar */}
         <div style={{ marginBottom: '32px' }}>
           <div style={{
@@ -352,9 +371,27 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <h1 style={{ fontSize: '1.5rem', margin: 0, color: '#2E7D32' }}>
               Welcome to OLEVA
             </h1>
-            <span style={{ fontSize: '0.9rem', color: '#666' }}>
-              Step {currentStep} of 3
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '0.9rem', color: '#666' }}>
+                Step {currentStep} of 3
+              </span>
+              <button
+                onClick={handleClose}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666',
+                  padding: '4px',
+                  borderRadius: '4px'
+                }}
+                title="Skip onboarding"
+                aria-label="Close onboarding wizard"
+              >
+                ×
+              </button>
+            </div>
           </div>
           <div style={{
             width: '100%',

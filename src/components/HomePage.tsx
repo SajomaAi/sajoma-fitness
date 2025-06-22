@@ -15,11 +15,8 @@ const HomePage: React.FC<HomePageProps> = () => {
           <div className="flex-container" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ flex: '1', padding: '0 20px' }}>
               <h1 style={{ fontSize: '3rem', marginBottom: '1.5rem', color: 'var(--dark-color)' }}>
-                OLEVA
+                OLEVA - Wellness Simplified
               </h1>
-              <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--dark-color)' }}>
-                Wellness Simplified
-              </h2>
               <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--dark-color)' }}>
                 Track meals, monitor health metrics, and receive expert-backed wellness suggestions tailored for your body's changing needs.
               </p>
@@ -53,7 +50,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <div className="container">
           <h2 className="section-title">Key Features</h2>
           <p className="section-subtitle">
-            OLEVA combines cutting-edge technology with expert nutritional guidance to help adults 40+ achieve their wellness goals.
+            OLEVA combines cutting-edge technology with expert nutritional guidance to help adults achieve their wellness goals.
           </p>
 
           <div className="flex-container features-container" style={{ justifyContent: 'space-between' }}>
@@ -116,7 +113,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <div className="container">
           <h2 className="section-title">How It Works</h2>
           <p className="section-subtitle">
-            OLEVA makes wellness tracking simple and effective with a user-friendly approach designed specifically for adults 40+.
+            OLEVA makes wellness tracking simple and effective with a user-friendly approach designed for all adults.
           </p>
 
           <div className="flex-container" style={{ justifyContent: 'center' }}>
