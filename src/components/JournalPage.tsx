@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
@@ -6,24 +7,42 @@ interface JournalEntry { id: number; date: string; mood: number; energy: number;
 
 const JournalPage: React.FC = () => {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<'write'|'history'>('write');
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<'write' | 'history'>('write');
   const [entries, setEntries] = useState<JournalEntry[]>(() => {
-    const s = localStorage.getItem('sajoma-journal');
-    return s ? JSON.parse(s) : [];
+    const saved = localStorage.getItem('sajoma-journal');
+    return saved ? JSON.parse(saved) : [];
   });
   const [mood, setMood] = useState(3);
   const [energy, setEnergy] = useState(3);
   const [gratitude, setGratitude] = useState('');
   const [notes, setNotes] = useState('');
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const moods = ['😢','😟','😐','😊','🤩'];
-   // const energyLevels = ['🔋','🔋','🔋','🔋','⚡'];
+  const moods = [
+    { val: 1, emoji: '😢', label: 'Rough', color: '#E57373' },
+    { val: 2, emoji: '😕', label: 'Low', color: '#FFB74D' },
+    { val: 3, emoji: '😊', label: 'Good', color: '#FFD54F' },
+    { val: 4, emoji: '😄', label: 'Great', color: '#81C784' },
+    { val: 5, emoji: '🤩', label: 'Amazing', color: '#D4A017' },
+  ];
+
+  const energyLevels = [
+    { val: 1, emoji: '🔋', label: 'Drained' },
+    { val: 2, emoji: '🔋', label: 'Low' },
+    { val: 3, emoji: '🔋', label: 'Moderate' },
+    { val: 4, emoji: '⚡', label: 'High' },
+    { val: 5, emoji: '⚡', label: 'Energized' },
+  ];
+
   const prompts = [
-    "What made you smile today?", "What healthy choice are you proud of?",
-    "How did your body feel during exercise?", "What are you grateful for today?",
-    "What is one thing you can improve tomorrow?", "How did you nourish your body today?",
-    "What positive affirmation resonates with you?",
+    "What are you most grateful for today?",
+    "What made you smile today?",
+    "What's one thing you did for your health today?",
+    "Describe a moment of peace you experienced.",
+    "What's a small win you had today?",
+    "How did you show kindness to yourself?",
+    "What would make tomorrow even better?",
   ];
   const todayPrompt = prompts[new Date().getDay()];
 
@@ -36,96 +55,119 @@ const JournalPage: React.FC = () => {
     setEntries(updated);
     localStorage.setItem('sajoma-journal', JSON.stringify(updated));
     setGratitude(''); setNotes(''); setMood(3); setEnergy(3);
-    setTab('history');
   };
 
-  const filtered = entries.filter(e =>
-    !search || e.notes.toLowerCase().includes(search.toLowerCase()) || e.gratitude.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredEntries = searchQuery
+    ? entries.filter(e => e.notes.toLowerCase().includes(searchQuery.toLowerCase()) || e.gratitude.toLowerCase().includes(searchQuery.toLowerCase()))
+    : entries;
 
   return (
-    <div className="page">
-      <h1 className="page-title" style={{ marginBottom: 4 }}>📓 {t('journal') || 'Journal'}</h1>
-      <p className="page-subtitle" style={{ marginBottom: 16 }}>{t('journal_subtitle') || 'Daily wellness reflections'}</p>
+    <div className="page animate-in">
+      <div className="page-header">
+        <button className="page-back" onClick={() => navigate('/dashboard')}>&#8249;</button>
+        <h1 className="page-header-title">{t('journal') || 'Journal'}</h1>
+        <div style={{ width: 32 }} />
+      </div>
 
-      <div className="sf-tabs">
-        <button className={`sf-tab ${tab === 'write' ? 'active' : ''}`} onClick={() => setTab('write')}>{t('write') || 'Write'}</button>
-        <button className={`sf-tab ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>{t('history') || 'History'}</button>
+      <div className="tabs">
+        <button className={`tab ${tab === 'write' ? 'active' : ''}`} onClick={() => setTab('write')}>✏️ {t('write') || 'Write'}</button>
+        <button className={`tab ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>📖 {t('history') || 'History'}</button>
       </div>
 
       {tab === 'write' && (
-        <div>
-          {/* Prompt Card */}
-          <div className="sf-card sf-card-pink" style={{ padding: 16, marginBottom: 16 }}>
-            <p style={{ fontSize: '0.78rem', color: '#C5961B', fontWeight: 600, marginBottom: 4 }}>✨ {t('todays_prompt') || "Today's Prompt"}</p>
-            <p style={{ fontSize: '0.92rem', color: '#3E2723', fontWeight: 500, fontStyle: 'italic', margin: 0 }}>{todayPrompt}</p>
+        <>
+          {/* Today's Prompt */}
+          <div className="card card-gold" style={{ padding: 18, marginBottom: 20, textAlign: 'center' }}>
+            <p style={{ fontSize: '0.72rem', opacity: 0.8, marginBottom: 6 }}>Today's Prompt</p>
+            <p style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4 }}>"{todayPrompt}"</p>
           </div>
 
-          <div className="sf-card" style={{ padding: 18, marginBottom: 16 }}>
-            {/* Mood */}
-            <label className="sf-label">{t('mood') || 'Mood'}</label>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
-              {moods.map((m, i) => (
-                <button key={i} onClick={() => setMood(i + 1)} style={{
-                  flex: 1, padding: '10px 0', borderRadius: 12, border: 'none', cursor: 'pointer',
-                  background: mood === i + 1 ? 'linear-gradient(135deg, #D4A017, #C5961B)' : '#FFF0F5',
-                  fontSize: '1.3rem', transition: 'all 0.2s', transform: mood === i + 1 ? 'scale(1.1)' : 'scale(1)',
-                }}>{m}</button>
+          {/* Mood Selector */}
+          <div className="card" style={{ padding: 20, marginBottom: 16 }}>
+            <h3 className="section-title" style={{ marginBottom: 14 }}>How are you feeling?</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+              {moods.map(m => (
+                <button key={m.val} onClick={() => setMood(m.val)} style={{
+                  flex: 1, padding: '12px 4px', borderRadius: 16, border: 'none', cursor: 'pointer',
+                  background: mood === m.val ? m.color + '22' : 'transparent',
+                  boxShadow: mood === m.val ? `0 0 0 2px ${m.color}` : 'none',
+                  transition: 'all 0.2s ease', fontFamily: 'inherit',
+                }}>
+                  <div style={{ fontSize: '1.6rem', marginBottom: 4 }}>{m.emoji}</div>
+                  <div style={{ fontSize: '0.62rem', fontWeight: 600, color: mood === m.val ? m.color : '#8D6E63' }}>{m.label}</div>
+                </button>
               ))}
             </div>
-
-            {/* Energy */}
-            <label className="sf-label">{t('energy_level') || 'Energy Level'}</label>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
-              {[1,2,3,4,5].map(i => (
-                <button key={i} onClick={() => setEnergy(i)} style={{
-                  flex: 1, padding: '10px 0', borderRadius: 12, border: 'none', cursor: 'pointer',
-                  background: energy >= i ? 'linear-gradient(135deg, #F8B4C8, #D4A017)' : '#FFF0F5',
-                  fontSize: '0.75rem', fontWeight: 700, fontFamily: 'inherit',
-                  color: energy >= i ? 'white' : '#BCAAA4',
-                }}>{i}</button>
-              ))}
-            </div>
-
-            {/* Gratitude */}
-            <label className="sf-label">{t('gratitude') || 'Gratitude'}</label>
-            <textarea className="sf-input" rows={2} placeholder={t('gratitude_placeholder') || 'What are you grateful for today?'}
-              value={gratitude} onChange={e => setGratitude(e.target.value)} style={{ marginBottom: 14, resize: 'none' }} />
-
-            {/* Notes */}
-            <label className="sf-label">{t('journal_notes') || 'Notes'}</label>
-            <textarea className="sf-input" rows={4} placeholder={t('journal_notes_placeholder') || 'How are you feeling? What happened today?'}
-              value={notes} onChange={e => setNotes(e.target.value)} style={{ marginBottom: 14, resize: 'none' }} />
-
-            <button className="sf-btn sf-btn-gold sf-btn-full sf-btn-lg" onClick={handleSave}>
-              {t('save_entry') || 'Save Entry'}
-            </button>
           </div>
-        </div>
+
+          {/* Energy Level */}
+          <div className="card" style={{ padding: 20, marginBottom: 16 }}>
+            <h3 className="section-title" style={{ marginBottom: 14 }}>Energy Level</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+              {energyLevels.map(e => (
+                <button key={e.val} onClick={() => setEnergy(e.val)} style={{
+                  flex: 1, padding: '10px 4px', borderRadius: 14, border: 'none', cursor: 'pointer',
+                  background: energy === e.val ? 'rgba(212,160,23,0.1)' : 'transparent',
+                  boxShadow: energy === e.val ? '0 0 0 2px #D4A017' : 'none',
+                  transition: 'all 0.2s ease', fontFamily: 'inherit',
+                }}>
+                  <div style={{ fontSize: '1.2rem', marginBottom: 2 }}>{e.emoji}</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 600, color: energy === e.val ? '#D4A017' : '#8D6E63' }}>{e.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Gratitude */}
+          <div className="card" style={{ padding: 20, marginBottom: 16 }}>
+            <h3 className="section-title" style={{ marginBottom: 10 }}>🙏 Gratitude</h3>
+            <textarea className="input" rows={3} placeholder="What are you grateful for today?" value={gratitude} onChange={e => setGratitude(e.target.value)} style={{ resize: 'none' }} />
+          </div>
+
+          {/* Free Writing */}
+          <div className="card" style={{ padding: 20, marginBottom: 20 }}>
+            <h3 className="section-title" style={{ marginBottom: 10 }}>📝 Journal Entry</h3>
+            <textarea className="input" rows={5} placeholder="Write freely about your day..." value={notes} onChange={e => setNotes(e.target.value)} style={{ resize: 'none' }} />
+          </div>
+
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleSave} disabled={!notes && !gratitude}>
+            Save Entry
+          </button>
+        </>
       )}
 
       {tab === 'history' && (
-        <div>
-          <input className="sf-input" placeholder={t('search_journal') || 'Search entries...'} value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: 14 }} />
-          {filtered.length === 0 ? (
-            <div className="sf-card" style={{ padding: 32, textAlign: 'center' }}>
+        <>
+          <div style={{ marginBottom: 16 }}>
+            <input className="input" placeholder="🔍 Search entries..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+          </div>
+
+          {filteredEntries.length === 0 ? (
+            <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2rem', marginBottom: 8 }}>📓</p>
-              <p style={{ color: '#8D6E63' }}>{t('no_entries') || 'No journal entries yet'}</p>
+              <p style={{ color: '#8D6E63' }}>No journal entries yet</p>
             </div>
-          ) : filtered.map(e => (
-            <div key={e.id} className="sf-card" style={{ padding: 16, marginBottom: 10 }}>
+          ) : filteredEntries.map(entry => (
+            <div key={entry.id} className="card" style={{ padding: 18, marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span style={{ fontSize: '0.78rem', color: '#8D6E63' }}>{new Date(e.date).toLocaleDateString()}</span>
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <span style={{ fontSize: '1.1rem' }}>{moods[e.mood - 1]}</span>
-                  <span className="sf-badge sf-badge-gold">⚡{e.energy}/5</span>
+                <span style={{ fontSize: '0.78rem', color: '#8D6E63', fontWeight: 600 }}>
+                  {new Date(entry.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                </span>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <span style={{ fontSize: '1.1rem' }}>{moods.find(m => m.val === entry.mood)?.emoji}</span>
+                  <span style={{ fontSize: '0.75rem', color: '#D4A017', fontWeight: 700 }}>⚡{entry.energy}/5</span>
                 </div>
               </div>
-              {e.gratitude && <p style={{ fontSize: '0.85rem', color: '#C5961B', margin: '0 0 6px', fontStyle: 'italic' }}>🙏 {e.gratitude}</p>}
-              {e.notes && <p style={{ fontSize: '0.85rem', color: '#5D4037', margin: 0, lineHeight: 1.5 }}>{e.notes}</p>}
+              {entry.gratitude && (
+                <div style={{ background: 'rgba(212,160,23,0.06)', borderRadius: 12, padding: '10px 14px', marginBottom: 8 }}>
+                  <p style={{ fontSize: '0.72rem', color: '#D4A017', fontWeight: 600, marginBottom: 2 }}>Gratitude</p>
+                  <p style={{ fontSize: '0.82rem', color: '#3E2723', margin: 0, lineHeight: 1.4 }}>{entry.gratitude}</p>
+                </div>
+              )}
+              {entry.notes && <p style={{ fontSize: '0.85rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>{entry.notes}</p>}
             </div>
           ))}
-        </div>
+        </>
       )}
 
       <BottomNav />

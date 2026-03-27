@@ -1,38 +1,46 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from '../hooks/useTranslation';
 
 const PremiumPaywall: React.FC = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <div className="page" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 40, background: 'white' }}>
-      <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ fontSize: '5rem', marginBottom: 32 }}>⭐</div>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3E2723', marginBottom: 16 }}>{t('premium_feature') || 'Premium Feature'}</h1>
-        <p style={{ fontSize: '1rem', color: '#8D6E63', lineHeight: 1.6, marginBottom: 40 }}>
-          {t('premium_feature_desc') || 'This feature is only available to our Premium members. Upgrade now to unlock full access.'}
+    <div style={{
+      minHeight: '100vh', background: '#FFF0F5',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24,
+    }}>
+      <div style={{
+        background: 'white', borderRadius: 24, padding: 32, maxWidth: 360, width: '100%',
+        textAlign: 'center', boxShadow: '0 20px 60px rgba(62,39,35,0.08)',
+      }}>
+        <div style={{ fontSize: '3rem', marginBottom: 12 }}>👑</div>
+        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#3E2723', marginBottom: 8 }}>Unlock Premium</h2>
+        <p style={{ fontSize: '0.88rem', color: '#8D6E63', lineHeight: 1.5, marginBottom: 24 }}>
+          This feature is only available to Premium members. Start your 30-day free trial today!
         </p>
-        
-        <div className="sf-card sf-card-pink" style={{ padding: 20, textAlign: 'left', marginBottom: 32 }}>
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3E2723', marginBottom: 12 }}>{t('premium_benefits') || 'Premium Benefits:'}</h3>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {['AI Meal Analysis', 'Personalized Plans', 'Advanced Analytics', 'Priority Support'].map((b, i) => (
-              <li key={i} style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ color: '#C5961B' }}>✓</span> {b}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
-        <button className="sf-btn sf-btn-gold sf-btn-full sf-btn-lg" onClick={() => navigate('/subscription')}>
-          {t('upgrade_now') || 'Upgrade Now'}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, textAlign: 'left' }}>
+          {['AI Meal Analysis', 'Personalized Plans', 'Advanced Analytics', 'Priority Support', 'Ad-free Experience'].map(f => (
+            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', color: '#5D4037' }}>
+              <span style={{ color: '#D4A017', fontWeight: 700 }}>&#10003;</span> {f}
+            </div>
+          ))}
+        </div>
+
+        <button onClick={() => navigate('/subscription')} style={{
+          width: '100%', padding: '14px 0', borderRadius: 14, border: 'none', cursor: 'pointer',
+          background: 'linear-gradient(135deg, #D4A017, #C5961B)', color: 'white',
+          fontSize: '0.95rem', fontWeight: 700, fontFamily: 'inherit', marginBottom: 10,
+          boxShadow: '0 4px 16px rgba(212,160,23,0.3)',
+        }}>
+          Start Free Trial
         </button>
-        <button className="sf-btn sf-btn-outline sf-btn-full sf-btn-lg" onClick={() => navigate(-1)}>
-          {t('go_back') || 'Go Back'}
+
+        <button onClick={() => navigate(-1)} style={{
+          width: '100%', padding: '12px 0', borderRadius: 14, border: 'none', cursor: 'pointer',
+          background: 'transparent', color: '#8D6E63', fontSize: '0.85rem', fontFamily: 'inherit',
+        }}>
+          Maybe Later
         </button>
       </div>
     </div>

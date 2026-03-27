@@ -1,73 +1,86 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
 const WaterTrackerPage: React.FC = () => {
   const { t } = useTranslation();
-  const [glasses, setGlasses] = useState(() => {
-    const s = localStorage.getItem('sajoma-water');
-    return s ? parseInt(s) : 0;
-  });
+  const navigate = useNavigate();
+  const [glasses, setGlasses] = useState(5);
   const goal = 8;
-
-  const addGlass = () => {
-    const newVal = glasses + 1;
-    setGlasses(newVal);
-    localStorage.setItem('sajoma-water', newVal.toString());
-  };
-
-  const reset = () => {
-    setGlasses(0);
-    localStorage.setItem('sajoma-water', '0');
-  };
-
   const pct = Math.min((glasses / goal) * 100, 100);
 
+  const addWater = (amount: number) => setGlasses(prev => Math.max(0, prev + amount));
+
   return (
-    <div className="page">
-      <h1 className="page-title" style={{ marginBottom: 4 }}>💧 {t('water_tracking') || 'Hydration'}</h1>
-      <p className="page-subtitle" style={{ marginBottom: 24 }}>{t('water_subtitle') || 'Track your daily water intake'}</p>
-
-      <div className="sf-card" style={{ padding: 32, textAlign: 'center', marginBottom: 24, position: 'relative' }}>
-        <div style={{ position: 'relative', width: 160, height: 160, margin: '0 auto 24px' }}>
-          <svg width="160" height="160" style={{ transform: 'rotate(-90deg)' }}>
-            <circle cx="80" cy="80" r="70" stroke="#FFF0F5" strokeWidth="12" fill="none" />
-            <circle cx="80" cy="80" r="70" stroke="#C5961B" strokeWidth="12" fill="none"
-              strokeDasharray={`${(pct / 100) * 440} 440`} strokeLinecap="round" style={{ transition: 'stroke-dasharray 0.8s ease' }} />
-          </svg>
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#3E2723' }}>{glasses}</span>
-            <span style={{ fontSize: '0.8rem', color: '#8D6E63', fontWeight: 600 }}>/ {goal} {t('glasses') || 'glasses'}</span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <button className="sf-btn sf-btn-gold sf-btn-lg" onClick={addGlass} style={{ width: 140 }}>
-            + {t('add_glass') || 'Add Glass'}
-          </button>
-          <button className="sf-btn sf-btn-outline sf-btn-lg" onClick={reset} style={{ width: 100 }}>
-            {t('reset') || 'Reset'}
-          </button>
-        </div>
+    <div className="page animate-in">
+      <div className="page-header">
+        <button className="page-back" onClick={() => navigate('/dashboard')}>&#8249;</button>
+        <h1 className="page-header-title">{t('water_tracker') || 'Water Tracker'}</h1>
+        <div style={{ width: 32 }} />
       </div>
 
-      <div className="sf-card sf-card-pink" style={{ padding: 20, marginBottom: 24 }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 10 }}>{t('hydration_tip') || 'Hydration Tip'}</h3>
-        <p style={{ fontSize: '0.88rem', color: '#5D4037', lineHeight: 1.6, margin: 0 }}>
-          {t('water_tip_msg') || 'Drinking water before meals can help with digestion and portion control. Aim for at least 8 glasses a day.'}
+      {/* Main Progress */}
+      <div className="card card-gold" style={{ padding: 30, marginBottom: 20, textAlign: 'center' }}>
+        <div style={{ position: 'relative', width: 140, height: 140, margin: '0 auto 16px' }}>
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="10" />
+            <circle cx="70" cy="70" r="60" fill="none" stroke="white" strokeWidth="10" strokeLinecap="round"
+              strokeDasharray={`${(pct / 100) * 377} 377`} transform="rotate(-90 70 70)"
+              style={{ transition: 'stroke-dasharray 0.6s ease' }} />
+          </svg>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '0.9rem' }}>💧</span>
+            <span style={{ fontSize: '2rem', fontWeight: 900 }}>{glasses}</span>
+            <span style={{ fontSize: '0.72rem', opacity: 0.8 }}>of {goal} glasses</span>
+          </div>
+        </div>
+        <p style={{ fontSize: '0.88rem', fontWeight: 700 }}>
+          {pct >= 100 ? '🎉 Goal reached!' : `${Math.round(pct)}% of daily goal`}
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-        {Array(8).fill(0).map((_, i) => (
-          <div key={i} className="sf-card" style={{
-            padding: '12px 0', textAlign: 'center',
-            background: i < glasses ? 'linear-gradient(135deg, #F8B4C8, #D4A017)' : 'white',
-            borderColor: i < glasses ? 'transparent' : 'rgba(197,150,27,0.1)',
-          }}>
-            <span style={{ fontSize: '1.2rem', opacity: i < glasses ? 1 : 0.3 }}>💧</span>
-          </div>
+      {/* Quick Add Buttons */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 20 }}>
+        {[
+          { amount: 1, icon: '🥤', label: '1 Glass' },
+          { amount: 2, icon: '💧', label: '2 Glasses' },
+          { amount: -1, icon: '↩️', label: 'Undo' },
+          { amount: 0, icon: '🔄', label: 'Reset' },
+        ].map(btn => (
+          <button key={btn.label} className="card" onClick={() => btn.amount === 0 ? setGlasses(0) : addWater(btn.amount)} style={{ padding: 14, textAlign: 'center', cursor: 'pointer', border: 'none' }}>
+            <div style={{ fontSize: '1.3rem', marginBottom: 4 }}>{btn.icon}</div>
+            <div style={{ fontSize: '0.68rem', fontWeight: 600, color: '#5D4037' }}>{btn.label}</div>
+          </button>
         ))}
+      </div>
+
+      {/* Visual Glasses */}
+      <div className="card" style={{ padding: 18, marginBottom: 20 }}>
+        <h3 className="section-title">Today's Intake</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+          {Array.from({ length: goal }).map((_, i) => (
+            <div key={i} style={{
+              width: 40, height: 50, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: i < glasses ? 'rgba(100,180,255,0.15)' : 'rgba(188,170,164,0.08)',
+              border: i < glasses ? '2px solid rgba(100,180,255,0.3)' : '2px solid rgba(188,170,164,0.15)',
+              fontSize: '1.2rem', transition: 'all 0.3s ease',
+            }}>
+              {i < glasses ? '💧' : '○'}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tip */}
+      <div className="card card-pink" style={{ padding: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <span style={{ fontSize: '1.1rem' }}>💡</span>
+          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#3E2723' }}>Hydration Tip</span>
+        </div>
+        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
+          Drinking water before meals can help with portion control and improve digestion.
+        </p>
       </div>
 
       <BottomNav />

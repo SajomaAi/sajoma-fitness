@@ -4,121 +4,103 @@ import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
 const SubscriptionPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const [isYearly, setIsYearly] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState('');
 
   const plans = [
     {
-      id: 'free',
-      name: t('free_tier') || 'Free',
-      price: '0',
-      features: [
-        t('basic_meal_logging') || 'Basic meal logging',
-        t('water_tracking') || 'Water tracking',
-        t('health_dashboard') || 'Health dashboard',
-        t('basic_exercise_logging') || 'Basic exercise logging',
-      ],
-      current: true,
+      id: 'free', name: 'Free', price: '$0', yearlyPrice: '$0', icon: '🌱',
+      features: ['Basic meal logging', 'Water tracking', 'Health dashboard', 'Basic exercise logging'],
+      color: '#8D6E63',
     },
     {
-      id: 'basic',
-      name: t('basic_premium') || 'Basic Premium',
-      price: billingCycle === 'monthly' ? '9.99' : '49.99',
-      features: [
-        t('journaling') || 'Journaling',
-        t('detailed_nutrition') || 'Detailed nutrition',
-        t('advanced_analytics') || 'Advanced analytics',
-        t('personalized_recommendations') || 'Personalized recommendations',
-        t('ad_free') || 'Ad-free experience',
-      ],
-      popular: true,
+      id: 'basic', name: 'Basic Premium', price: '$9.99/mo', yearlyPrice: '$49.99/yr', icon: '⭐', badge: 'POPULAR',
+      features: ['Everything in Free', 'Journaling', 'Detailed nutrition', 'Advanced analytics', 'Personalized recommendations', 'Ad-free experience'],
+      color: '#D4A017',
     },
     {
-      id: 'full',
-      name: t('full_premium') || 'Full Premium',
-      price: billingCycle === 'monthly' ? '14.99' : '74.99',
-      features: [
-        t('everything_in_basic') || 'Everything in Basic',
-        t('groups_community') || 'Groups & Community',
-        t('custom_meal_plans') || 'Custom meal plans',
-        t('ai_meal_analysis') || 'AI meal analysis',
-        t('priority_support') || 'Priority support',
-      ],
+      id: 'full', name: 'Full Premium', price: '$14.99/mo', yearlyPrice: '$74.99/yr', icon: '👑', badge: 'BEST VALUE',
+      features: ['Everything in Basic', 'Group challenges', 'Custom meal plans', 'AI meal analysis', 'Priority support', 'Exclusive content'],
+      color: '#C5961B',
     },
   ];
 
   return (
-    <div className="page">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>‹</button>
-        <h1 className="page-title" style={{ marginBottom: 0 }}>{t('subscription_plans') || 'Subscription'}</h1>
+    <div className="page animate-in">
+      <div className="page-header">
+        <button className="page-back" onClick={() => navigate('/settings')}>&#8249;</button>
+        <h1 className="page-header-title">Premium</h1>
+        <div style={{ width: 32 }} />
       </div>
 
-      <div className="sf-card sf-card-pink" style={{ padding: 20, textAlign: 'center', marginBottom: 24 }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#3E2723', marginBottom: 8 }}>{t('start_free_trial') || 'Start Your 30-Day Free Trial'}</h2>
-        <p style={{ fontSize: '0.85rem', color: '#8D6E63', marginBottom: 0 }}>{t('cancel_anytime') || 'No commitment. Cancel anytime.'}</p>
-      </div>
-
-      {/* Billing Toggle */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-        <div style={{ background: '#FFF0F5', padding: 4, borderRadius: 14, display: 'flex', gap: 4 }}>
-          <button onClick={() => setBillingCycle('monthly')} style={{
-            padding: '8px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
-            background: billingCycle === 'monthly' ? 'white' : 'transparent',
-            color: billingCycle === 'monthly' ? '#C5961B' : '#BCAAA4',
-            fontWeight: 700, fontSize: '0.85rem', transition: 'all 0.2s',
-          }}>{t('monthly') || 'Monthly'}</button>
-          <button onClick={() => setBillingCycle('yearly')} style={{
-            padding: '8px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
-            background: billingCycle === 'yearly' ? 'white' : 'transparent',
-            color: billingCycle === 'yearly' ? '#C5961B' : '#BCAAA4',
-            fontWeight: 700, fontSize: '0.85rem', transition: 'all 0.2s',
-          }}>
-            {t('yearly') || 'Yearly'}
-            <span style={{ marginLeft: 6, fontSize: '0.65rem', background: '#F8B4C8', color: 'white', padding: '2px 6px', borderRadius: 6 }}>-50%</span>
-          </button>
+      {/* Hero */}
+      <div className="card card-gold" style={{ padding: 24, marginBottom: 20, textAlign: 'center' }}>
+        <p style={{ fontSize: '2rem', marginBottom: 8 }}>👑</p>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 6 }}>Unlock Your Full Potential</h2>
+        <p style={{ fontSize: '0.82rem', opacity: 0.85, lineHeight: 1.5 }}>Get personalized insights, advanced tracking, and premium features</p>
+        <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.2)', padding: '4px 14px', borderRadius: 10, marginTop: 10, fontSize: '0.72rem', fontWeight: 700 }}>
+          🎁 30-day free trial
         </div>
       </div>
 
-      {/* Plans */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
-        {plans.map(plan => (
-          <div key={plan.id} className={`sf-card ${plan.popular ? 'sf-card-gold' : ''}`} style={{
-            padding: 24, position: 'relative', border: plan.popular ? 'none' : '1px solid rgba(197,150,27,0.1)',
-          }}>
-            {plan.popular && (
-              <div style={{
-                position: 'absolute', top: 12, right: 12, background: 'white', color: '#C5961B',
-                fontSize: '0.65rem', fontWeight: 800, padding: '4px 10px', borderRadius: 20, textTransform: 'uppercase',
-              }}>{t('most_popular') || 'Most Popular'}</div>
-            )}
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 4 }}>{plan.name}</h3>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 16 }}>
-              <span style={{ fontSize: '1.8rem', fontWeight: 800 }}>${plan.price}</span>
-              <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-              {plan.features.map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ color: plan.popular ? 'white' : '#C5961B', fontSize: '0.9rem' }}>✓</span>
-                  <span style={{ fontSize: '0.85rem', opacity: 0.9 }}>{f}</span>
-                </div>
-              ))}
-            </div>
-            <button className={`sf-btn sf-btn-full sf-btn-lg ${plan.popular ? '' : 'sf-btn-gold'}`} style={{
-              background: plan.popular ? 'white' : undefined,
-              color: plan.popular ? '#C5961B' : undefined,
-              fontWeight: 800,
-            }}>
-              {plan.current ? (t('current_plan') || 'Current Plan') : (t('get_started') || 'Get Started')}
-            </button>
-          </div>
-        ))}
+      {/* Billing Toggle */}
+      <div className="tabs" style={{ marginBottom: 20 }}>
+        <button className={`tab ${!isYearly ? 'active' : ''}`} onClick={() => setIsYearly(false)}>Monthly</button>
+        <button className={`tab ${isYearly ? 'active' : ''}`} onClick={() => setIsYearly(true)}>Yearly (Save 58%)</button>
       </div>
 
-      <p style={{ textAlign: 'center', fontSize: '0.75rem', color: '#BCAAA4', marginBottom: 24 }}>
-        {t('subscription_footer_msg') || 'Subscription will automatically renew unless canceled at least 24 hours before the end of the current period.'}
+      {/* Plan Cards */}
+      {plans.map(plan => (
+        <div key={plan.id} className={`card ${selectedPlan === plan.id ? '' : ''}`} onClick={() => setSelectedPlan(plan.id)} style={{
+          padding: 20, marginBottom: 12, cursor: 'pointer', position: 'relative',
+          border: selectedPlan === plan.id ? '2px solid #D4A017' : '1.5px solid rgba(212,160,23,0.08)',
+          boxShadow: selectedPlan === plan.id ? '0 4px 20px rgba(212,160,23,0.15)' : undefined,
+        }}>
+          {plan.badge && (
+            <div style={{ position: 'absolute', top: -1, right: 16, background: 'var(--gold-gradient)', color: 'white', padding: '3px 12px', borderRadius: '0 0 8px 8px', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.05em' }}>
+              {plan.badge}
+            </div>
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: plan.id === 'free' ? 'rgba(141,110,99,0.1)' : 'rgba(212,160,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>{plan.icon}</div>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 2 }}>{plan.name}</h3>
+              <p style={{ fontSize: '1.1rem', fontWeight: 800, color: plan.color, margin: 0 }}>
+                {isYearly ? plan.yearlyPrice : plan.price}
+              </p>
+            </div>
+            <div style={{
+              width: 24, height: 24, borderRadius: '50%',
+              border: selectedPlan === plan.id ? 'none' : '2px solid #E0D6D0',
+              background: selectedPlan === plan.id ? 'var(--gold-gradient)' : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {selectedPlan === plan.id && <span style={{ color: 'white', fontSize: '0.7rem', fontWeight: 800 }}>✓</span>}
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {plan.features.map((f, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.78rem', color: '#5D4037' }}>
+                <span style={{ color: plan.id === 'free' ? '#8D6E63' : '#D4A017', fontSize: '0.7rem' }}>✓</span> {f}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* CTA */}
+      <button className="btn btn-gold btn-full btn-lg" style={{ marginTop: 8, marginBottom: 12 }} disabled={!selectedPlan || selectedPlan === 'free'}>
+        {selectedPlan === 'free' ? 'Current Plan' : 'Start Free Trial'}
+      </button>
+
+      <button className="btn btn-full" style={{ background: 'transparent', color: '#8D6E63', fontSize: '0.82rem' }}>
+        Restore Purchases
+      </button>
+
+      <p style={{ textAlign: 'center', fontSize: '0.68rem', color: '#BCAAA4', marginTop: 12, lineHeight: 1.5 }}>
+        Cancel anytime. No charge during trial period. Subscription auto-renews unless cancelled 24 hours before the end of the current period.
       </p>
 
       <BottomNav />

@@ -6,80 +6,134 @@ import BottomNav from './BottomNav';
 const MealLoggerPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [activeMeal, setActiveMeal] = useState('breakfast');
 
-  const handlePhoto = () => {
-    setIsAnalyzing(true);
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      navigate('/meal-result');
-    }, 2500);
-  };
+  const meals = [
+    { id: 'breakfast', icon: '🥣', label: t('breakfast') || 'Breakfast', time: '7:00 - 10:00 AM', cal: 420, items: [
+      { name: 'Scrambled eggs', cal: 180, qty: '2 large' },
+      { name: 'Wheat toast', cal: 90, qty: '1 slice' },
+      { name: 'Orange juice', cal: 110, qty: '8 oz' },
+      { name: 'Banana', cal: 40, qty: '1/2' },
+    ]},
+    { id: 'lunch', icon: '🥗', label: t('lunch') || 'Lunch', time: '12:00 - 2:00 PM', cal: 550, items: [
+      { name: 'Grilled chicken salad', cal: 350, qty: '1 bowl' },
+      { name: 'Whole grain bread', cal: 120, qty: '1 slice' },
+      { name: 'Water', cal: 0, qty: '16 oz' },
+    ]},
+    { id: 'dinner', icon: '🍽️', label: t('dinner') || 'Dinner', time: '6:00 - 8:00 PM', cal: 0, items: [] },
+    { id: 'snacks', icon: '🍎', label: t('snacks') || 'Snacks', time: 'Anytime', cal: 150, items: [
+      { name: 'Almonds', cal: 100, qty: '1 oz' },
+      { name: 'Apple', cal: 50, qty: '1 small' },
+    ]},
+  ];
+
+  const totalCal = meals.reduce((s, m) => s + m.cal, 0);
+  const goalCal = 2000;
+  const remaining = goalCal - totalCal;
+  const pct = Math.min((totalCal / goalCal) * 100, 100);
+  const activeMealData = meals.find(m => m.id === activeMeal)!;
 
   return (
-    <div className="page">
-      <h1 className="page-title" style={{ marginBottom: 4 }}>🍽️ {t('meal_logger') || 'Meal Logger'}</h1>
-      <p className="page-subtitle" style={{ marginBottom: 24 }}>{t('meal_subtitle') || 'Track your nutrition with AI'}</p>
+    <div className="page animate-in">
+      <div className="page-header">
+        <button className="page-back" onClick={() => navigate('/dashboard')}>&#8249;</button>
+        <h1 className="page-header-title">{t('food_diary') || 'Food Diary'}</h1>
+        <div style={{ width: 32 }} />
+      </div>
 
-      <div className="sf-card sf-card-pink" style={{ padding: 40, textAlign: 'center', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
-        {isAnalyzing ? (
-          <div className="animate-in">
-            <div style={{ width: 80, height: 80, borderRadius: '50%', border: '4px solid #F8B4C8', borderTopColor: '#D4A017', margin: '0 auto 20px', animation: 'spin 1s linear infinite' }} />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3E2723', marginBottom: 8 }}>{t('analyzing_meal') || 'Analyzing Meal...'}</h3>
-            <p style={{ fontSize: '0.85rem', color: '#8D6E63' }}>{t('ai_identifying') || 'Our AI is identifying ingredients and calculating nutrition.'}</p>
+      {/* Calorie Summary */}
+      <div className="card card-gold" style={{ padding: 22, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: '0.78rem', opacity: 0.85, marginBottom: 4 }}>{t('calories_remaining') || 'Calories Remaining'}</p>
+            <p style={{ fontSize: '2rem', fontWeight: 900 }}>{remaining > 0 ? remaining : 0}</p>
+            <p style={{ fontSize: '0.72rem', opacity: 0.7 }}>{totalCal} eaten &middot; {goalCal} goal</p>
+          </div>
+          <div style={{ position: 'relative', width: 80, height: 80 }}>
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="7" />
+              <circle cx="40" cy="40" r="34" fill="none" stroke="white" strokeWidth="7" strokeLinecap="round"
+                strokeDasharray={`${(pct / 100) * 213.6} 213.6`} transform="rotate(-90 40 40)"
+                style={{ transition: 'stroke-dasharray 0.6s ease' }} />
+            </svg>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem', fontWeight: 800 }}>{Math.round(pct)}%</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 12, marginTop: 14 }}>
+          {[{ label: 'Protein', val: 65, goal: 120 }, { label: 'Carbs', val: 140, goal: 250 }, { label: 'Fat', val: 35, goal: 65 }].map(m => (
+            <div key={m.label} style={{ flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', opacity: 0.8, marginBottom: 3 }}>
+                <span>{m.label}</span><span>{m.val}g/{m.goal}g</span>
+              </div>
+              <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.2)' }}>
+                <div style={{ width: `${Math.min((m.val / m.goal) * 100, 100)}%`, height: '100%', borderRadius: 2, background: 'white' }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+        <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={() => navigate('/barcode-scanner')}>📷 {t('scan_barcode') || 'Scan Barcode'}</button>
+        <button className="btn btn-pink btn-sm" style={{ flex: 1 }}>🔍 {t('search_food') || 'Search Food'}</button>
+      </div>
+
+      {/* Meal Tabs */}
+      <div className="scroll-row" style={{ marginBottom: 16 }}>
+        {meals.map(m => (
+          <button key={m.id} onClick={() => setActiveMeal(m.id)} className={`btn ${activeMeal === m.id ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span>{m.icon}</span> {m.label}
+            {m.cal > 0 && <span style={{ opacity: 0.7, fontSize: '0.7rem' }}>{m.cal}</span>}
+          </button>
+        ))}
+      </div>
+
+      {/* Active Meal */}
+      <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 20 }}>
+        <div style={{ padding: '16px 18px', borderBottom: '1px solid rgba(212,160,23,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 2 }}>{activeMealData.icon} {activeMealData.label}</h3>
+            <p style={{ fontSize: '0.75rem', color: '#8D6E63', margin: 0 }}>{activeMealData.time}</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#D4A017' }}>{activeMealData.cal}</div>
+            <div style={{ fontSize: '0.68rem', color: '#8D6E63' }}>kcal</div>
+          </div>
+        </div>
+        {activeMealData.items.length === 0 ? (
+          <div style={{ padding: 32, textAlign: 'center' }}>
+            <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>{activeMealData.icon}</p>
+            <p style={{ color: '#8D6E63', fontSize: '0.85rem', marginBottom: 16 }}>No foods logged yet</p>
+            <button className="btn btn-gold btn-sm">+ Add Food</button>
           </div>
         ) : (
-          <div className="animate-in">
-            <div style={{ fontSize: '4rem', marginBottom: 20 }}>📸</div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#3E2723', marginBottom: 10 }}>{t('take_meal_photo') || 'Take a Photo'}</h3>
-            <p style={{ fontSize: '0.9rem', color: '#8D6E63', marginBottom: 24, maxWidth: 280, margin: '0 auto 24px' }}>
-              {t('photo_instruction') || 'Simply snap a photo of your plate and let our AI do the rest.'}
-            </p>
-            <button className="sf-btn sf-btn-gold sf-btn-lg sf-btn-full" onClick={handlePhoto}>
-              {t('open_camera') || 'Open Camera'}
-            </button>
-          </div>
+          <>
+            {activeMealData.items.map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: i < activeMealData.items.length - 1 ? '1px solid rgba(212,160,23,0.06)' : 'none' }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{item.name}</div>
+                  <div style={{ fontSize: '0.72rem', color: '#BCAAA4' }}>{item.qty}</div>
+                </div>
+                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4A017' }}>{item.cal} cal</div>
+              </div>
+            ))}
+            <div style={{ padding: '12px 18px', borderTop: '1px solid rgba(212,160,23,0.08)' }}>
+              <button className="btn btn-pink btn-sm btn-full">+ Add More</button>
+            </div>
+          </>
         )}
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-        <div style={{ flex: 1, height: 1, background: 'rgba(197,150,27,0.1)' }} />
-        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#BCAAA4', textTransform: 'uppercase' }}>{t('or') || 'or'}</span>
-        <div style={{ flex: 1, height: 1, background: 'rgba(197,150,27,0.1)' }} />
-      </div>
-
-      <div className="sf-card" style={{ padding: 20, marginBottom: 24 }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 16 }}>{t('manual_log') || 'Manual Entry'}</h3>
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-          <input className="sf-input" placeholder={t('search_food_placeholder') || 'Search for a food...'} />
-          <button className="sf-btn sf-btn-gold" style={{ padding: '0 20px' }}>{t('search') || 'Search'}</button>
+      {/* Nutrition Tip */}
+      <div className="card card-pink" style={{ padding: 16, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <span style={{ fontSize: '1.2rem' }}>💡</span>
+          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#3E2723' }}>Nutrition Tip</span>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button className="sf-btn sf-btn-outline sf-btn-full" onClick={() => navigate('/barcode-scanner')}>
-            📱 {t('scan_barcode') || 'Scan Barcode'}
-          </button>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: 20 }}>
-        <h3 className="section-title">{t('recent_logs') || 'Recent Logs'}</h3>
-        {[
-          { name: 'Avocado Toast', cal: 320, time: 'Today, 8:45 AM', emoji: '🥑' },
-          { name: 'Grilled Chicken Salad', cal: 450, time: 'Yesterday, 1:20 PM', emoji: '🥗' },
-        ].map((item, i) => (
-          <div key={i} className="sf-card" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', marginBottom: 8 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: '#FFF5F8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>{item.emoji}</div>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontWeight: 600, fontSize: '0.92rem', margin: 0 }}>{item.name}</p>
-              <p style={{ color: '#8D6E63', fontSize: '0.75rem', margin: 0 }}>{item.time}</p>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.92rem', margin: 0, color: '#C5961B' }}>{item.cal}</p>
-              <p style={{ color: '#BCAAA4', fontSize: '0.7rem', margin: 0 }}>kcal</p>
-            </div>
-          </div>
-        ))}
+        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
+          Try adding more protein to your breakfast. It helps maintain stable energy levels throughout the morning.
+        </p>
       </div>
 
       <BottomNav />

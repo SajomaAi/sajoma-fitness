@@ -3,109 +3,111 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
-interface SettingsPageProps { onLogout: () => void; }
+interface SettingsPageProps { onLogout?: () => void; }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
-  const { t, changeLanguage: setLanguage, language } = useTranslation();
+  const { t, language, changeLanguage } = useTranslation();
   const navigate = useNavigate();
-  const userName = localStorage.getItem('userName') || 'Sarah';
   const [notifications, setNotifications] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
-  const handleLanguageToggle = () => {
-    const newLang = language === 'en' ? 'es' : 'en';
-    setLanguage(newLang);
+  const userName = (() => {
+    try { const u = localStorage.getItem('sajoma-user'); return u ? JSON.parse(u).name : 'User'; } catch { return 'User'; }
+  })();
+  const userEmail = (() => {
+    try { const u = localStorage.getItem('sajoma-user'); return u ? JSON.parse(u).email : ''; } catch { return ''; }
+  })();
+
+  const handleLogout = () => {
+    localStorage.removeItem('sajoma-token');
+    localStorage.removeItem('sajoma-user');
+    if (onLogout) onLogout();
+    navigate('/login');
   };
 
-  const menuItems = [
-    { icon: '👤', label: t('profile_settings') || 'Profile Settings', to: '#' },
-    { icon: '🔔', label: t('notifications') || 'Notifications', to: '/reminders' },
-    { icon: '⭐', label: t('subscription') || 'Subscription', to: '/subscription' },
-    { icon: '🔒', label: t('privacy_security') || 'Privacy & Security', to: '#' },
-    { icon: '❓', label: t('help_support') || 'Help & Support', to: '#' },
-  ];
+  const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
+    <button onClick={onToggle} style={{
+      width: 48, height: 28, borderRadius: 14, border: 'none', cursor: 'pointer',
+      background: on ? 'var(--gold-gradient)' : '#E0D6D0',
+      position: 'relative', transition: 'background 0.3s ease',
+    }}>
+      <div style={{
+        width: 22, height: 22, borderRadius: '50%', background: 'white',
+        position: 'absolute', top: 3, left: on ? 23 : 3,
+        transition: 'left 0.3s ease', boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+      }} />
+    </button>
+  );
+
+  const SettingRow = ({ icon, label, onClick, right, danger }: { icon: string; label: string; onClick?: () => void; right?: React.ReactNode; danger?: boolean }) => (
+    <div onClick={onClick} style={{
+      display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0',
+      borderBottom: '1px solid rgba(212,160,23,0.06)', cursor: onClick ? 'pointer' : 'default',
+    }}>
+      <div style={{ width: 36, height: 36, borderRadius: 10, background: danger ? 'rgba(229,57,53,0.08)' : 'rgba(212,160,23,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>{icon}</div>
+      <span style={{ flex: 1, fontSize: '0.88rem', fontWeight: 600, color: danger ? '#E53935' : '#3E2723' }}>{label}</span>
+      {right || (onClick && <span style={{ color: '#BCAAA4', fontSize: '1rem' }}>&#8250;</span>)}
+    </div>
+  );
 
   return (
-    <div className="page">
-      <h1 className="page-title" style={{ marginBottom: 4 }}>⚙️ {t('settings') || 'Settings'}</h1>
-      <p className="page-subtitle" style={{ marginBottom: 24 }}>{t('settings_subtitle') || 'Manage your account and preferences'}</p>
+    <div className="page animate-in">
+      <h1 className="page-title" style={{ marginBottom: 20 }}>{t('profile') || 'Profile'}</h1>
 
       {/* Profile Card */}
-      <div className="sf-card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20, marginBottom: 20 }}>
-        <div style={{
-          width: 64, height: 64, borderRadius: 20,
-          background: 'linear-gradient(135deg, #F8B4C8, #D4A017)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.5rem', color: 'white', fontWeight: 800,
-        }}>{userName[0]}</div>
+      <div className="card card-gold" style={{ padding: 22, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ width: 60, height: 60, borderRadius: 20, background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, border: '2px solid rgba(255,255,255,0.4)' }}>
+          {userName.charAt(0).toUpperCase()}
+        </div>
         <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3E2723', margin: 0 }}>{userName}</h3>
-          <p style={{ fontSize: '0.8rem', color: '#8D6E63', margin: 0 }}>{t('premium_member') || 'Premium Member'}</p>
-        </div>
-        <button className="sf-btn sf-btn-outline sf-btn-sm" style={{ padding: '8px 12px' }}>{t('edit') || 'Edit'}</button>
-      </div>
-
-      {/* Premium Banner */}
-      <div className="sf-card sf-card-gold" style={{ padding: 20, marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 4 }}>{t('upgrade_to_premium') || 'Upgrade to Premium'}</h3>
-          <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: 12, maxWidth: '80%' }}>
-            {t('premium_banner_desc') || 'Unlock advanced analytics, personalized meal plans, and more.'}
-          </p>
-          <button className="sf-btn sf-btn-sm" style={{ background: 'white', color: '#C5961B', fontWeight: 700 }} onClick={() => navigate('/subscription')}>
-            {t('learn_more') || 'Learn More'}
-          </button>
-        </div>
-        <span style={{ position: 'absolute', right: -10, bottom: -10, fontSize: '5rem', opacity: 0.2 }}>⭐</span>
-      </div>
-
-      {/* Settings List */}
-      <div className="sf-card" style={{ padding: 0, overflow: 'hidden', marginBottom: 20 }}>
-        {menuItems.map((item, i) => (
-          <div key={i} onClick={() => item.to !== '#' && navigate(item.to)} style={{
-            display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px',
-            borderBottom: i === menuItems.length - 1 ? 'none' : '1px solid rgba(197,150,27,0.08)',
-            cursor: 'pointer',
-          }}>
-            <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
-            <span style={{ flex: 1, fontSize: '0.92rem', fontWeight: 500 }}>{item.label}</span>
-            <span style={{ color: '#BCAAA4' }}>›</span>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 2 }}>{userName}</h2>
+          <p style={{ fontSize: '0.78rem', opacity: 0.8 }}>{userEmail}</p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.2)', padding: '3px 10px', borderRadius: 8, marginTop: 4, fontSize: '0.68rem', fontWeight: 600 }}>
+            ⭐ Free Plan
           </div>
-        ))}
-      </div>
-
-      {/* Preferences */}
-      <h2 className="section-title">{t('preferences') || 'Preferences'}</h2>
-      <div className="sf-card" style={{ padding: 0, overflow: 'hidden', marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(197,150,27,0.08)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <span style={{ fontSize: '1.2rem' }}>🌐</span>
-            <span style={{ fontSize: '0.92rem', fontWeight: 500 }}>{t('language') || 'Language'}</span>
-          </div>
-          <button className="sf-btn sf-btn-outline sf-btn-sm" onClick={handleLanguageToggle}>
-            {language === 'en' ? 'English' : 'Español'}
-          </button>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <span style={{ fontSize: '1.2rem' }}>🔔</span>
-            <span style={{ fontSize: '0.92rem', fontWeight: 500 }}>{t('push_notifications') || 'Push Notifications'}</span>
-          </div>
-          <label className="sf-toggle">
-            <input type="checkbox" checked={notifications} onChange={() => setNotifications(!notifications)} />
-            <span className="sf-toggle-track"></span>
-            <span className="sf-toggle-thumb"></span>
-          </label>
         </div>
       </div>
 
-      {/* Logout */}
-      <button className="sf-btn sf-btn-outline sf-btn-full sf-btn-lg" onClick={onLogout} style={{ color: '#D32F2F', borderColor: '#FFCDD2', background: '#FFF5F5' }}>
-        {t('logout') || 'Log Out'}
-      </button>
+      {/* Subscription Banner */}
+      <div className="card" style={{ padding: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }} onClick={() => navigate('/subscription')}>
+        <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'var(--shadow-gold)' }}>👑</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#3E2723' }}>Upgrade to Premium</div>
+          <div style={{ fontSize: '0.75rem', color: '#8D6E63' }}>Unlock all features &middot; 30-day free trial</div>
+        </div>
+        <span style={{ color: '#D4A017', fontWeight: 700 }}>&#8250;</span>
+      </div>
 
-      <p style={{ textAlign: 'center', marginTop: 24, fontSize: '0.75rem', color: '#BCAAA4' }}>
-        Sajoma Fitness v1.2.0
-      </p>
+      {/* Settings Groups */}
+      <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
+        <SettingRow icon="🌐" label={t('language') || 'Language'} right={
+          <div className="tabs" style={{ width: 'auto', marginBottom: 0 }}>
+            <button className={`tab ${language === 'en' ? 'active' : ''}`} onClick={() => changeLanguage('en')} style={{ padding: '6px 14px', fontSize: '0.72rem' }}>EN</button>
+            <button className={`tab ${language === 'es' ? 'active' : ''}`} onClick={() => changeLanguage('es')} style={{ padding: '6px 14px', fontSize: '0.72rem' }}>ES</button>
+          </div>
+        } />
+        <SettingRow icon="🔔" label={t('notifications') || 'Notifications'} right={<Toggle on={notifications} onToggle={() => setNotifications(!notifications)} />} />
+        <SettingRow icon="🌙" label="Dark Mode" right={<Toggle on={darkMode} onToggle={() => setDarkMode(!darkMode)} />} />
+      </div>
+
+      <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
+        <SettingRow icon="🎯" label={t('goals') || 'Goals & Targets'} onClick={() => {}} />
+        <SettingRow icon="📊" label={t('health_data') || 'Health Data'} onClick={() => navigate('/health-tracker')} />
+        <SettingRow icon="🔔" label={t('reminders') || 'Reminders'} onClick={() => navigate('/reminders')} />
+        <SettingRow icon="📸" label={t('progress_photos') || 'Progress Photos'} onClick={() => navigate('/progress-photos')} />
+      </div>
+
+      <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
+        <SettingRow icon="❓" label={t('help_support') || 'Help & Support'} onClick={() => {}} />
+        <SettingRow icon="📋" label={t('terms_of_service') || 'Terms of Service'} onClick={() => {}} />
+        <SettingRow icon="🔒" label={t('privacy_policy') || 'Privacy Policy'} onClick={() => {}} />
+      </div>
+
+      <div className="card" style={{ padding: '4px 18px', marginBottom: 20 }}>
+        <SettingRow icon="🚪" label={t('log_out') || 'Log Out'} onClick={handleLogout} danger />
+      </div>
+
+      <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#BCAAA4', marginBottom: 20 }}>Sajoma Fitness v1.0.0</p>
 
       <BottomNav />
     </div>

@@ -1,28 +1,30 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 
 const BottomNav: React.FC = () => {
-  const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
-  const items = [
-    { to: '/dashboard', icon: '🏠', label: t('home') },
-    { to: '/meal-logger', icon: '🍽️', label: t('meals') },
-    { to: '/exercise', icon: '💪', label: t('exercise') },
-    { to: '/journal', icon: '📓', label: t('journal') },
-    { to: '/settings', icon: '⚙️', label: t('settings') },
+  const tabs = [
+    { path: '/dashboard', icon: '🏠', label: t('home') || 'Home' },
+    { path: '/exercise', icon: '🏋️', label: t('workouts') || 'Workouts' },
+    { path: '/settings', icon: '👤', label: t('profile') || 'Profile' },
+    { path: '/health-tracker', icon: '🧭', label: t('discover') || 'Discover' },
   ];
 
   return (
     <nav className="bottom-nav">
-      {items.map(item => {
-        const isActive = location.pathname === item.to;
+      {tabs.map(tab => {
+        const isActive = location.pathname === tab.path ||
+          (tab.path === '/dashboard' && location.pathname === '/') ||
+          (tab.path === '/exercise' && location.pathname.startsWith('/exercise'));
         return (
-          <Link key={item.to} to={item.to} className={`bottom-nav-item ${isActive ? 'active' : ''}`}>
-            <span className="nav-icon">{item.icon}</span>
-            <span className="nav-label">{item.label}</span>
-          </Link>
+          <button key={tab.path} className={`nav-item ${isActive ? 'active' : ''}`} onClick={() => navigate(tab.path)}>
+            <div className="nav-icon">{tab.icon}</div>
+            <span className="nav-label">{tab.label}</span>
+          </button>
         );
       })}
     </nav>
