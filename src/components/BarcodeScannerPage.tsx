@@ -1,10 +1,13 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 import { culturalFoods } from '../lib/culturalFoods';
 
-const BarcodeScannerPage: React.FC = () => {
+const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) => {
   const { t, language } = useTranslation();
   const navigate = useNavigate();
   const [tab, setTab] = useState<'scan' | 'search' | 'cultural'>('scan');

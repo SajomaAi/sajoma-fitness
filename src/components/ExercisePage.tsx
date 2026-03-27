@@ -1,12 +1,18 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
 interface Workout { id: number; type: string; category: string; duration: number; calories: number; intensity: string; date: string; }
 
-const ExercisePage: React.FC = () => {
+const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'browse' | 'log' | 'history'>('browse');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>(() => {
     const saved = localStorage.getItem('sajoma-workouts');
     return saved ? JSON.parse(saved) : [];
@@ -58,184 +64,94 @@ const ExercisePage: React.FC = () => {
 
   const handleLog = () => {
     if (!form.type || !form.duration) return;
-    const w: Workout = { id: Date.now(), type: form.type, category: form.category, duration: parseInt(form.duration), calories: estimateCal(), intensity: form.intensity, date: new Date().toISOString() };
+    const w: Workout = { id: Date.now(), type: form.type, category: form.category, duration: parseInt(form.duration), calories: Number(estimateCal()), intensity: form.intensity, date: new Date().toISOString() };
     const updated = [w, ...workouts];
     setWorkouts(updated);
     localStorage.setItem('sajoma-workouts', JSON.stringify(updated));
     setForm({ type: '', category: 'cardio', duration: '', intensity: 'moderate' });
+    setActiveTab('history');
   };
 
-  const weekWorkouts = workouts.filter(w => { const diff = (Date.now() - new Date(w.date).getTime()) / 86400000; return diff <= 7; });
-  const weekCal = weekWorkouts.reduce((s, w) => s + w.calories, 0);
-  const weekMin = weekWorkouts.reduce((s, w) => s + w.duration, 0);
-
-  // Workout Detail View
   if (selectedWorkout) {
     return (
       <div className="page animate-in">
-        <div className="page-header">
-          <button className="page-back" onClick={() => setSelectedWorkout(null)}>‹</button>
-          <h1 className="page-header-title">{selectedWorkout.name}</h1>
-          <div style={{ width: 32 }} />
-        </div>
-
-        {/* Video/Image Area */}
+        <PageHeader title={selectedWorkout.name} showBack onOpenMenu={onOpenMenu} />
         <div style={{ background: 'linear-gradient(135deg, #3E2723 0%, #5D4037 100%)', borderRadius: 20, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
           <div style={{ fontSize: '4rem', opacity: 0.3, position: 'absolute' }}>{selectedWorkout.icon}</div>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', color: 'white', zIndex: 1, boxShadow: '0 4px 20px rgba(212,160,23,0.4)' }}>▶</div>
+          <div className="play-btn play-btn-lg">▶</div>
         </div>
-
-        {/* Stats Bar */}
-        <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '18px 12px', marginBottom: 20, position: 'relative' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D4A017' }}>15</div>
-            <div style={{ fontSize: '0.72rem', color: '#8D6E63', fontWeight: 600 }}>min</div>
-          </div>
-          <div style={{ width: 1.5, height: 36, background: 'linear-gradient(180deg, transparent, #D4A017, transparent)' }} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#3E2723' }}>All</div>
-            <div style={{ fontSize: '0.72rem', color: '#8D6E63', fontWeight: 600 }}>Levels</div>
-          </div>
-          <div style={{ width: 1.5, height: 36, background: 'linear-gradient(180deg, transparent, #D4A017, transparent)' }} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D4A017' }}>150</div>
-            <div style={{ fontSize: '0.72rem', color: '#8D6E63', fontWeight: 600 }}>Calories (Est.)</div>
-          </div>
+        <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '18px 12px', marginBottom: 20 }}>
+          <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--gold)' }}>{selectedWorkout.duration.split(' ')[0]}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>min</div></div>
+          <div style={{ width: 1.5, height: 36, background: 'rgba(212,160,23,0.2)' }} />
+          <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>{selectedWorkout.level.split(' ')[0]}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Levels</div></div>
+          <div style={{ width: 1.5, height: 36, background: 'rgba(212,160,23,0.2)' }} />
+          <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--gold)' }}>{selectedWorkout.calories}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Calories</div></div>
         </div>
-
-        {/* Step-by-Step Exercises */}
         <div className="card" style={{ padding: '8px 18px', marginBottom: 24 }}>
           {selectedWorkout.steps.map((step, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 0', borderBottom: i < selectedWorkout.steps.length - 1 ? '1px solid rgba(212,160,23,0.08)' : 'none' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', color: 'white', flexShrink: 0, boxShadow: '0 2px 8px rgba(212,160,23,0.25)' }}>▶</div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#3E2723', marginBottom: 2 }}>Step {i + 1}: {step.name}</div>
-                <div style={{ fontSize: '0.8rem', color: '#8D6E63', lineHeight: 1.5 }}>{step.desc}</div>
-              </div>
+              <div className="play-btn" style={{ width: 32, height: 32, fontSize: '0.7rem' }}>▶</div>
+              <div><div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text)', marginBottom: 2 }}>Step {i + 1}: {step.name}</div><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{step.desc}</div></div>
             </div>
           ))}
         </div>
-
-        <button className="btn btn-gold btn-full btn-lg" style={{ fontSize: '1.05rem', letterSpacing: '0.05em', padding: '18px 28px', fontWeight: 800 }}>
-          START WORKOUT
-        </button>
-
+        <button className="btn btn-gold btn-full btn-lg">START WORKOUT</button>
+        <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); window.location.href = '/login'; }} />
         <BottomNav />
       </div>
     );
   }
 
-  // Main View
   return (
     <div className="page animate-in">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <h1 className="page-title">{t('workouts') || 'Workouts'}</h1>
-      </div>
-
+      <PageHeader title={t('workouts') || 'Workouts'} onOpenMenu={onOpenMenu} />
       <div className="tabs">
         <button className={`tab ${activeTab === 'browse' ? 'active' : ''}`} onClick={() => setActiveTab('browse')}>{t('browse') || 'Browse'}</button>
         <button className={`tab ${activeTab === 'log' ? 'active' : ''}`} onClick={() => setActiveTab('log')}>{t('log') || 'Log'}</button>
         <button className={`tab ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>{t('history') || 'History'}</button>
       </div>
-
       {activeTab === 'browse' && (
         <>
-          {/* Category Filter */}
           <div className="scroll-row" style={{ marginBottom: 20 }}>
-            {['All', 'Cardio', 'Strength', 'Yoga', 'HIIT', 'Stretching'].map((cat, i) => (
+            {['All', 'Cardio', 'Strength', 'Yoga', 'HIIT'].map((cat, i) => (
               <button key={cat} className={`btn ${i === 0 ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flexShrink: 0 }}>{cat}</button>
             ))}
           </div>
-
-          {/* Workout Cards */}
           {presetWorkouts.map(w => (
             <div key={w.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, cursor: 'pointer' }} onClick={() => setSelectedWorkout(w)}>
-              <div style={{ width: 60, height: 60, borderRadius: 16, background: w.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0, boxShadow: '0 4px 12px rgba(212,160,23,0.15)' }}>{w.icon}</div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: 2, color: '#3E2723' }}>{w.name}</h3>
-                <p style={{ fontSize: '0.78rem', color: '#8D6E63', margin: 0 }}>{w.duration} · {w.level} · {w.calories} cal</p>
-              </div>
-              <span style={{ color: '#D4A017', fontSize: '1.2rem', fontWeight: 600 }}>›</span>
+              <div style={{ width: 60, height: 60, borderRadius: 16, background: w.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0, boxShadow: 'var(--shadow-sm)' }}>{w.icon}</div>
+              <div style={{ flex: 1 }}><h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: 2, color: 'var(--text)' }}>{w.name}</h3><p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>{w.duration} · {w.level} · {w.calories} cal</p></div>
+              <span style={{ color: 'var(--gold)', fontSize: '1.2rem', fontWeight: 600 }}>›</span>
             </div>
           ))}
-
-          {/* Quick Start Card */}
-          <div className="card card-gold" style={{ padding: 22, marginTop: 8, textAlign: 'center' }}>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 8 }}>Quick Start</h3>
-            <p style={{ fontSize: '0.8rem', opacity: 0.85, marginBottom: 16 }}>Start a timer and log your own workout</p>
-            <button className="btn btn-full" style={{ background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', fontWeight: 700 }}>⏱️ Start Timer</button>
-          </div>
         </>
       )}
-
       {activeTab === 'log' && (
         <div className="card" style={{ padding: 24 }}>
           <h3 className="section-title">{t('log_workout') || 'Log Workout'}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div>
-              <label className="label">{t('category') || 'Category'}</label>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {categories.map(c => (
-                  <button key={c.id} onClick={() => setForm({ ...form, category: c.id })} className={`btn ${form.category === c.id ? 'btn-gold' : 'btn-pink'} btn-sm`}>
-                    {c.icon} {c.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div><label className="label">{t('exercise_type') || 'Exercise Type'}</label><input className="input" placeholder="e.g. Running, Push-ups..." value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} /></div>
+            <div><label className="label">{t('category') || 'Category'}</label><div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{categories.map(c => (<button key={c.id} onClick={() => setForm({ ...form, category: c.id })} className={`btn ${form.category === c.id ? 'btn-gold' : 'btn-pink'} btn-sm`}>{c.icon} {c.label}</button>))}</div></div>
+            <div><label className="label">{t('exercise_type') || 'Exercise Type'}</label><input className="input" placeholder="e.g. Running..." value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} /></div>
             <div><label className="label">{t('duration_minutes') || 'Duration (min)'}</label><input className="input" type="number" placeholder="30" value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} /></div>
-            <div>
-              <label className="label">{t('intensity') || 'Intensity'}</label>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {['light', 'moderate', 'intense', 'extreme'].map(int => (
-                  <button key={int} onClick={() => setForm({ ...form, intensity: int })} className={`btn ${form.intensity === int ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flex: 1, textTransform: 'capitalize' }}>{int}</button>
-                ))}
-              </div>
-            </div>
-            {form.duration && (
-              <div className="card card-pink" style={{ padding: 14, textAlign: 'center' }}>
-                <p style={{ fontSize: '0.8rem', color: '#8D6E63', margin: '0 0 4px' }}>Estimated Calories</p>
-                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D4A017', margin: 0 }}>🔥 {estimateCal()} kcal</p>
-              </div>
-            )}
-            <button className="btn btn-gold btn-full btn-lg" onClick={handleLog} disabled={!form.type || !form.duration}>
-              {t('log_workout') || 'Log Workout'}
-            </button>
+            <button className="btn btn-gold btn-full btn-lg" onClick={handleLog} disabled={!form.type || !form.duration}>{t('log_workout') || 'Log Workout'}</button>
           </div>
         </div>
       )}
-
       {activeTab === 'history' && (
-        <div>
-          {/* Weekly Summary */}
-          <div className="card card-gold" style={{ padding: 20, marginBottom: 16 }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: 12 }}>{t('this_week') || 'This Week'}</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-              <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.3rem', fontWeight: 800 }}>{weekWorkouts.length}</div><div style={{ fontSize: '0.68rem', opacity: 0.8 }}>Workouts</div></div>
-              <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.3rem', fontWeight: 800 }}>{weekMin}</div><div style={{ fontSize: '0.68rem', opacity: 0.8 }}>Minutes</div></div>
-              <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.3rem', fontWeight: 800 }}>{weekCal}</div><div style={{ fontSize: '0.68rem', opacity: 0.8 }}>Calories</div></div>
-            </div>
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {workouts.length === 0 ? (
-            <div className="card" style={{ padding: 32, textAlign: 'center' }}>
-              <p style={{ fontSize: '2rem', marginBottom: 8 }}>🏋️</p>
-              <p style={{ color: '#8D6E63' }}>{t('no_workouts_yet') || 'No workouts logged yet'}</p>
-            </div>
-          ) : workouts.slice(0, 20).map(w => (
-            <div key={w.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 14 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(212,160,23,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
-                {categories.find(c => c.id === w.category)?.icon || '💪'}
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}><div style={{ fontSize: '3rem', marginBottom: 16 }}>📅</div><h3 style={{ marginBottom: 8 }}>No workouts yet</h3><p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Complete your first workout to see your history here.</p></div>
+          ) : (
+            workouts.map(w => (
+              <div key={w.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16 }}>
+                <div style={{ width: 50, height: 50, borderRadius: 12, background: 'var(--bg-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>{categories.find(c => c.id === w.category)?.icon || '💪'}</div>
+                <div style={{ flex: 1 }}><h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: 2 }}>{w.type}</h3><p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{w.duration} min · {w.calories} kcal · {new Date(w.date).toLocaleDateString()}</p></div>
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{w.type}</div>
-                <div style={{ fontSize: '0.75rem', color: '#8D6E63' }}>{new Date(w.date).toLocaleDateString()} · {w.duration} min</div>
-              </div>
-              <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#D4A017' }}>{w.calories} cal</div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       )}
-
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); window.location.href = '/login'; }} />
       <BottomNav />
     </div>
   );

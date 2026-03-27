@@ -1,13 +1,19 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
 interface PhotoEntry { id: number; date: string; type: 'front' | 'side' | 'back'; url: string; weight?: string; }
 
-const ProgressPhotosPage: React.FC = () => {
+const ProgressPhotosPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tab, setTab] = useState<'gallery' | 'compare' | 'add'>('gallery');
   const [photos, setPhotos] = useState<PhotoEntry[]>(() => {
     const saved = localStorage.getItem('sajoma-photos');
@@ -37,16 +43,12 @@ const ProgressPhotosPage: React.FC = () => {
 
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <button className="page-back" onClick={() => navigate('/settings')}>&#8249;</button>
-        <h1 className="page-header-title">{t('progress_photos') || 'Progress Photos'}</h1>
-        <div style={{ width: 32 }} />
-      </div>
+      <PageHeader title={t('progress_photos') || 'Progress Photos'} onOpenMenu={onOpenMenu} />
 
-      <div className="tabs">
-        <button className={`tab ${tab === 'gallery' ? 'active' : ''}`} onClick={() => setTab('gallery')}>📷 Gallery</button>
-        <button className={`tab ${tab === 'compare' ? 'active' : ''}`} onClick={() => setTab('compare')}>↔️ Compare</button>
-        <button className={`tab ${tab === 'add' ? 'active' : ''}`} onClick={() => setTab('add')}>+ Add</button>
+      <div className="tabs" style={{ marginBottom: 20 }}>
+        <button className={`tab ${tab === 'gallery' ? 'active' : ''}`} onClick={() => setTab('gallery')}>📷 {t('gallery') || 'Gallery'}</button>
+        <button className={`tab ${tab === 'compare' ? 'active' : ''}`} onClick={() => setTab('compare')}>↔️ {t('compare') || 'Compare'}</button>
+        <button className={`tab ${tab === 'add' ? 'active' : ''}`} onClick={() => setTab('add')}>+ {t('add') || 'Add'}</button>
       </div>
 
       {tab === 'gallery' && (
@@ -54,9 +56,9 @@ const ProgressPhotosPage: React.FC = () => {
           {photos.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2.5rem', marginBottom: 12 }}>📸</p>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 6 }}>No Photos Yet</h3>
-              <p style={{ fontSize: '0.82rem', color: '#8D6E63', marginBottom: 20 }}>Take your first progress photo to start tracking your journey</p>
-              <button className="btn btn-gold" onClick={() => setTab('add')}>+ Take Photo</button>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 6 }}>{t('no_photos_yet') || 'No Photos Yet'}</h3>
+              <p style={{ fontSize: '0.82rem', color: '#8D6E63', marginBottom: 20 }}>{t('take_first_photo') || 'Take your first progress photo to start tracking your journey'}</p>
+              <button className="btn btn-gold" onClick={() => setTab('add')}>+ {t('take_photo') || 'Take Photo'}</button>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
@@ -79,26 +81,26 @@ const ProgressPhotosPage: React.FC = () => {
           {photos.length < 2 ? (
             <div className="card" style={{ padding: 32, textAlign: 'center' }}>
               <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>↔️</p>
-              <p style={{ color: '#8D6E63' }}>Need at least 2 photos to compare</p>
+              <p style={{ color: '#8D6E63' }}>{t('need_two_photos') || 'Need at least 2 photos to compare'}</p>
             </div>
           ) : (
             <div>
               <div className="card" style={{ padding: 16, marginBottom: 16 }}>
-                <h3 className="section-title">Before &amp; After</h3>
+                <h3 className="section-title">{t('before_after') || 'Before & After'}</h3>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <div style={{ flex: 1, borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4', position: 'relative' }}>
                     <img src={photos[photos.length - 1].url} alt="Before" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.5)', color: 'white', padding: '3px 10px', borderRadius: 8, fontSize: '0.68rem', fontWeight: 600 }}>Before</div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.5)', color: 'white', padding: '3px 10px', borderRadius: 8, fontSize: '0.68rem', fontWeight: 600 }}>{t('before') || 'Before'}</div>
                   </div>
                   <div style={{ flex: 1, borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4', position: 'relative' }}>
                     <img src={photos[0].url} alt="After" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'var(--gold-gradient)', color: 'white', padding: '3px 10px', borderRadius: 8, fontSize: '0.68rem', fontWeight: 600 }}>After</div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'var(--gold-gradient)', color: 'white', padding: '3px 10px', borderRadius: 8, fontSize: '0.68rem', fontWeight: 600 }}>{t('after') || 'After'}</div>
                   </div>
                 </div>
               </div>
               <div className="card card-pink" style={{ padding: 14, textAlign: 'center' }}>
                 <p style={{ fontSize: '0.82rem', color: '#5D4037' }}>
-                  {photos.length} photos over {Math.ceil((new Date(photos[0].date).getTime() - new Date(photos[photos.length - 1].date).getTime()) / 86400000)} days
+                  {photos.length} {t('photos_over') || 'photos over'} {Math.ceil((new Date(photos[0].date).getTime() - new Date(photos[photos.length - 1].date).getTime()) / 86400000)} {t('days') || 'days'}
                 </p>
               </div>
             </div>
@@ -108,23 +110,24 @@ const ProgressPhotosPage: React.FC = () => {
 
       {tab === 'add' && (
         <div className="card" style={{ padding: 24 }}>
-          <h3 className="section-title">New Progress Photo</h3>
+          <h3 className="section-title">{t('new_progress_photo') || 'New Progress Photo'}</h3>
           <div style={{ marginBottom: 16 }}>
-            <label className="label">Photo Type</label>
+            <label className="label">{t('photo_type') || 'Photo Type'}</label>
             <div style={{ display: 'flex', gap: 8 }}>
               {(['front', 'side', 'back'] as const).map(type => (
-                <button key={type} onClick={() => setPhotoType(type)} className={`btn ${photoType === type ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flex: 1, textTransform: 'capitalize' }}>{type}</button>
+                <button key={type} onClick={() => setPhotoType(type)} className={`btn ${photoType === type ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flex: 1, textTransform: 'capitalize' }}>{t(type) || type}</button>
               ))}
             </div>
           </div>
           <div style={{ marginBottom: 20 }}>
-            <label className="label">Current Weight (optional)</label>
+            <label className="label">{t('current_weight_optional') || 'Current Weight (optional)'}</label>
             <input className="input" type="number" placeholder="e.g. 150 lbs" value={weight} onChange={e => setWeight(e.target.value)} />
           </div>
-          <button className="btn btn-gold btn-full btn-lg" onClick={handleAddPhoto}>📷 Take / Upload Photo</button>
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleAddPhoto}>📷 {t('take_upload_photo') || 'Take / Upload Photo'}</button>
         </div>
       )}
 
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); navigate('/login'); }} />
       <BottomNav />
     </div>
   );

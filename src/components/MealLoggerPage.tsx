@@ -1,12 +1,18 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
-const MealLoggerPage: React.FC = () => {
+const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeMeal, setActiveMeal] = useState('breakfast');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const meals = [
     { id: 'breakfast', icon: '🥣', label: t('breakfast') || 'Breakfast', time: '7:00 - 10:00 AM', cal: 420, items: [
@@ -35,11 +41,7 @@ const MealLoggerPage: React.FC = () => {
 
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <button className="page-back" onClick={() => navigate('/dashboard')}>&#8249;</button>
-        <h1 className="page-header-title">{t('food_diary') || 'Food Diary'}</h1>
-        <div style={{ width: 32 }} />
-      </div>
+      <PageHeader title={t('food_diary') || 'Food Diary'} onOpenMenu={onOpenMenu} />
 
       {/* Calorie Summary */}
       <div className="card card-gold" style={{ padding: 22, marginBottom: 20 }}>
@@ -105,7 +107,7 @@ const MealLoggerPage: React.FC = () => {
           <div style={{ padding: 32, textAlign: 'center' }}>
             <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>{activeMealData.icon}</p>
             <p style={{ color: '#8D6E63', fontSize: '0.85rem', marginBottom: 16 }}>No foods logged yet</p>
-            <button className="btn btn-gold btn-sm">+ Add Food</button>
+            <button className="btn btn-gold btn-sm" onClick={() => navigate('/barcode-scanner')}>+ Add Food</button>
           </div>
         ) : (
           <>
@@ -119,23 +121,13 @@ const MealLoggerPage: React.FC = () => {
               </div>
             ))}
             <div style={{ padding: '12px 18px', borderTop: '1px solid rgba(212,160,23,0.08)' }}>
-              <button className="btn btn-pink btn-sm btn-full">+ Add More</button>
+              <button className="btn btn-pink btn-sm btn-full" onClick={() => navigate('/barcode-scanner')}>+ Add More</button>
             </div>
           </>
         )}
       </div>
 
-      {/* Nutrition Tip */}
-      <div className="card card-pink" style={{ padding: 16, marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span style={{ fontSize: '1.2rem' }}>💡</span>
-          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#3E2723' }}>Nutrition Tip</span>
-        </div>
-        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
-          Try adding more protein to your breakfast. It helps maintain stable energy levels throughout the morning.
-        </p>
-      </div>
-
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); navigate('/login'); }} />
       <BottomNav />
     </div>
   );

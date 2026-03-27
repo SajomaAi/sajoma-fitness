@@ -1,154 +1,115 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
-const DashboardPage: React.FC = () => {
+const DashboardPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [userName, setUserName] = useState('');
-  const steps = 6240;
-  const calories = 1280;
-  const water = 5;
+  const [userName, setUserName] = useState('Sarah');
+  const [greeting, setGreeting] = useState('Good Morning');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const u = localStorage.getItem('sajoma-user');
-    if (u) { try { const d = JSON.parse(u); setUserName(d.name || d.email?.split('@')[0] || ''); } catch { setUserName(''); } }
-  }, []);
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting(t('good_morning') || 'Good Morning');
+    else if (hour < 18) setGreeting(t('good_afternoon') || 'Good Afternoon');
+    else setGreeting(t('good_evening') || 'Good Evening');
 
-  const greeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return t('good_morning') || 'Good Morning';
-    if (h < 17) return t('good_afternoon') || 'Good Afternoon';
-    return t('good_evening') || 'Good Evening';
+    const storedUser = localStorage.getItem('sajoma-user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user.name) setUserName(user.name);
+      } catch (e) { console.error(e); }
+    }
+  }, [t]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('sajoma-loggedIn');
+    navigate('/login');
   };
 
-  const stepsGoal = 10000;
-  const stepsPct = Math.min((steps / stepsGoal) * 100, 100);
-  const r = 52; const circ = 2 * Math.PI * r; const dash = (stepsPct / 100) * circ;
+  const features = [
+    { id: 'workout', title: t('core_power_workout') || 'Core Power Workout', desc: '15 min • ' + (t('all_levels') || 'All Levels'), icon: '🔥', btn: t('start_workout') || 'Start Workout', path: '/exercise' },
+    { id: 'meditation', title: t('zen_mind_meditation') || 'Zen Mind Meditation', desc: '10 min • ' + (t('relaxing') || 'Relaxing'), icon: '🧘', btn: t('play') || 'Play', path: '/meditation' },
+    { id: 'water', title: t('hydration_tracker') || 'Hydration Tracker', desc: '4/8 glasses', icon: '💧', btn: t('add_food') || 'Add', path: '/water-tracker' },
+  ];
+
+  const stats = [
+    { label: t('burned') || 'Burned', value: '450', unit: 'kcal', icon: '🔥', color: '#FFF5F8' },
+    { label: t('consumed') || 'Consumed', value: '1,240', unit: 'kcal', icon: '🍎', color: '#E3F2FD' },
+    { label: t('steps') || 'Steps', value: '8,420', unit: 'Steps', icon: '👟', color: '#F1F8E9' },
+    { label: t('heart_rate') || 'Heart Rate', value: '72', unit: 'bpm', icon: '❤️', color: '#FFF0F0' },
+  ];
 
   return (
     <div className="page animate-in">
-      {/* Logo & Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/sajoma-logo.jpg" alt="Sajoma" style={{ width: 44, height: 44, borderRadius: 14, boxShadow: '0 2px 8px rgba(212,160,23,0.2)' }} />
-          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#D4A017' }}>Sajoma Fitness</span>
+      <PageHeader onOpenMenu={onOpenMenu} />
+      
+      <h2 style={{ fontSize: '1.6rem', fontWeight: 900, marginBottom: 20, color: 'var(--text)' }}>{t('daily_hub') || 'Daily Hub'}</h2>
+
+      {/* Greeting Card with Progress Ring */}
+      <div className="card card-gold" style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '24px 20px', marginBottom: 24 }}>
+        <div style={{ position: 'relative', width: 80, height: 80, flexShrink: 0 }}>
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="6" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke="white" strokeWidth="6" strokeDasharray="213.6" strokeDashoffset="64" strokeLinecap="round" transform="rotate(-90 40 40)" />
+          </svg>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>🏃</div>
         </div>
-        <button onClick={() => navigate('/reminders')} style={{ background: 'white', border: 'none', width: 40, height: 40, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 2px 8px rgba(62,39,35,0.06)', cursor: 'pointer' }}>🔔</button>
+        <div>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 4 }}>{greeting}, {userName}!</h3>
+          <p style={{ fontSize: '0.75rem', opacity: 0.9, marginBottom: 8 }}>{t('todays_goal') || "Today's Goal"}:</p>
+          <div style={{ fontSize: '1.2rem', fontWeight: 900 }}>10,000 {t('steps') || 'steps'}</div>
+          <div style={{ fontSize: '0.65rem', opacity: 0.8, marginTop: 2 }}>10,000 / 17,200</div>
+        </div>
       </div>
 
-      <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3E2723', marginBottom: 18 }}>{t('daily_hub') || 'Daily Hub'}</h1>
-
-      {/* Gold Greeting Card with Progress Ring */}
-      <div className="card card-gold" style={{ padding: 22, marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <svg width="110" height="110" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
-              <circle cx="60" cy="60" r={r} fill="none" stroke="white" strokeWidth="8" strokeLinecap="round"
-                strokeDasharray={circ} strokeDashoffset={circ - dash} transform="rotate(-90 60 60)"
-                style={{ transition: 'stroke-dashoffset 1s ease' }} />
-            </svg>
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: '0.7rem', opacity: 0.85 }}>🏃</span>
-              <span style={{ fontSize: '1.1rem', fontWeight: 800 }}>{Math.round(stepsPct)}%</span>
+      {/* Feature Cards (Horizontal Scroll) */}
+      <div className="scroll-row" style={{ marginBottom: 24 }}>
+        {features.map(f => (
+          <div key={f.id} className="feature-card" onClick={() => navigate(f.path)} style={{ cursor: 'pointer' }}>
+            <div className="feature-card-icon">{f.icon}</div>
+            <div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+              <button className="feature-card-btn">{f.btn}</button>
             </div>
           </div>
-          <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: 4 }}>{greeting()}, {userName || 'Friend'}!</h2>
-            <p style={{ fontSize: '0.78rem', opacity: 0.9, marginBottom: 8 }}>{t('todays_goal') || "Today's Goal:"}</p>
-            <p style={{ fontSize: '1.2rem', fontWeight: 800 }}>{stepsGoal.toLocaleString()} {t('steps') || 'steps'}</p>
-            <div style={{ background: 'rgba(255,255,255,0.25)', borderRadius: 6, height: 6, marginTop: 8, overflow: 'hidden' }}>
-              <div style={{ width: `${stepsPct}%`, height: '100%', background: 'white', borderRadius: 6, transition: 'width 0.6s ease' }} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-              <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{steps.toLocaleString()} steps</span>
-              <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>17,200</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Feature Cards - Horizontal Scroll */}
-      <div className="scroll-row" style={{ marginBottom: 22 }}>
-        <div className="feature-card" onClick={() => navigate('/exercise')}>
-          <div><div className="feature-card-icon">💪</div><h3>Core Power Workout</h3><p>15 min | All levels</p></div>
-          <button className="feature-card-btn" onClick={(e) => { e.stopPropagation(); navigate('/exercise'); }}>✏️ Start Workout</button>
-        </div>
-        <div className="feature-card" style={{ background: 'linear-gradient(145deg, #F8B4C8 0%, #E8A0B8 40%, #D88CA8 100%)' }}>
-          <div><div className="feature-card-icon">🧘</div><h3>Zen Mind Meditation</h3><p>10 min | Relaxing</p></div>
-          <button className="feature-card-btn">▶ Play</button>
-        </div>
-        <div className="feature-card" onClick={() => navigate('/water-tracker')}>
-          <div><div className="feature-card-icon">💧</div><h3>{t('hydration_tracker') || 'Hydration Tracker'}</h3><p>{water}/8 glasses</p></div>
-          <button className="feature-card-btn" onClick={(e) => { e.stopPropagation(); navigate('/water-tracker'); }}>+ Log Water</button>
-        </div>
-        <div className="feature-card" style={{ background: 'linear-gradient(145deg, #A8D8A8 0%, #7CB87C 40%, #5C985C 100%)' }} onClick={() => navigate('/meal-logger')}>
-          <div><div className="feature-card-icon">🥗</div><h3>{t('meal_logger') || 'Meal Logger'}</h3><p>{calories} / 2000 cal</p></div>
-          <button className="feature-card-btn" onClick={(e) => { e.stopPropagation(); navigate('/meal-logger'); }}>+ Log Meal</button>
-        </div>
-        <div className="feature-card" style={{ background: 'linear-gradient(145deg, #B8A0D8 0%, #9C84C0 40%, #8070A8 100%)' }} onClick={() => navigate('/journal')}>
-          <div><div className="feature-card-icon">📝</div><h3>{t('daily_journal') || 'Daily Journal'}</h3><p>Mood & Gratitude</p></div>
-          <button className="feature-card-btn" onClick={(e) => { e.stopPropagation(); navigate('/journal'); }}>✏️ Write</button>
-        </div>
-      </div>
-
-      {/* Quick Stats */}
-      <h2 className="section-title">{t('todays_stats') || "Today's Stats"}</h2>
-      <div className="stat-grid" style={{ marginBottom: 22 }}>
-        <div className="stat-card" onClick={() => navigate('/meal-logger')} style={{ cursor: 'pointer' }}>
-          <div className="stat-icon" style={{ background: 'rgba(212,160,23,0.1)' }}>🔥</div>
-          <div className="stat-value">{calories}</div>
-          <div className="stat-label">{t('calories') || 'Calories'}</div>
-          <div className="stat-bar"><div className="stat-bar-fill" style={{ width: `${Math.min((calories / 2000) * 100, 100)}%` }} /></div>
-        </div>
-        <div className="stat-card" onClick={() => navigate('/water-tracker')} style={{ cursor: 'pointer' }}>
-          <div className="stat-icon" style={{ background: 'rgba(100,180,255,0.1)' }}>💧</div>
-          <div className="stat-value">{water}/8</div>
-          <div className="stat-label">{t('water') || 'Water'}</div>
-          <div className="stat-bar"><div className="stat-bar-fill" style={{ width: `${(water / 8) * 100}%` }} /></div>
-        </div>
-        <div className="stat-card" onClick={() => navigate('/exercise')} style={{ cursor: 'pointer' }}>
-          <div className="stat-icon" style={{ background: 'rgba(248,180,200,0.2)' }}>🏃</div>
-          <div className="stat-value">{steps.toLocaleString()}</div>
-          <div className="stat-label">{t('steps') || 'Steps'}</div>
-          <div className="stat-bar"><div className="stat-bar-fill" style={{ width: `${stepsPct}%` }} /></div>
-        </div>
-        <div className="stat-card" onClick={() => navigate('/health-tracker')} style={{ cursor: 'pointer' }}>
-          <div className="stat-icon" style={{ background: 'rgba(255,100,100,0.1)' }}>❤️</div>
-          <div className="stat-value">72</div>
-          <div className="stat-label">{t('heart_rate') || 'Heart Rate'}</div>
-          <div className="stat-bar"><div className="stat-bar-fill" style={{ width: '72%' }} /></div>
-        </div>
-      </div>
-
-      {/* Community Feed Sneak-Peek */}
-      <h2 className="section-title">{t('community_feed') || 'Community Feed Sneak-Peek'}</h2>
-      <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 18, marginBottom: 22 }}>
-        <div style={{ display: 'flex', gap: 8, fontSize: '1.6rem', color: '#D4A017', opacity: 0.7 }}>🏃‍♀️ 🧘‍♂️ 💃 🏋️ 🤸</div>
-        <button className="btn btn-gold btn-sm" onClick={() => navigate('/health-tracker')}>{t('view_full_feed') || 'View Full Feed'}</button>
-      </div>
-
-      {/* Explore More */}
-      <h2 className="section-title">{t('explore') || 'Explore'}</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
-        {[
-          { to: '/journal', icon: '📓', label: t('journal') || 'Journal', desc: 'Daily wellness' },
-          { to: '/progress-photos', icon: '📸', label: t('progress_photos') || 'Photos', desc: 'Track progress' },
-          { to: '/reminders', icon: '🔔', label: t('reminders') || 'Reminders', desc: 'Stay on track' },
-          { to: '/subscription', icon: '⭐', label: t('premium') || 'Premium', desc: 'Unlock all' },
-        ].map(f => (
-          <Link key={f.to} to={f.to} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="card" style={{ padding: 16, marginBottom: 0 }}>
-              <span style={{ fontSize: '1.5rem' }}>{f.icon}</span>
-              <p style={{ fontWeight: 700, fontSize: '0.9rem', margin: '8px 0 2px', color: '#3E2723' }}>{f.label}</p>
-              <p style={{ fontSize: '0.75rem', color: '#8D6E63', margin: 0 }}>{f.desc}</p>
-            </div>
-          </Link>
         ))}
       </div>
 
+      {/* Stats Grid */}
+      <h3 className="section-title">{t('statistics') || 'Statistics'}</h3>
+      <div className="stat-grid">
+        {stats.map(s => (
+          <div key={s.label} className="stat-card" onClick={() => navigate('/analytics')}>
+            <div className="stat-icon" style={{ background: s.color }}>{s.icon}</div>
+            <div className="stat-value">{s.value}</div>
+            <div className="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Community Feed Sneak-Peek */}
+      <h3 className="section-title">{t('community_feed') || 'Community Feed'}</h3>
+      <div className="card" style={{ padding: '18px 20px' }}>
+        <div style={{ display: 'flex', gap: 12, marginBottom: 18 }}>
+          {[1, 2, 3].map(i => (
+            <div key={i} style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--bg-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', border: '2px solid white', boxShadow: 'var(--shadow-sm)' }}>👤</div>
+          ))}
+          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--gold-gradient)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700, border: '2px solid white', boxShadow: 'var(--shadow-sm)' }}>+12</div>
+        </div>
+        <button className="btn btn-gold btn-full" onClick={() => navigate('/premium')}>{t('view_full_feed') || 'View Full Feed'}</button>
+      </div>
+
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={handleLogout} />
       <BottomNav />
     </div>
   );

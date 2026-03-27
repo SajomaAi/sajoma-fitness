@@ -1,11 +1,17 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
-const HealthTrackerPage: React.FC = () => {
+const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [period, setPeriod] = useState<'week' | 'month'>('week');
 
   const weekData = [
@@ -25,24 +31,20 @@ const HealthTrackerPage: React.FC = () => {
 
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <button className="page-back" onClick={() => navigate('/settings')}>&#8249;</button>
-        <h1 className="page-header-title">{t('analytics') || 'Analytics'}</h1>
-        <div style={{ width: 32 }} />
-      </div>
+      <PageHeader title={t('analytics') || 'Analytics'} onOpenMenu={onOpenMenu} />
 
       <div className="tabs" style={{ marginBottom: 20 }}>
-        <button className={`tab ${period === 'week' ? 'active' : ''}`} onClick={() => setPeriod('week')}>This Week</button>
-        <button className={`tab ${period === 'month' ? 'active' : ''}`} onClick={() => setPeriod('month')}>This Month</button>
+        <button className={`tab ${period === 'week' ? 'active' : ''}`} onClick={() => setPeriod('week')}>{t('this_week') || 'This Week'}</button>
+        <button className={`tab ${period === 'month' ? 'active' : ''}`} onClick={() => setPeriod('month')}>{t('this_month') || 'This Month'}</button>
       </div>
 
       {/* Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 20 }}>
         {[
-          { icon: '🔥', label: 'Avg Calories', value: `${avgCal}`, unit: 'kcal/day', color: '#FF9800' },
-          { icon: '👣', label: 'Avg Steps', value: avgSteps.toLocaleString(), unit: 'steps/day', color: '#42A5F5' },
-          { icon: '💧', label: 'Total Water', value: `${totalWater}`, unit: 'glasses', color: '#29B6F6' },
-          { icon: '💪', label: 'Workouts', value: '4', unit: 'this week', color: '#D4A017' },
+          { icon: '🔥', label: t('avg_calories') || 'Avg Calories', value: `${avgCal}`, unit: 'kcal/day', color: '#FF9800' },
+          { icon: '👣', label: t('avg_steps') || 'Avg Steps', value: avgSteps.toLocaleString(), unit: 'steps/day', color: '#42A5F5' },
+          { icon: '💧', label: t('total_water') || 'Total Water', value: `${totalWater}`, unit: 'glasses', color: '#29B6F6' },
+          { icon: '💪', label: t('workouts') || 'Workouts', value: '4', unit: 'this week', color: '#D4A017' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: 16, textAlign: 'center' }}>
             <span style={{ fontSize: '1.3rem' }}>{s.icon}</span>
@@ -55,7 +57,7 @@ const HealthTrackerPage: React.FC = () => {
 
       {/* Calorie Chart */}
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-        <h3 className="section-title">Calorie Intake</h3>
+        <h3 className="section-title">{t('calorie_intake') || 'Calorie Intake'}</h3>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 120, marginTop: 12 }}>
           {weekData.map((d, i) => (
             <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
@@ -70,14 +72,14 @@ const HealthTrackerPage: React.FC = () => {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(212,160,23,0.05)', borderRadius: 10 }}>
-          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>Daily Average</span>
+          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>{t('daily_average') || 'Daily Average'}</span>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4A017' }}>{avgCal} kcal</span>
         </div>
       </div>
 
       {/* Steps Chart */}
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-        <h3 className="section-title">Steps</h3>
+        <h3 className="section-title">{t('steps') || 'Steps'}</h3>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 100, marginTop: 12 }}>
           {weekData.map((d, i) => {
             const maxSteps = Math.max(...weekData.map(x => x.steps));
@@ -94,7 +96,7 @@ const HealthTrackerPage: React.FC = () => {
           })}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(248,180,200,0.1)', borderRadius: 10 }}>
-          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>Daily Average</span>
+          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>{t('daily_average') || 'Daily Average'}</span>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4A017' }}>{avgSteps.toLocaleString()} steps</span>
         </div>
       </div>
@@ -103,13 +105,14 @@ const HealthTrackerPage: React.FC = () => {
       <div className="card card-pink" style={{ padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontSize: '1.1rem' }}>📊</span>
-          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#3E2723' }}>Weekly Insight</span>
+          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#3E2723' }}>{t('weekly_insight') || 'Weekly Insight'}</span>
         </div>
         <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
-          You were most active on Saturday with 11,200 steps! Try to maintain that momentum during weekdays too.
+          {t('weekly_insight_text') || 'You were most active on Saturday with 11,200 steps! Try to maintain that momentum during weekdays too.'}
         </p>
       </div>
 
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); navigate('/login'); }} />
       <BottomNav />
     </div>
   );

@@ -14,14 +14,23 @@ const BottomNav: React.FC = () => {
     { path: '/health-tracker', icon: '🧭', label: t('discover') || 'Discover' },
   ];
 
+  const handleNav = (path: string) => {
+    const isLoggedIn = localStorage.getItem('sajoma-loggedIn') === 'true';
+    if (path === '/dashboard') {
+      navigate(isLoggedIn ? '/dashboard' : '/');
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
-    <nav className="bottom-nav">
+    <nav className="bottom-nav" style={{ zIndex: 1000 }}>
       {tabs.map(tab => {
         const isActive = location.pathname === tab.path ||
           (tab.path === '/dashboard' && location.pathname === '/') ||
           (tab.path === '/exercise' && location.pathname.startsWith('/exercise'));
         return (
-          <button key={tab.path} className={`nav-item ${isActive ? 'active' : ''}`} onClick={() => navigate(tab.path)}>
+          <button key={tab.path} className={`nav-item ${isActive ? 'active' : ''}`} onClick={() => handleNav(tab.path)}>
             <div className="nav-icon">{tab.icon}</div>
             <span className="nav-label">{tab.label}</span>
           </button>

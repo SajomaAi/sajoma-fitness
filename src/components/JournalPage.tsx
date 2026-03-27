@@ -1,13 +1,19 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
 interface JournalEntry { id: number; date: string; mood: number; energy: number; gratitude: string; notes: string; prompt: string; }
 
-const JournalPage: React.FC = () => {
+const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tab, setTab] = useState<'write' | 'history'>('write');
   const [entries, setEntries] = useState<JournalEntry[]>(() => {
     const saved = localStorage.getItem('sajoma-journal');
@@ -20,29 +26,29 @@ const JournalPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const moods = [
-    { val: 1, emoji: '😢', label: 'Rough', color: '#E57373' },
-    { val: 2, emoji: '😕', label: 'Low', color: '#FFB74D' },
-    { val: 3, emoji: '😊', label: 'Good', color: '#FFD54F' },
-    { val: 4, emoji: '😄', label: 'Great', color: '#81C784' },
-    { val: 5, emoji: '🤩', label: 'Amazing', color: '#D4A017' },
+    { val: 1, emoji: '😢', label: t('mood_rough') || 'Rough', color: '#E57373' },
+    { val: 2, emoji: '😕', label: t('mood_low') || 'Low', color: '#FFB74D' },
+    { val: 3, emoji: '😊', label: t('mood_good') || 'Good', color: '#FFD54F' },
+    { val: 4, emoji: '😄', label: t('mood_great') || 'Great', color: '#81C784' },
+    { val: 5, emoji: '🤩', label: t('mood_amazing') || 'Amazing', color: '#D4A017' },
   ];
 
   const energyLevels = [
-    { val: 1, emoji: '🔋', label: 'Drained' },
-    { val: 2, emoji: '🔋', label: 'Low' },
-    { val: 3, emoji: '🔋', label: 'Moderate' },
-    { val: 4, emoji: '⚡', label: 'High' },
-    { val: 5, emoji: '⚡', label: 'Energized' },
+    { val: 1, emoji: '🔋', label: t('energy_drained') || 'Drained' },
+    { val: 2, emoji: '🔋', label: t('energy_low') || 'Low' },
+    { val: 3, emoji: '🔋', label: t('energy_moderate') || 'Moderate' },
+    { val: 4, emoji: '⚡', label: t('energy_high') || 'High' },
+    { val: 5, emoji: '⚡', label: t('energy_energized') || 'Energized' },
   ];
 
   const prompts = [
-    "What are you most grateful for today?",
-    "What made you smile today?",
-    "What's one thing you did for your health today?",
-    "Describe a moment of peace you experienced.",
-    "What's a small win you had today?",
-    "How did you show kindness to yourself?",
-    "What would make tomorrow even better?",
+    t('prompt_gratitude') || "What are you most grateful for today?",
+    t('prompt_smile') || "What made you smile today?",
+    t('prompt_health') || "What's one thing you did for your health today?",
+    t('prompt_peace') || "Describe a moment of peace you experienced.",
+    t('prompt_win') || "What's a small win you had today?",
+    t('prompt_kindness') || "How did you show kindness to yourself?",
+    t('prompt_tomorrow') || "What would make tomorrow even better?",
   ];
   const todayPrompt = prompts[new Date().getDay()];
 
@@ -55,6 +61,7 @@ const JournalPage: React.FC = () => {
     setEntries(updated);
     localStorage.setItem('sajoma-journal', JSON.stringify(updated));
     setGratitude(''); setNotes(''); setMood(3); setEnergy(3);
+    alert(t('entry_saved') || 'Journal entry saved!');
   };
 
   const filteredEntries = searchQuery
@@ -63,11 +70,7 @@ const JournalPage: React.FC = () => {
 
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <button className="page-back" onClick={() => navigate('/dashboard')}>&#8249;</button>
-        <h1 className="page-header-title">{t('journal') || 'Journal'}</h1>
-        <div style={{ width: 32 }} />
-      </div>
+      <PageHeader title={t('journal') || 'Journal'} onOpenMenu={onOpenMenu} />
 
       <div className="tabs">
         <button className={`tab ${tab === 'write' ? 'active' : ''}`} onClick={() => setTab('write')}>✏️ {t('write') || 'Write'}</button>
@@ -78,13 +81,13 @@ const JournalPage: React.FC = () => {
         <>
           {/* Today's Prompt */}
           <div className="card card-gold" style={{ padding: 18, marginBottom: 20, textAlign: 'center' }}>
-            <p style={{ fontSize: '0.72rem', opacity: 0.8, marginBottom: 6 }}>Today's Prompt</p>
+            <p style={{ fontSize: '0.72rem', opacity: 0.8, marginBottom: 6 }}>{t('todays_prompt') || "Today's Prompt"}</p>
             <p style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4 }}>"{todayPrompt}"</p>
           </div>
 
           {/* Mood Selector */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-            <h3 className="section-title" style={{ marginBottom: 14 }}>How are you feeling?</h3>
+            <h3 className="section-title" style={{ marginBottom: 14 }}>{t('how_feeling') || 'How are you feeling?'}</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
               {moods.map(m => (
                 <button key={m.val} onClick={() => setMood(m.val)} style={{
@@ -102,7 +105,7 @@ const JournalPage: React.FC = () => {
 
           {/* Energy Level */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-            <h3 className="section-title" style={{ marginBottom: 14 }}>Energy Level</h3>
+            <h3 className="section-title" style={{ marginBottom: 14 }}>{t('energy_level') || 'Energy Level'}</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
               {energyLevels.map(e => (
                 <button key={e.val} onClick={() => setEnergy(e.val)} style={{
@@ -120,18 +123,18 @@ const JournalPage: React.FC = () => {
 
           {/* Gratitude */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-            <h3 className="section-title" style={{ marginBottom: 10 }}>🙏 Gratitude</h3>
-            <textarea className="input" rows={3} placeholder="What are you grateful for today?" value={gratitude} onChange={e => setGratitude(e.target.value)} style={{ resize: 'none' }} />
+            <h3 className="section-title" style={{ marginBottom: 10 }}>🙏 {t('gratitude') || 'Gratitude'}</h3>
+            <textarea className="input" rows={3} placeholder={t('gratitude_placeholder') || "What are you grateful for today?"} value={gratitude} onChange={e => setGratitude(e.target.value)} style={{ resize: 'none' }} />
           </div>
 
           {/* Free Writing */}
           <div className="card" style={{ padding: 20, marginBottom: 20 }}>
-            <h3 className="section-title" style={{ marginBottom: 10 }}>📝 Journal Entry</h3>
-            <textarea className="input" rows={5} placeholder="Write freely about your day..." value={notes} onChange={e => setNotes(e.target.value)} style={{ resize: 'none' }} />
+            <h3 className="section-title" style={{ marginBottom: 10 }}>📝 {t('journal_entry') || 'Journal Entry'}</h3>
+            <textarea className="input" rows={5} placeholder={t('write_something') || "Write freely about your day..."} value={notes} onChange={e => setNotes(e.target.value)} style={{ resize: 'none' }} />
           </div>
 
           <button className="btn btn-gold btn-full btn-lg" onClick={handleSave} disabled={!notes && !gratitude}>
-            Save Entry
+            {t('save_entry') || 'Save Entry'}
           </button>
         </>
       )}
@@ -139,13 +142,13 @@ const JournalPage: React.FC = () => {
       {tab === 'history' && (
         <>
           <div style={{ marginBottom: 16 }}>
-            <input className="input" placeholder="🔍 Search entries..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+            <input className="input" placeholder={t('search_entries') || "🔍 Search entries..."} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
           </div>
 
           {filteredEntries.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2rem', marginBottom: 8 }}>📓</p>
-              <p style={{ color: '#8D6E63' }}>No journal entries yet</p>
+              <p style={{ color: '#8D6E63' }}>{t('no_entries') || 'No journal entries yet'}</p>
             </div>
           ) : filteredEntries.map(entry => (
             <div key={entry.id} className="card" style={{ padding: 18, marginBottom: 10 }}>
@@ -160,7 +163,7 @@ const JournalPage: React.FC = () => {
               </div>
               {entry.gratitude && (
                 <div style={{ background: 'rgba(212,160,23,0.06)', borderRadius: 12, padding: '10px 14px', marginBottom: 8 }}>
-                  <p style={{ fontSize: '0.72rem', color: '#D4A017', fontWeight: 600, marginBottom: 2 }}>Gratitude</p>
+                  <p style={{ fontSize: '0.72rem', color: '#D4A017', fontWeight: 600, marginBottom: 2 }}>{t('gratitude') || 'Gratitude'}</p>
                   <p style={{ fontSize: '0.82rem', color: '#3E2723', margin: 0, lineHeight: 1.4 }}>{entry.gratitude}</p>
                 </div>
               )}
@@ -170,6 +173,7 @@ const JournalPage: React.FC = () => {
         </>
       )}
 
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); navigate('/login'); }} />
       <BottomNav />
     </div>
   );

@@ -1,39 +1,52 @@
 import React, { useState } from 'react';
+import { useTranslation } from '../hooks/useTranslation';
 
-interface OnboardingWizardProps { onComplete: () => void; }
+interface OnboardingWizardProps {
+  onComplete: () => void;
+}
 
 const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
+  const { t: _t } = useTranslation();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
   const steps = [
     {
-      icon: '🌟', title: 'Welcome to Sajoma Fitness', subtitle: 'Your personalized wellness journey starts here',
+      icon: '✨', title: 'Welcome to Sajoma!', subtitle: "Let's personalize your wellness journey in just a few steps.",
       type: 'welcome' as const,
     },
     {
-      icon: '🎯', title: "What's your main goal?", subtitle: 'We\'ll customize your experience',
+      icon: '🎯', title: "What's your main goal?", subtitle: "We'll customize your experience based on your target.",
       type: 'select' as const, key: 'goal',
-      options: [
-        { icon: '🏋️', label: 'Lose Weight' },
-        { icon: '💪', label: 'Build Muscle' },
-        { icon: '🧘', label: 'Stay Healthy' },
-        { icon: '🍎', label: 'Eat Better' },
-        { icon: '😴', label: 'Improve Sleep' },
-      ],
+      options: ['Lose Weight', 'Build Muscle', 'Stay Healthy', 'Eat Better', 'Improve Sleep'],
     },
     {
-      icon: '📊', title: 'How active are you?', subtitle: 'This helps us set realistic goals',
+      icon: '📈', title: "What's your fitness level?", subtitle: "Be honest, we all start somewhere!",
+      type: 'select' as const, key: 'level',
+      options: ['Beginner', 'Intermediate', 'Advanced'],
+    },
+    {
+      icon: '📊', title: "How active are you?", subtitle: "This helps us set realistic daily goals.",
       type: 'select' as const, key: 'activity',
-      options: [
-        { icon: '🛋️', label: 'Sedentary' },
-        { icon: '🚶', label: 'Lightly Active' },
-        { icon: '🏃', label: 'Moderately Active' },
-        { icon: '⚡', label: 'Very Active' },
-      ],
+      options: ['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active'],
     },
     {
-      icon: '🎉', title: "You're all set!", subtitle: 'Let\'s start your wellness journey',
+      icon: '🔥', title: "Preferred workout type?", subtitle: "What gets you moving and motivated?",
+      type: 'select' as const, key: 'workout_type',
+      options: ['Cardio', 'Strength', 'Yoga', 'HIIT', 'Mixed'],
+    },
+    {
+      icon: '🥗', title: "Do you follow a specific diet?", subtitle: "We'll suggest relevant meals and recipes.",
+      type: 'select' as const, key: 'diet',
+      options: ['No specific diet', 'Keto', 'Vegan', 'Vegetarian', 'Mediterranean', 'Gluten-free'],
+    },
+    {
+      icon: '⏰', title: "When do you prefer to work out?", subtitle: "When do you feel most energetic?",
+      type: 'select' as const, key: 'workout_time',
+      options: ['Morning', 'Afternoon', 'Evening', 'No preference'],
+    },
+    {
+      icon: '🎉', title: "You're all set!", subtitle: "We've created a personalized plan just for you. Ready to start?",
       type: 'complete' as const,
     },
   ];
@@ -41,58 +54,76 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const current = steps[step];
   const progress = ((step + 1) / steps.length) * 100;
 
+  const handleNext = () => {
+    if (step < steps.length - 1) setStep(step + 1);
+    else onComplete();
+  };
+
+  const handleBack = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: '#FFF0F5', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ 
+      position: 'fixed', inset: 0, zIndex: 10000,
+      background: 'var(--bg)', display: 'flex', flexDirection: 'column',
+      padding: '60px 24px 40px'
+    }}>
       {/* Progress Bar */}
-      <div style={{ padding: '16px 20px 0' }}>
-        <div style={{ height: 4, borderRadius: 2, background: 'rgba(212,160,23,0.12)' }}>
-          <div style={{ width: `${progress}%`, height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, #D4A017, #F0D060)', transition: 'width 0.4s ease' }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-          <span style={{ fontSize: '0.68rem', color: '#8D6E63' }}>Step {step + 1} of {steps.length}</span>
-          {step > 0 && <button onClick={() => setStep(step - 1)} style={{ fontSize: '0.72rem', color: '#D4A017', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>Back</button>}
-        </div>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 6, background: 'rgba(212,160,23,0.1)' }}>
+        <div style={{ 
+          width: `${progress}%`, height: '100%', 
+          background: 'var(--gold-gradient)', transition: 'width 0.4s ease' 
+        }} />
       </div>
 
-      {/* Content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px 24px' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16 }}>{current.icon}</div>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3E2723', textAlign: 'center', marginBottom: 8 }}>{current.title}</h1>
-        <p style={{ fontSize: '0.88rem', color: '#8D6E63', textAlign: 'center', marginBottom: 32, maxWidth: 300 }}>{current.subtitle}</p>
+      {/* Back Button */}
+      {step > 0 && step < steps.length - 1 && (
+        <button onClick={handleBack} style={{ 
+          position: 'absolute', top: 24, left: 20, background: 'none', border: 'none', 
+          fontSize: '1.5rem', color: 'var(--text)', cursor: 'pointer' 
+        }}>←</button>
+      )}
 
-        {current.type === 'select' && current.options && (
-          <div style={{ width: '100%', maxWidth: 340, display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+        <div style={{ fontSize: '4rem', marginBottom: 24, animation: 'float 3s ease-in-out infinite' }}>{current.icon}</div>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--gold)', marginBottom: 12 }}>{current.title}</h1>
+        <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: 40, maxWidth: 320, lineHeight: 1.6 }}>{current.subtitle}</p>
+
+        {current.type === 'select' && (
+          <div style={{ width: '100%', maxWidth: 360, display: 'flex', flexDirection: 'column', gap: 12 }}>
             {current.options.map(opt => (
-              <button key={opt.label} onClick={() => setAnswers({ ...answers, [current.key!]: opt.label })} style={{
-                display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px',
-                borderRadius: 16, border: answers[current.key!] === opt.label ? '2px solid #D4A017' : '1.5px solid rgba(212,160,23,0.1)',
-                background: answers[current.key!] === opt.label ? 'rgba(212,160,23,0.08)' : 'white',
-                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s ease',
-                boxShadow: answers[current.key!] === opt.label ? '0 4px 16px rgba(212,160,23,0.12)' : '0 2px 8px rgba(62,39,35,0.04)',
+              <button key={opt} onClick={() => {
+                setAnswers({ ...answers, [current.key!]: opt });
+                setTimeout(handleNext, 300);
+              }} style={{
+                padding: '18px 24px', borderRadius: 20, border: answers[current.key!] === opt ? '2.5px solid var(--gold)' : '1.5px solid rgba(212,160,23,0.1)',
+                background: answers[current.key!] === opt ? 'rgba(212,160,23,0.08)' : 'white',
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
+                boxShadow: answers[current.key!] === opt ? 'var(--shadow-gold)' : 'var(--shadow-sm)',
+                textAlign: 'left', fontWeight: 700, color: 'var(--text)'
               }}>
-                <span style={{ fontSize: '1.3rem' }}>{opt.icon}</span>
-                <span style={{ fontSize: '0.92rem', fontWeight: 600, color: '#3E2723' }}>{opt.label}</span>
-                {answers[current.key!] === opt.label && <span style={{ marginLeft: 'auto', color: '#D4A017', fontWeight: 700 }}>&#10003;</span>}
+                {opt}
               </button>
             ))}
           </div>
         )}
+
+        {(current.type === 'welcome' || current.type === 'complete') && (
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleNext} style={{ maxWidth: 360 }}>
+            {current.type === 'welcome' ? 'Get Started' : "Let's Go!"}
+          </button>
+        )}
       </div>
 
-      {/* Bottom Button */}
-      <div style={{ padding: '16px 24px 32px' }}>
-        <button onClick={() => {
-          if (step < steps.length - 1) setStep(step + 1);
-          else onComplete();
-        }} style={{
-          width: '100%', padding: '16px 0', borderRadius: 16, border: 'none', cursor: 'pointer',
-          background: 'linear-gradient(135deg, #D4A017, #C5961B)', color: 'white',
-          fontSize: '1rem', fontWeight: 700, fontFamily: 'inherit',
-          boxShadow: '0 4px 16px rgba(212,160,23,0.3)',
-        }}>
-          {current.type === 'complete' ? "Let's Go!" : 'Continue'}
-        </button>
-      </div>
+      {/* Manual Continue Button for select steps if not auto-advancing */}
+      {current.type === 'select' && !answers[current.key!] && (
+        <div style={{ marginTop: 20, width: '100%', maxWidth: 360, alignSelf: 'center' }}>
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleNext} disabled={!answers[current.key!]}>
+            Continue
+          </button>
+        </div>
+      )}
     </div>
   );
 };

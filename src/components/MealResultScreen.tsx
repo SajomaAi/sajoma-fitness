@@ -1,9 +1,12 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
-const MealResultScreen: React.FC = () => {
+const MealResultScreen: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

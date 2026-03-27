@@ -1,13 +1,19 @@
+interface SettingsPageProps {
+  onOpenMenu: () => void;
+  onLogout?: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
-interface SettingsPageProps { onLogout?: () => void; }
 
-const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
+const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => {
   const { t, language, changeLanguage } = useTranslation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -21,6 +27,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
   const handleLogout = () => {
     localStorage.removeItem('sajoma-token');
     localStorage.removeItem('sajoma-user');
+    localStorage.removeItem('sajoma-loggedIn');
     if (onLogout) onLogout();
     navigate('/login');
   };
@@ -52,7 +59,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
 
   return (
     <div className="page animate-in">
-      <h1 className="page-title" style={{ marginBottom: 20 }}>{t('profile') || 'Profile'}</h1>
+      <PageHeader title={t('settings') || 'Settings'} onOpenMenu={onOpenMenu} />
 
       {/* Profile Card */}
       <div className="card card-gold" style={{ padding: 22, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -63,7 +70,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
           <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 2 }}>{userName}</h2>
           <p style={{ fontSize: '0.78rem', opacity: 0.8 }}>{userEmail}</p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.2)', padding: '3px 10px', borderRadius: 8, marginTop: 4, fontSize: '0.68rem', fontWeight: 600 }}>
-            ⭐ Free Plan
+            ⭐ {t('free_plan') || 'Free Plan'}
           </div>
         </div>
       </div>
@@ -72,8 +79,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
       <div className="card" style={{ padding: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }} onClick={() => navigate('/subscription')}>
         <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'var(--shadow-gold)' }}>👑</div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#3E2723' }}>Upgrade to Premium</div>
-          <div style={{ fontSize: '0.75rem', color: '#8D6E63' }}>Unlock all features &middot; 30-day free trial</div>
+          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#3E2723' }}>{t('upgrade_premium') || 'Upgrade to Premium'}</div>
+          <div style={{ fontSize: '0.75rem', color: '#8D6E63' }}>{t('unlock_all_features') || 'Unlock all features'} &middot; 30-day free trial</div>
         </div>
         <span style={{ color: '#D4A017', fontWeight: 700 }}>&#8250;</span>
       </div>
@@ -87,7 +94,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
           </div>
         } />
         <SettingRow icon="🔔" label={t('notifications') || 'Notifications'} right={<Toggle on={notifications} onToggle={() => setNotifications(!notifications)} />} />
-        <SettingRow icon="🌙" label="Dark Mode" right={<Toggle on={darkMode} onToggle={() => setDarkMode(!darkMode)} />} />
+        <SettingRow icon="🌙" label={t('dark_mode') || 'Dark Mode'} right={<Toggle on={darkMode} onToggle={() => setDarkMode(!darkMode)} />} />
       </div>
 
       <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
@@ -109,6 +116,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
 
       <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#BCAAA4', marginBottom: 20 }}>Sajoma Fitness v1.0.0</p>
 
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={handleLogout} />
       <BottomNav />
     </div>
   );

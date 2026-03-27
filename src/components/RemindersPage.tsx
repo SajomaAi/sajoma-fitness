@@ -1,11 +1,18 @@
+interface PageProps {
+  onOpenMenu: () => void;
+}
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
+import PageHeader from './PageHeader';
+import HamburgerMenu from './HamburgerMenu';
 
-const RemindersPage: React.FC = () => {
+
+const RemindersPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [reminders, setReminders] = useState({
     breakfast: { on: true, time: '08:00' },
     lunch: { on: true, time: '12:30' },
@@ -55,52 +62,54 @@ const RemindersPage: React.FC = () => {
     );
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('sajoma-loggedIn');
+    navigate('/login');
+  };
+
   return (
     <div className="page animate-in">
-      <div className="page-header">
-        <button className="page-back" onClick={() => navigate('/settings')}>&#8249;</button>
-        <h1 className="page-header-title">{t('reminders') || 'Reminders'}</h1>
-        <div style={{ width: 32 }} />
-      </div>
+      <PageHeader title={t('reminders') || 'Reminders'} onOpenMenu={onOpenMenu} />
 
       {/* Info Card */}
       <div className="card card-gold" style={{ padding: 18, marginBottom: 20, textAlign: 'center' }}>
         <p style={{ fontSize: '1.3rem', marginBottom: 6 }}>🔔</p>
-        <p style={{ fontSize: '0.88rem', fontWeight: 700 }}>Stay on Track</p>
-        <p style={{ fontSize: '0.78rem', opacity: 0.85 }}>Set reminders to build healthy habits</p>
+        <p style={{ fontSize: '0.88rem', fontWeight: 700 }}>{t('stay_on_track') || 'Stay on Track'}</p>
+        <p style={{ fontSize: '0.78rem', opacity: 0.85 }}>{t('set_reminders_desc') || 'Set reminders to build healthy habits'}</p>
       </div>
 
       {/* Meal Reminders */}
       <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
-        <h3 className="section-title" style={{ paddingTop: 12 }}>Meal Reminders</h3>
-        <ReminderRow icon="🥣" label="Breakfast" desc="Start your day right" rKey="breakfast" />
-        <ReminderRow icon="🥗" label="Lunch" desc="Midday nutrition" rKey="lunch" />
-        <ReminderRow icon="🍽️" label="Dinner" desc="Evening meal" rKey="dinner" />
+        <h3 className="section-title" style={{ paddingTop: 12 }}>{t('meal_reminders') || 'Meal Reminders'}</h3>
+        <ReminderRow icon="🥣" label={t('breakfast') || 'Breakfast'} desc={t('breakfast_desc') || 'Start your day right'} rKey="breakfast" />
+        <ReminderRow icon="🥗" label={t('lunch') || 'Lunch'} desc={t('lunch_desc') || 'Midday nutrition'} rKey="lunch" />
+        <ReminderRow icon="🍽️" label={t('dinner') || 'Dinner'} desc={t('dinner_desc') || 'Evening meal'} rKey="dinner" />
       </div>
 
       {/* Wellness Reminders */}
       <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
-        <h3 className="section-title" style={{ paddingTop: 12 }}>Wellness</h3>
-        <ReminderRow icon="💧" label="Water" desc="Stay hydrated" rKey="water" />
-        <ReminderRow icon="💪" label="Workout" desc="Time to move" rKey="workout" />
-        <ReminderRow icon="🌅" label="Morning Check-in" desc="Daily wellness check" rKey="morning" />
+        <h3 className="section-title" style={{ paddingTop: 12 }}>{t('wellness') || 'Wellness'}</h3>
+        <ReminderRow icon="💧" label={t('water') || 'Water'} desc={t('water_desc') || 'Stay hydrated'} rKey="water" />
+        <ReminderRow icon="💪" label={t('workout') || 'Workout'} desc={t('workout_desc') || 'Time to move'} rKey="workout" />
+        <ReminderRow icon="🌅" label={t('morning_checkin') || 'Morning Check-in'} desc={t('morning_checkin_desc') || 'Daily wellness check'} rKey="morning" />
       </div>
 
       {/* Smart Reminders */}
       <div className="card" style={{ padding: '4px 18px', marginBottom: 20 }}>
-        <h3 className="section-title" style={{ paddingTop: 12 }}>Smart Reminders</h3>
+        <h3 className="section-title" style={{ paddingTop: 12 }}>{t('smart_reminders') || 'Smart Reminders'}</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 0' }}>
           <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(212,160,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🧠</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>AI Smart Reminders</div>
-            <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>Learns your habits and reminds you at the best times</div>
+            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{t('ai_smart_reminders') || 'AI Smart Reminders'}</div>
+            <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>{t('ai_smart_reminders_desc') || 'Learns your habits and reminds you at the best times'}</div>
           </div>
           <Toggle on={reminders.smart.on} onToggle={() => toggle('smart')} />
         </div>
       </div>
 
-      <button className="btn btn-gold btn-full btn-lg">Save Preferences</button>
+      <button className="btn btn-gold btn-full btn-lg" style={{ marginBottom: 40 }}>{t('save_preferences') || 'Save Preferences'}</button>
 
+      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={handleLogout} />
       <BottomNav />
     </div>
   );
