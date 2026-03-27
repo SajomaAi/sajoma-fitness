@@ -41,9 +41,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
             marginRight: '10px',
             fontWeight: 'bold'
           }}>
-            O
+            S
           </div>
-          OLEVA
+          Sajoma Fitness
         </Link>
       </div>
       <div style={{

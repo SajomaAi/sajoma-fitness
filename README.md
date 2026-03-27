@@ -1,50 +1,51 @@
-# React + TypeScript + Vite
+# Sajoma Fitness
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Your Personal Wellness Coach** — A bilingual (EN/ES) iOS wellness app built with React + Vite + TypeScript + Tailwind CSS + Capacitor.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Phase 1 (Current)
+- **Exercise Tracking** — Log workouts by type, duration, calories, and intensity; Apple HealthKit integration; weekly summaries
+- **Barcode Food Scanner** — Scan barcodes via camera; OpenFoodFacts API lookup; 40+ Latino/Hispanic cultural foods database
+- **Push Notification Reminders** — Configurable meal, water, and workout reminders; morning wellness check-in
+- **Progress Photos** — Take/upload weekly photos; before/after comparison view; local storage
+- **Journaling** — Daily mood, energy, gratitude entries; rotating prompts; searchable history
+- **Bilingual EN/ES** — Full Spanish translation; language toggle in settings; cultural meal database
+- **Subscription Tiers** — Free / Basic Premium ($9.99/mo) / Full Premium ($14.99/mo) UI with 30-day trial messaging
 
-## Expanding the ESLint configuration
+### Core Features
+- AI-powered meal photo analysis
+- Water intake tracking
+- Health metrics dashboard
+- Personalized wellness tips
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 18 + TypeScript |
+| Build | Vite 6 |
+| Styling | Tailwind CSS + inline styles |
+| Mobile | Capacitor (iOS) |
+| i18n | Custom hook + JSON translations |
+| Storage | localStorage (Phase 1) |
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Bundle ID
+`com.sajomafitness.app`
+
+## Getting Started
+
+```bash
+pnpm install
+pnpm dev          # Web development server
+pnpm build        # Production build
+npx cap sync ios  # Sync to iOS project
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## iOS Requirements
+- Xcode 14+
+- iOS 13+
+- CocoaPods
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Contact
+info@sajomafitness.app

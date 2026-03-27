@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.oleva.app',
-  appName: 'OLEVA',
+  appId: 'com.sajomafitness.app',
+  appName: 'Sajoma Fitness',
   webDir: 'dist',
   server: {
     allowNavigation: ['*'],
@@ -24,14 +24,14 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 2000,
       launchAutoHide: true,
-      backgroundColor: '#6B8E23',
+      backgroundColor: '#F8B4C8',
       showSpinner: false,
       splashFullScreen: true,
       splashImmersive: true,
     },
     StatusBar: {
       style: 'DARK',
-      backgroundColor: '#6B8E23',
+      backgroundColor: '#F8B4C8',
     },
     Keyboard: {
       resize: 'body',

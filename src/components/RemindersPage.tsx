@@ -31,14 +31,14 @@ const RemindersPage: React.FC = () => {
   const [reminders, setReminders] = useState<ReminderConfig[]>(defaultReminders);
 
   useEffect(() => {
-    const saved = localStorage.getItem('oleva-reminders');
+    const saved = localStorage.getItem('sajoma-reminders');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         setReminders(parsed);
       } catch { /* use defaults */ }
     }
-    const smart = localStorage.getItem('oleva-smart-reminders');
+    const smart = localStorage.getItem('sajoma-smart-reminders');
     if (smart !== null) setSmartReminders(smart === 'true');
 
     // Check notification permission
@@ -68,8 +68,8 @@ const RemindersPage: React.FC = () => {
   };
 
   const saveSettings = () => {
-    localStorage.setItem('oleva-reminders', JSON.stringify(reminders));
-    localStorage.setItem('oleva-smart-reminders', String(smartReminders));
+    localStorage.setItem('sajoma-reminders', JSON.stringify(reminders));
+    localStorage.setItem('sajoma-smart-reminders', String(smartReminders));
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
   };

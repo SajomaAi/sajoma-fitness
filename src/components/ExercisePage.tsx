@@ -38,9 +38,9 @@ const ExercisePage: React.FC = () => {
   const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('oleva-workouts');
+    const saved = localStorage.getItem('sajoma-workouts');
     if (saved) setWorkouts(JSON.parse(saved));
-    const hkStatus = localStorage.getItem('oleva-healthkit-connected');
+    const hkStatus = localStorage.getItem('sajoma-healthkit-connected');
     if (hkStatus === 'true') setHealthKitConnected(true);
   }, []);
 
@@ -59,7 +59,7 @@ const ExercisePage: React.FC = () => {
     };
     const updated = [workout, ...workouts];
     setWorkouts(updated);
-    localStorage.setItem('oleva-workouts', JSON.stringify(updated));
+    localStorage.setItem('sajoma-workouts', JSON.stringify(updated));
     setShowSuccess(true);
     setWorkoutName('');
     setDuration('');
@@ -82,7 +82,7 @@ const ExercisePage: React.FC = () => {
     setSyncing(true);
     setTimeout(() => {
       setHealthKitConnected(true);
-      localStorage.setItem('oleva-healthkit-connected', 'true');
+      localStorage.setItem('sajoma-healthkit-connected', 'true');
       setSyncing(false);
     }, 2000);
   };
@@ -102,7 +102,7 @@ const ExercisePage: React.FC = () => {
   const deleteWorkout = (id: string) => {
     const updated = workouts.filter(w => w.id !== id);
     setWorkouts(updated);
-    localStorage.setItem('oleva-workouts', JSON.stringify(updated));
+    localStorage.setItem('sajoma-workouts', JSON.stringify(updated));
   };
 
   return (

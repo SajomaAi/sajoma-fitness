@@ -15,7 +15,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <div className="flex-container" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ flex: '1', padding: '0 20px' }}>
               <h1 style={{ fontSize: '3rem', marginBottom: '1.5rem', color: 'var(--dark-color)' }}>
-                OLEVA - Wellness Simplified
+                Sajoma Fitness
               </h1>
               <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--dark-color)' }}>
                 Track meals, monitor health metrics, and receive expert-backed wellness suggestions tailored for your body's changing needs.
@@ -32,7 +32,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             <div style={{ flex: '1', padding: '0 20px', textAlign: 'center' }}>
               <img 
                 src="/images/dashboard_screen.png" 
-                alt="OLEVA App Dashboard" 
+                alt="Sajoma Fitness App Dashboard" 
                 style={{ 
                   maxWidth: '100%', 
                   height: 'auto',
@@ -50,7 +50,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <div className="container">
           <h2 className="section-title">Key Features</h2>
           <p className="section-subtitle">
-            OLEVA combines cutting-edge technology with expert nutritional guidance to help adults achieve their wellness goals.
+            Sajoma Fitness combines cutting-edge technology with expert nutritional guidance to help adults achieve their wellness goals.
           </p>
 
           <div className="flex-container features-container" style={{ justifyContent: 'space-between' }}>
@@ -66,7 +66,7 @@ const HomePage: React.FC<HomePageProps> = () => {
                 </div>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Meal Photo Analysis</h3>
                 <p>
-                  Simply take a photo of your meal and OLEVA identifies ingredients, analyzes nutritional content, and provides expert-backed suggestions.
+                  Simply take a photo of your meal and Sajoma Fitness identifies ingredients, analyzes nutritional content, and provides expert-backed suggestions.
                 </p>
               </div>
             </div>
@@ -113,7 +113,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <div className="container">
           <h2 className="section-title">How It Works</h2>
           <p className="section-subtitle">
-            OLEVA makes wellness tracking simple and effective with a user-friendly approach designed for all adults.
+            Sajoma Fitness makes wellness tracking simple and effective with a user-friendly approach designed for all adults.
           </p>
 
           <div className="flex-container" style={{ justifyContent: 'center' }}>
@@ -213,7 +213,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <div className="container">
           <h2 className="section-title">What Our Users Say</h2>
           <p className="section-subtitle">
-            Hear from adults who have transformed their wellness journey with OLEVA.
+            Hear from adults who have transformed their wellness journey with Sajoma Fitness.
           </p>
 
           <div className="flex-container" style={{ justifyContent: 'center' }}>
@@ -221,7 +221,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             <div className="testimonial-card" style={{ flex: '1', minWidth: '300px', maxWidth: '400px', padding: '20px' }}>
               <div className="card" style={{ height: '100%' }}>
                 <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                  "OLEVA has completely changed how I approach nutrition. The meal analysis feature helped me identify inflammatory foods that were causing my joint pain."
+                  "Sajoma Fitness has completely changed how I approach nutrition. The meal analysis feature helped me identify inflammatory foods that were causing my joint pain."
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ 
@@ -279,7 +279,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             <div className="testimonial-card" style={{ flex: '1', minWidth: '300px', maxWidth: '400px', padding: '20px' }}>
               <div className="card" style={{ height: '100%' }}>
                 <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                  "As someone over 60, I appreciate how OLEVA is designed with simplicity in mind. The expert tips have helped me make better choices without feeling overwhelmed."
+                  "As someone over 60, I appreciate how Sajoma Fitness is designed with simplicity in mind. The expert tips have helped me make better choices without feeling overwhelmed."
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ 
@@ -319,7 +319,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             Start Your Wellness Journey Today
           </h2>
           <p style={{ fontSize: '1.2rem', marginBottom: '2rem', maxWidth: '700px', margin: '0 auto 2rem' }}>
-            Join thousands of adults who are taking control of their health with OLEVA's personalized approach to wellness.
+            Join thousands of adults who are taking control of their health with Sajoma Fitness' personalized approach to wellness.
           </p>
           <Link to="/login" className="btn" style={{ 
             backgroundColor: 'white', 

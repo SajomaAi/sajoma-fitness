@@ -18,7 +18,7 @@ const Footer: React.FC<FooterProps> = () => {
         }}>
           {/* Logo and Description */}
           <div style={{ flex: '1', minWidth: '250px', marginBottom: '30px', paddingRight: '20px' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>OLEVA</h2>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>Sajoma Fitness</h2>
             <p style={{ color: 'var(--gray-color)', lineHeight: '1.6' }}>
               Wellness simplified for adults 40+. Track meals, monitor health metrics, and receive expert-backed suggestions.
             </p>
@@ -48,7 +48,7 @@ const Footer: React.FC<FooterProps> = () => {
             <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Contact</h3>
             <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
               <li style={{ marginBottom: '10px', color: 'var(--gray-color)' }}>
-                Email: info@oleva.com
+                Email: info@sajomafitness.app
               </li>
               <li style={{ marginBottom: '10px', color: 'var(--gray-color)' }}>
                 Phone: (555) 123-4567
@@ -165,7 +165,7 @@ const Footer: React.FC<FooterProps> = () => {
           paddingTop: '20px',
           color: 'var(--gray-color)'
         }}>
-          <p>&copy; {new Date().getFullYear()} OLEVA. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Sajoma Fitness. All rights reserved.</p>
         </div>
       </div>
     </footer>

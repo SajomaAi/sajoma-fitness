@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>OLEVA</string>
+        <string>Sajoma Fitness</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -48,13 +48,13 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>OLEVA needs access to your camera to take photos of your meals for nutritional tracking.</string>
+	<string>Sajoma Fitness needs access to your camera to take photos of your meals for nutritional tracking.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>OLEVA needs access to your photo library to select meal photos for nutritional tracking.</string>
+	<string>Sajoma Fitness needs access to your photo library to select meal photos for nutritional tracking.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>OLEVA needs permission to save photos to your photo library.</string>
+	<string>Sajoma Fitness needs permission to save photos to your photo library.</string>
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>OLEVA would like to send you reminders for meals, water intake, and health check-ins.</string>
+	<string>Sajoma Fitness would like to send you reminders for meals, water intake, and health check-ins.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

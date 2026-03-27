@@ -12,13 +12,13 @@ const loadedTranslations: Translations = translations;
 export const useTranslation = () => {
   const [language, setLanguage] = useState<Language>(() => {
     // Load language from localStorage if available
-    const savedLanguage = localStorage.getItem('oleva-language') as Language;
+    const savedLanguage = localStorage.getItem('sajoma-language') as Language;
     return savedLanguage && ['en', 'es'].includes(savedLanguage) ? savedLanguage : 'en';
   });
 
   useEffect(() => {
     // Save language preference to localStorage
-    localStorage.setItem('oleva-language', language);
+    localStorage.setItem('sajoma-language', language);
   }, [language]);
 
   const t = (key: string, replacements?: { [key: string]: string | number }) => {

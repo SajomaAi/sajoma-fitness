@@ -75,7 +75,7 @@ const JournalPage: React.FC = () => {
   const todayPrompt = prompts[new Date().getDate() % prompts.length];
 
   useEffect(() => {
-    const saved = localStorage.getItem('oleva-journal');
+    const saved = localStorage.getItem('sajoma-journal');
     if (saved) {
       try { setEntries(JSON.parse(saved)); } catch { /* ignore */ }
     }
@@ -96,7 +96,7 @@ const JournalPage: React.FC = () => {
     };
     const updated = [entry, ...entries];
     setEntries(updated);
-    localStorage.setItem('oleva-journal', JSON.stringify(updated));
+    localStorage.setItem('sajoma-journal', JSON.stringify(updated));
     setShowSuccess(true);
     setGratitude('');
     setNotes('');
@@ -109,7 +109,7 @@ const JournalPage: React.FC = () => {
   const deleteEntry = (id: string) => {
     const updated = entries.filter(e => e.id !== id);
     setEntries(updated);
-    localStorage.setItem('oleva-journal', JSON.stringify(updated));
+    localStorage.setItem('sajoma-journal', JSON.stringify(updated));
   };
 
   const filteredEntries = searchQuery

@@ -74,7 +74,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         What's Your Primary Goal?
       </h2>
       <p style={{ color: '#666', marginBottom: '32px', fontSize: '1rem' }}>
-        Help us personalize your OLEVA experience
+        Help us personalize your Sajoma Fitness experience
       </p>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '400px', margin: '0 auto' }}>
@@ -233,7 +233,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         Notification Preferences
       </h2>
       <p style={{ color: '#666', marginBottom: '32px', fontSize: '1rem' }}>
-        Choose how you'd like OLEVA to keep you on track
+        Choose how you'd like Sajoma Fitness to keep you on track
       </p>
       
       <div style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'left' }}>
@@ -369,7 +369,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             marginBottom: '16px'
           }}>
             <h1 style={{ fontSize: '1.5rem', margin: 0, color: '#2E7D32' }}>
-              Welcome to OLEVA
+              Welcome to Sajoma Fitness
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <span style={{ fontSize: '0.9rem', color: '#666' }}>

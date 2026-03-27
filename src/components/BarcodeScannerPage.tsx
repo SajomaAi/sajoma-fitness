@@ -137,7 +137,7 @@ const BarcodeScannerPage: React.FC = () => {
   };
 
   const addToMealLog = (food: NutritionData | CulturalFood) => {
-    const existing = JSON.parse(localStorage.getItem('oleva-meal-log') || '[]');
+    const existing = JSON.parse(localStorage.getItem('sajoma-meal-log') || '[]');
     const entry = 'name_en' in food ? {
       name: language === 'es' ? food.name_es : food.name_en,
       calories: food.calories, protein: food.protein, carbs: food.carbs, fat: food.fat,
@@ -147,7 +147,7 @@ const BarcodeScannerPage: React.FC = () => {
       timestamp: Date.now(), date: new Date().toLocaleDateString(),
     };
     existing.unshift(entry);
-    localStorage.setItem('oleva-meal-log', JSON.stringify(existing));
+    localStorage.setItem('sajoma-meal-log', JSON.stringify(existing));
     setShowAdded(true);
     setTimeout(() => setShowAdded(false), 2000);
   };

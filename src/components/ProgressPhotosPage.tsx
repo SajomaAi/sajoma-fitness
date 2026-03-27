@@ -24,7 +24,7 @@ const ProgressPhotosPage: React.FC = () => {
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('oleva-progress-photos');
+    const saved = localStorage.getItem('sajoma-progress-photos');
     if (saved) {
       try { setPhotos(JSON.parse(saved)); } catch { /* ignore */ }
     }
@@ -52,7 +52,7 @@ const ProgressPhotosPage: React.FC = () => {
     };
     const updated = [photo, ...photos];
     setPhotos(updated);
-    localStorage.setItem('oleva-progress-photos', JSON.stringify(updated));
+    localStorage.setItem('sajoma-progress-photos', JSON.stringify(updated));
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
   };
@@ -60,7 +60,7 @@ const ProgressPhotosPage: React.FC = () => {
   const deletePhoto = (id: string) => {
     const updated = photos.filter(p => p.id !== id);
     setPhotos(updated);
-    localStorage.setItem('oleva-progress-photos', JSON.stringify(updated));
+    localStorage.setItem('sajoma-progress-photos', JSON.stringify(updated));
     if (compareA?.id === id) setCompareA(null);
     if (compareB?.id === id) setCompareB(null);
   };

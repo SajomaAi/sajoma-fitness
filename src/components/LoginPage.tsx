@@ -105,20 +105,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <div style={{
             width: '100px',
             height: '100px',
-            borderRadius: '50%',
-            backgroundColor: '#6b8e23',
+            borderRadius: '22px',
+            background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%)',
             color: 'white',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.5rem',
+            fontSize: '2.5rem',
             fontWeight: 'bold',
-            margin: '0 auto 1rem'
+            margin: '0 auto 1rem',
+            boxShadow: '0 4px 12px rgba(212,160,23,0.4)'
           }}>
-            OLEVA
+            🏃‍♀️
           </div>
           <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>
-            {isSignUp ? 'Join OLEVA' : 'Welcome to OLEVA'}
+            {isSignUp ? 'Join Sajoma Fitness' : 'Welcome to Sajoma Fitness'}
           </h2>
           <p style={{ color: '#666', fontSize: '0.9rem' }}>
             {isSignUp ? 'Start your wellness journey today' : 'Your wellness journey starts here'}
