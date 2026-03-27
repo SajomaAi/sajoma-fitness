@@ -11,7 +11,7 @@ interface HamburgerMenuProps {
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, language, changeLanguage } = useTranslation();
 
   const menuItems = [
     { path: '/dashboard', icon: '🏠', label: t('dashboard') || 'Dashboard' },
@@ -54,7 +54,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose, onLogout
           boxShadow: '-5px 0 20px rgba(0,0,0,0.1)'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="/sajoma-icon.png" alt="Sajoma" style={{ width: 36, height: 36, borderRadius: 10 }} />
             <span style={{ fontWeight: 800, color: 'var(--primary-gold)', fontSize: '1.1rem' }}>Sajoma Fitness</span>
@@ -65,6 +65,27 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose, onLogout
           >
             ×
           </button>
+        </div>
+
+        {/* Language Toggle */}
+        <div style={{ background: 'white', borderRadius: 16, padding: '14px 16px', marginBottom: 20, boxShadow: 'var(--shadow-sm)', border: '1.5px solid rgba(212,160,23,0.2)' }}>
+          <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 0' }}>
+            🌐 {t('language') || 'Language'}
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => changeLanguage('en')}
+              style={{ flex: 1, padding: '10px 0', borderRadius: 12, border: 'none', background: language === 'en' ? 'var(--gold-gradient)' : 'var(--bg-light)', color: language === 'en' ? 'white' : 'var(--text-dark)', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: language === 'en' ? 'var(--shadow-gold)' : 'none' }}
+            >
+              🇺🇸 English
+            </button>
+            <button
+              onClick={() => changeLanguage('es')}
+              style={{ flex: 1, padding: '10px 0', borderRadius: 12, border: 'none', background: language === 'es' ? 'var(--gold-gradient)' : 'var(--bg-light)', color: language === 'es' ? 'white' : 'var(--text-dark)', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: language === 'es' ? 'var(--shadow-gold)' : 'none' }}
+            >
+              🇲🇽 Español
+            </button>
+          </div>
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto' }}>

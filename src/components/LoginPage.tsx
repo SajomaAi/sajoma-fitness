@@ -107,7 +107,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       </div>
 
       <p style={{ fontSize: '0.72rem', color: '#BCAAA4', marginTop: 24, textAlign: 'center', lineHeight: 1.5 }}>
-        {t('terms_notice') || 'By continuing, you agree to our Terms of Service and Privacy Policy'}
+        {t('terms_notice') || 'By continuing, you agree to our Terms and Privacy Policy'}
       </p>
     </div>
   );
