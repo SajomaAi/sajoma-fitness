@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import BottomNav from './BottomNav';
 
 interface DashboardPageProps {}
 
@@ -180,7 +181,7 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '20px' }}>
+    <div className="container" style={{ padding: '20px', paddingBottom: '80px' }}>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>{t('hello_name', { name: userData.name })}</h1>
@@ -332,6 +333,26 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
         </button>
       </div>
 
+      {/* Quick Access Grid */}
+      <h2 style={{ fontSize: '1.2rem', marginBottom: '12px' }}>{t('quick_actions')}</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
+        {[
+          { to: '/exercise', icon: '💪', label: t('exercise'), color: '#E53935' },
+          { to: '/barcode-scanner', icon: '📱', label: t('barcode_scanner'), color: '#1E88E5' },
+          { to: '/journal', icon: '📓', label: t('journal'), color: '#8E24AA' },
+          { to: '/progress-photos', icon: '📸', label: t('progress_photos'), color: '#FB8C00' },
+          { to: '/reminders', icon: '🔔', label: t('reminders'), color: '#43A047' },
+          { to: '/subscription', icon: '⭐', label: t('premium'), color: '#FF9800' },
+        ].map((item, i) => (
+          <Link key={i} to={item.to} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="card" style={{ padding: '14px 8px', textAlign: 'center', transition: 'transform 0.2s ease' }}>
+              <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '6px' }}>{item.icon}</span>
+              <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#495057' }}>{item.label}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
       {/* Wellness Tip of the Day */}
       <div className="card" style={{ 
         marginBottom: '24px',
@@ -348,55 +369,7 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
         </p>
       </div>
 
-      {/* Bottom Navigation */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-around',
-        marginTop: '40px',
-        padding: '16px 0',
-        borderTop: '1px solid var(--gray-color)'
-      }}>
-        <Link to="/dashboard" style={{ 
-          textDecoration: "none", 
-          color: "var(--primary-color)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
-          <span style={{ fontSize: "1.5rem", marginBottom: "4px" }}>🏠</span>
-          <span style={{ fontSize: "0.8rem" }}>{t("home")}</span>
-        </Link>
-        <Link to="/meal-logger" style={{ 
-          textDecoration: "none", 
-          color: "var(--text-gray)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
-          <span style={{ fontSize: "1.5rem", marginBottom: "4px" }}>📷</span>
-          <span style={{ fontSize: "0.8rem" }}>{t("meals")}</span>
-        </Link>
-        <Link to="/water-tracker" style={{ 
-          textDecoration: "none", 
-          color: "var(--text-gray)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
-          <span style={{ fontSize: "1.5rem", marginBottom: "4px" }}>💧</span>
-          <span style={{ fontSize: "0.8rem" }}>{t("water_nav")}</span>
-        </Link>
-        <Link to="/health-tracker" style={{ 
-          textDecoration: "none", 
-          color: "var(--text-gray)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
-          <span style={{ fontSize: "1.5rem", marginBottom: "4px" }}>📊</span>
-          <span style={{ fontSize: "0.8rem" }}>{t("health")}</span>
-        </Link>
-      </div>
+      <BottomNav />
     </div>
   );
 };
