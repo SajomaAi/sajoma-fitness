@@ -44,8 +44,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           src={assetUrl('/sajoma-logo.png')}
           alt="Sajoma Fitness"
           style={{
-            width: 120, height: 120, marginBottom: 16,
-            filter: 'drop-shadow(0 6px 20px rgba(212,175,55,0.35))',
+            width: 360, height: 360, marginBottom: 8,
+            filter: 'drop-shadow(0 10px 35px rgba(212,175,55,0.4))',
+            maxWidth: '85vw',
           }}
         />
         <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#212529' }}>Sajoma Fitness</h1>

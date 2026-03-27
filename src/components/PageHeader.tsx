@@ -18,7 +18,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '12px 16px',
+      padding: '8px 16px',
       position: 'sticky',
       top: 0,
       zIndex: 100,
@@ -51,8 +51,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
               src={assetUrl('/sajoma-logo.png')}
               alt="Sajoma Fitness"
               style={{
-                width: 42, height: 42,
-                filter: 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))',
+                width: 126, height: 126,
+                filter: 'drop-shadow(0 4px 14px rgba(212,175,55,0.45))',
               }}
             />
           </div>

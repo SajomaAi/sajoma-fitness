@@ -10,17 +10,18 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', textAlign: 'center' }}>
         {/* Logo */}
-        <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             src={assetUrl('/sajoma-logo.png')}
             alt="Sajoma Fitness"
             style={{
-              width: 150, height: 150,
-              filter: 'drop-shadow(0 6px 20px rgba(212,175,55,0.35))',
+              width: 450, height: 450,
+              filter: 'drop-shadow(0 12px 40px rgba(212,175,55,0.4))',
+              maxWidth: '90vw',
             }}
             onError={(e) => {
               const el = e.target as HTMLImageElement; el.style.display = 'none';
-              el.parentElement!.innerHTML = '<span style="font-size:3rem;color:#D4AF37;font-weight:900">S</span>';
+              el.parentElement!.innerHTML = '<span style="font-size:6rem;color:#D4AF37;font-weight:900">S</span>';
             }}
           />
         </div>

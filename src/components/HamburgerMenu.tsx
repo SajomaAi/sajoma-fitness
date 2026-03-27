@@ -55,21 +55,19 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose, onLogout
           boxShadow: '-5px 0 20px rgba(0,0,0,0.1)'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img
-              src={assetUrl('/sajoma-logo.png')}
-              alt="Sajoma"
-              style={{ width: 40, height: 40, filter: 'drop-shadow(0 2px 6px rgba(212,175,55,0.35))' }}
-            />
-            <span style={{ fontWeight: 800, color: 'var(--gold-metallic)', fontSize: '1.1rem' }}>Sajoma Fitness</span>
-          </div>
-          <button 
-            onClick={onClose} 
-            style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text)' }}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 20, position: 'relative' }}>
+          <button
+            onClick={onClose}
+            style={{ position: 'absolute', top: 0, right: 0, background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text)' }}
           >
             ×
           </button>
+          <img
+            src={assetUrl('/sajoma-logo.png')}
+            alt="Sajoma"
+            style={{ width: 120, height: 120, filter: 'drop-shadow(0 4px 14px rgba(212,175,55,0.4))', marginBottom: 8 }}
+          />
+          <span style={{ fontWeight: 800, color: 'var(--gold-metallic)', fontSize: '1.2rem' }}>Sajoma Fitness</span>
         </div>
 
         {/* Language Toggle */}
