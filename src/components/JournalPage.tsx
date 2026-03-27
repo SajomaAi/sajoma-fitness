@@ -128,7 +128,7 @@ const JournalPage: React.FC = () => {
       {showSuccess && (
         <div style={{
           position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
-          backgroundColor: '#4CAF50', color: 'white', padding: '12px 24px',
+          backgroundColor: '#D4A017', color: 'white', padding: '12px 24px',
           borderRadius: '12px', zIndex: 1000, fontWeight: '600', fontSize: '0.9rem',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}>
@@ -161,14 +161,14 @@ const JournalPage: React.FC = () => {
           {/* Today's Prompt */}
           <div className="card" style={{
             padding: '16px', marginBottom: '20px',
-            background: 'linear-gradient(135deg, #E8F5E8 0%, #f0f7f0 100%)',
+            background: 'linear-gradient(135deg, #FFF5F8 0%, #FFF0F5 100%)',
             border: '1px solid #c8e6c9',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <span style={{ fontSize: '1.2rem' }}>💡</span>
-              <p style={{ margin: 0, fontWeight: '700', fontSize: '0.9rem', color: '#2E7D32' }}>{t('todays_prompt')}</p>
+              <p style={{ margin: 0, fontWeight: '700', fontSize: '0.9rem', color: '#B8860B' }}>{t('todays_prompt')}</p>
             </div>
-            <p style={{ margin: '0 0 12px', fontSize: '0.95rem', fontStyle: 'italic', color: '#1B5E20', lineHeight: '1.5' }}>
+            <p style={{ margin: '0 0 12px', fontSize: '0.95rem', fontStyle: 'italic', color: '#8B6914', lineHeight: '1.5' }}>
               "{todayPrompt}"
             </p>
             <textarea
@@ -214,7 +214,7 @@ const JournalPage: React.FC = () => {
             <p style={{ fontWeight: '700', fontSize: '0.95rem', marginBottom: '10px' }}>{t('energy_level')}</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               {[1, 2, 3, 4, 5].map(level => {
-                const colors = ['#E53935', '#FB8C00', '#FDD835', '#66BB6A', '#43A047'];
+                const colors = ['#E53935', '#FB8C00', '#FDD835', '#66BB6A', '#C4900A'];
                 return (
                   <button
                     key={level}
@@ -345,7 +345,7 @@ const JournalPage: React.FC = () => {
                   <div style={{ borderTop: '1px solid #f1f3f5', paddingTop: '12px' }}>
                     {entry.promptResponse && (
                       <div style={{ marginBottom: '10px' }}>
-                        <p style={{ margin: '0 0 4px', fontSize: '0.75rem', fontWeight: '600', color: '#2E7D32' }}>💡 {t('journal_prompt')}</p>
+                        <p style={{ margin: '0 0 4px', fontSize: '0.75rem', fontWeight: '600', color: '#B8860B' }}>💡 {t('journal_prompt')}</p>
                         <p style={{ margin: '0 0 4px', fontSize: '0.8rem', fontStyle: 'italic', color: 'var(--text-gray)' }}>"{entry.prompt}"</p>
                         <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: '1.5' }}>{entry.promptResponse}</p>
                       </div>

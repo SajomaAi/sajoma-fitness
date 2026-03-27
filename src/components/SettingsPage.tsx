@@ -67,9 +67,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{
               width: '56px', height: '56px', borderRadius: '50%',
-              backgroundColor: 'var(--primary-color)', color: 'white',
+              background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%)', color: 'white',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '1.4rem', fontWeight: 'bold', marginRight: '14px', flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(212,160,23,0.3)',
             }}>
               S
             </div>
@@ -87,7 +88,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
         <Link to="/subscription" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card" style={{
             padding: '16px',
-            background: 'linear-gradient(135deg, #556B2F 0%, #6B8E23 50%, #8FBC3F 100%)',
+            background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 50%, #C4900A 100%)',
             color: 'white', cursor: 'pointer',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

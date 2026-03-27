@@ -70,7 +70,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const renderStep1 = () => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ fontSize: '4rem', marginBottom: '24px' }}>🎯</div>
-      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#2E7D32' }}>
+      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#B8860B' }}>
         What's Your Primary Goal?
       </h2>
       <p style={{ color: '#666', marginBottom: '32px', fontSize: '1rem' }}>
@@ -89,9 +89,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             onClick={() => updatePreferences('goals', 'primaryGoal', goal.value)}
             style={{
               padding: '16px',
-              border: preferences.goals.primaryGoal === goal.value ? '2px solid #4CAF50' : '1px solid #ddd',
+              border: preferences.goals.primaryGoal === goal.value ? '2px solid #D4A017' : '1px solid #ddd',
               borderRadius: '12px',
-              backgroundColor: preferences.goals.primaryGoal === goal.value ? '#E8F5E8' : 'white',
+              backgroundColor: preferences.goals.primaryGoal === goal.value ? '#FFF5F8' : 'white',
               cursor: 'pointer',
               textAlign: 'left',
               transition: 'all 0.3s ease'
@@ -137,7 +137,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const renderStep2 = () => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ fontSize: '4rem', marginBottom: '24px' }}>🥗</div>
-      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#2E7D32' }}>
+      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#B8860B' }}>
         Dietary Preferences
       </h2>
       <p style={{ color: '#666', marginBottom: '32px', fontSize: '1rem' }}>
@@ -157,9 +157,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 onClick={() => toggleArrayItem('dietary', 'restrictions', restriction)}
                 style={{
                   padding: '12px',
-                  border: preferences.dietary.restrictions.includes(restriction) ? '2px solid #4CAF50' : '1px solid #ddd',
+                  border: preferences.dietary.restrictions.includes(restriction) ? '2px solid #D4A017' : '1px solid #ddd',
                   borderRadius: '8px',
-                  backgroundColor: preferences.dietary.restrictions.includes(restriction) ? '#E8F5E8' : 'white',
+                  backgroundColor: preferences.dietary.restrictions.includes(restriction) ? '#FFF5F8' : 'white',
                   cursor: 'pointer',
                   fontSize: '0.9rem',
                   transition: 'all 0.3s ease'
@@ -229,7 +229,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const renderStep3 = () => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ fontSize: '4rem', marginBottom: '24px' }}>🔔</div>
-      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#2E7D32' }}>
+      <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#B8860B' }}>
         Notification Preferences
       </h2>
       <p style={{ color: '#666', marginBottom: '32px', fontSize: '1rem' }}>
@@ -278,7 +278,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: preferences.notifications[notification.key as keyof typeof preferences.notifications] ? '#4CAF50' : '#ccc',
+                backgroundColor: preferences.notifications[notification.key as keyof typeof preferences.notifications] ? '#D4A017' : '#ccc',
                 borderRadius: '34px',
                 transition: '0.4s'
               }}>
@@ -303,11 +303,11 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       <div style={{ 
         marginTop: '32px', 
         padding: '20px', 
-        backgroundColor: '#E8F5E8', 
+        backgroundColor: '#FFF5F8', 
         borderRadius: '12px',
-        border: '1px solid #4CAF50'
+        border: '1px solid #D4A017'
       }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '12px', color: '#2E7D32' }}>
+        <h3 style={{ fontSize: '1.2rem', marginBottom: '12px', color: '#B8860B' }}>
           🎉 You're All Set!
         </h3>
         <p style={{ fontSize: '0.95rem', color: '#424242', margin: 0 }}>
@@ -368,7 +368,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             alignItems: 'center',
             marginBottom: '16px'
           }}>
-            <h1 style={{ fontSize: '1.5rem', margin: 0, color: '#2E7D32' }}>
+            <h1 style={{ fontSize: '1.5rem', margin: 0, color: '#B8860B' }}>
               Welcome to Sajoma Fitness
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -403,7 +403,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <div style={{
               width: `${(currentStep / 3) * 100}%`,
               height: '100%',
-              backgroundColor: '#4CAF50',
+              backgroundColor: '#D4A017',
               transition: 'width 0.3s ease'
             }}></div>
           </div>
@@ -448,7 +448,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
               padding: '12px 24px',
               border: 'none',
               borderRadius: '8px',
-              backgroundColor: '#4CAF50',
+              backgroundColor: '#D4A017',
               color: 'white',
               cursor: 'pointer',
               fontSize: '1rem',

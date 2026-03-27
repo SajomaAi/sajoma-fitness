@@ -100,7 +100,7 @@ const ProgressPhotosPage: React.FC = () => {
       {showSuccess && (
         <div style={{
           position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
-          backgroundColor: '#4CAF50', color: 'white', padding: '12px 24px',
+          backgroundColor: '#D4A017', color: 'white', padding: '12px 24px',
           borderRadius: '12px', zIndex: 1000, fontWeight: '600', fontSize: '0.9rem',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}>

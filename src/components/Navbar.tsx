@@ -9,7 +9,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
   return (
     <nav style={{
-      backgroundColor: '#1a1a1a',
+      background: 'linear-gradient(135deg, #3E2723 0%, #4E342E 100%)',
       color: 'white',
       padding: '1rem',
       display: 'flex',
@@ -18,11 +18,11 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      boxShadow: '0 2px 8px rgba(62,39,35,0.3)'
     }}>
       <div>
         <Link to="/" style={{ 
-          color: '#6b8e23', 
+          color: '#D4A017', 
           textDecoration: 'none', 
           fontSize: '1.5rem',
           fontWeight: 'bold',
@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
           alignItems: 'center'
         }}>
           <div style={{
-            backgroundColor: '#6b8e23',
+            background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%)',
             color: 'white',
             width: '40px',
             height: '40px',
@@ -39,7 +39,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
             alignItems: 'center',
             justifyContent: 'center',
             marginRight: '10px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            boxShadow: '0 2px 6px rgba(212,160,23,0.4)'
           }}>
             S
           </div>
@@ -58,7 +59,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               textDecoration: 'none',
               padding: '0.5rem 1rem',
               borderRadius: '4px',
-              backgroundColor: '#333'
+              backgroundColor: '#5D4037'
             }}>
               Dashboard
             </Link>
@@ -67,7 +68,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               textDecoration: 'none',
               padding: '0.5rem 1rem',
               borderRadius: '4px',
-              backgroundColor: '#6b8e23'
+              background: 'linear-gradient(135deg, #F8B4C8, #D4A017)',
+              border: 'none'
             }}>
               Settings
             </Link>
@@ -93,7 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               textDecoration: 'none',
               padding: '0.5rem 1rem',
               borderRadius: '4px',
-              backgroundColor: '#333'
+              backgroundColor: '#5D4037'
             }}>
               Login
             </Link>
@@ -102,7 +104,8 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               textDecoration: 'none',
               padding: '0.5rem 1rem',
               borderRadius: '4px',
-              backgroundColor: '#6b8e23',
+              background: 'linear-gradient(135deg, #F8B4C8, #D4A017)',
+              border: 'none',
               fontWeight: 'bold'
             }}>
               Sign Up

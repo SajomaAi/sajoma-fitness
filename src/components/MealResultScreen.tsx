@@ -43,7 +43,7 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
   };
 
   const getHealthScoreColor = (score: number) => {
-    if (score >= 80) return '#6b8e23';
+    if (score >= 80) return '#D4A017';
     if (score >= 60) return '#f59e0b';
     return '#ef4444';
   };
@@ -82,7 +82,7 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
             border: 'none',
             fontSize: '1.5rem',
             cursor: 'pointer',
-            color: '#6b8e23'
+            color: '#D4A017'
           }}
         >
           ←
@@ -181,25 +181,25 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#6b8e23', margin: '0 0 4px 0' }}>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#D4A017', margin: '0 0 4px 0' }}>
               {analysisResults.calories}
             </p>
             <p style={{ fontSize: '0.9rem', color: '#666', margin: 0 }}>Calories</p>
           </div>
           <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#6b8e23', margin: '0 0 4px 0' }}>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#D4A017', margin: '0 0 4px 0' }}>
               {analysisResults.protein}g
             </p>
             <p style={{ fontSize: '0.9rem', color: '#666', margin: 0 }}>Protein</p>
           </div>
           <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#6b8e23', margin: '0 0 4px 0' }}>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#D4A017', margin: '0 0 4px 0' }}>
               {analysisResults.carbs}g
             </p>
             <p style={{ fontSize: '0.9rem', color: '#666', margin: 0 }}>Carbs</p>
           </div>
           <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#6b8e23', margin: '0 0 4px 0' }}>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#D4A017', margin: '0 0 4px 0' }}>
               {analysisResults.fat}g
             </p>
             <p style={{ fontSize: '0.9rem', color: '#666', margin: 0 }}>Fat</p>
@@ -261,7 +261,7 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
             marginBottom: '12px',
             gap: '8px'
           }}>
-            <span style={{ color: '#6b8e23', fontSize: '1.2rem' }}>💡</span>
+            <span style={{ color: '#D4A017', fontSize: '1.2rem' }}>💡</span>
             <p style={{ margin: 0, color: '#333', fontSize: '0.95rem' }}>
               {suggestion}
             </p>
@@ -298,7 +298,7 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
           style={{
             flex: 1,
             padding: '12px',
-            backgroundColor: '#6b8e23',
+            backgroundColor: '#D4A017',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
@@ -314,8 +314,8 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
             flex: 1,
             padding: '12px',
             backgroundColor: 'transparent',
-            color: '#6b8e23',
-            border: '2px solid #6b8e23',
+            color: '#D4A017',
+            border: '2px solid #D4A017',
             borderRadius: '8px',
             fontWeight: 'bold',
             cursor: 'pointer'
@@ -348,7 +348,7 @@ const MealResultScreen: React.FC<MealResultScreenProps> = () => {
         </Link>
         <Link to="/meal-logger" style={{ 
           textDecoration: 'none', 
-          color: '#6b8e23',
+          color: '#D4A017',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

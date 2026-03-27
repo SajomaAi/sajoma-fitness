@@ -84,9 +84,9 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
     
     // Color coding based on percentage
     const getColor = (percent: number) => {
-      if (percent >= 80) return '#4CAF50'; // Green
-      if (percent >= 60) return '#8BC34A'; // Light green
-      if (percent >= 40) return '#FFC107'; // Yellow
+      if (percent >= 80) return '#D4A017'; // Gold
+      if (percent >= 60) return '#E8B960'; // Light gold
+      if (percent >= 40) return '#F8B4C8'; // Pink
       if (percent >= 20) return '#FF9800'; // Orange
       return '#FF5722'; // Red
     };
@@ -146,11 +146,11 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
 
   const getQualityColor = (quality: string): string => {
     switch(quality) {
-      case 'excellent': return '#4CAF50';
-      case 'good': return '#8BC34A';
-      case 'average': return '#FFC107';
+      case 'excellent': return '#D4A017';
+      case 'good': return '#E8B960';
+      case 'average': return '#F8B4C8';
       case 'poor': return '#FF5722';
-      default: return '#8BC34A';
+      default: return '#E8B960';
     }
   };
 
@@ -205,7 +205,7 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
             goal={userData.goals.calories}
             size={80}
             strokeWidth={6}
-            color="#4CAF50"
+            color="#D4A017"
             label={t("calories")}
           />
           <ProgressRing
@@ -232,7 +232,7 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
       <h2 style={{ fontSize: '1.5rem', marginBottom: '16px' }}>{t('recent_meals')}</h2>
       <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '20px', lineHeight: '1.4' }}>
         {t('meal_quality_legend')}
-        <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#4CAF50', marginLeft: '10px', marginRight: '5px' }}></span> {t('low_carb_clean_meal')}
+        <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#D4A017', marginLeft: '10px', marginRight: '5px' }}></span> {t('low_carb_clean_meal')}
         <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#FFC107', marginLeft: '10px', marginRight: '5px' }}></span> {t('moderate_meal')}
         <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#FF5722', marginLeft: '10px', marginRight: '5px' }}></span> {t('flagged_meal')}
       </div>
@@ -312,9 +312,9 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
         <button 
           className="btn" 
           style={{ 
-            backgroundColor: '#E8F5E8',
-            color: '#2E7D32',
-            border: '1px solid #4CAF50'
+            background: 'linear-gradient(135deg, #FFF5F8, #FFF0E8)',
+            color: '#B8860B',
+            border: '1px solid rgba(212,160,23,0.3)'
           }}
           onClick={() => alert(t("mood_logging_coming_soon"))}
         >
@@ -341,7 +341,7 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
           { to: '/barcode-scanner', icon: '📱', label: t('barcode_scanner'), color: '#1E88E5' },
           { to: '/journal', icon: '📓', label: t('journal'), color: '#8E24AA' },
           { to: '/progress-photos', icon: '📸', label: t('progress_photos'), color: '#FB8C00' },
-          { to: '/reminders', icon: '🔔', label: t('reminders'), color: '#43A047' },
+          { to: '/reminders', icon: '🔔', label: t('reminders'), color: '#C4900A' },
           { to: '/subscription', icon: '⭐', label: t('premium'), color: '#FF9800' },
         ].map((item, i) => (
           <Link key={i} to={item.to} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -357,14 +357,14 @@ const DashboardPage: React.FC<DashboardPageProps> = () => {
       <div className="card" style={{ 
         marginBottom: '24px',
         padding: '20px',
-        backgroundColor: '#E8F5E8',
-        border: '1px solid #4CAF50'
+        background: 'linear-gradient(135deg, #FFF5F8 0%, #FFF0E8 100%)',
+        border: '1px solid rgba(212,160,23,0.3)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
           <span style={{ fontSize: '1.5rem', marginRight: '12px' }}>🌟</span>
-          <h3 style={{ margin: "0", fontSize: "1.1rem", color: "#2E7D32" }}>{t("wellness_tip_of_the_day")}</h3>
+          <h3 style={{ margin: "0", fontSize: "1.1rem", color: "#B8860B" }}>{t("wellness_tip_of_the_day")}</h3>
         </div>
-        <p style={{ margin: '0', fontSize: '0.95rem', color: '#1B5E20', lineHeight: '1.5', fontWeight: '500' }}>
+        <p style={{ margin: '0', fontSize: '0.95rem', color: '#5D4037', lineHeight: '1.5', fontWeight: '500' }}>
           {getDailyWellnessTip()}
         </p>
       </div>

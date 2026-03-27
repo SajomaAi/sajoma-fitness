@@ -5,7 +5,7 @@ interface FooterProps {}
 const Footer: React.FC<FooterProps> = () => {
   return (
     <footer style={{
-      backgroundColor: 'var(--dark-color)',
+      background: 'linear-gradient(135deg, #3E2723 0%, #4E342E 100%)',
       color: 'var(--light-color)',
       padding: '40px 0 20px'
     }}>

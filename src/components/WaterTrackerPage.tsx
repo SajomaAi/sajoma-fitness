@@ -83,7 +83,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
           height: '30px',
           margin: '2px',
           borderRadius: '4px',
-          backgroundColor: index < filledCups ? '#6b8e23' : '#e5e7eb',
+          backgroundColor: index < filledCups ? '#D4A017' : '#e5e7eb',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -132,7 +132,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
           fontSize: '2rem', 
           fontWeight: 'bold', 
           marginBottom: '8px',
-          color: '#6b8e23'
+          color: '#D4A017'
         }}>
           {getTotalWater()} oz
         </p>
@@ -155,7 +155,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
           <div style={{ 
             height: '100%', 
             width: `${getProgressPercentage()}%`, 
-            backgroundColor: '#6b8e23', 
+            backgroundColor: '#D4A017', 
             borderRadius: '12px',
             transition: 'width 0.5s ease-in-out'
           }}></div>
@@ -165,7 +165,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
         <p style={{ 
           fontSize: '1.1rem', 
           fontWeight: 'bold',
-          color: '#6b8e23'
+          color: '#D4A017'
         }}>
           {Math.round(getProgressPercentage())}% Complete
         </p>
@@ -211,7 +211,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
             width: '140px', 
             height: '140px', 
             borderRadius: '50%', 
-            backgroundColor: isAdding ? '#9ca3af' : '#6b8e23', 
+            backgroundColor: isAdding ? '#9ca3af' : '#D4A017', 
             border: 'none', 
             color: 'white', 
             cursor: isAdding ? 'not-allowed' : 'pointer',
@@ -255,8 +255,8 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
               marginTop: '16px',
               padding: '8px 16px',
               backgroundColor: 'transparent',
-              border: '2px solid #6b8e23',
-              color: '#6b8e23',
+              border: '2px solid #D4A017',
+              color: '#D4A017',
               borderRadius: '20px',
               cursor: 'pointer',
               fontSize: '0.9rem',
@@ -342,7 +342,7 @@ const WaterTrackerPage: React.FC<WaterTrackerPageProps> = () => {
         </Link>
         <Link to="/water-tracker" style={{ 
           textDecoration: 'none', 
-          color: '#6b8e23',
+          color: '#D4A017',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

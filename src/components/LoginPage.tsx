@@ -165,7 +165,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   borderRadius: '4px',
                   border: '1px solid #ddd',
                   fontSize: '1rem',
-                  backgroundColor: '#f5f9f5'
+                  backgroundColor: '#FFF5F8'
                 }}
               />
             </div>
@@ -195,7 +195,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 borderRadius: '4px',
                 border: '1px solid #ddd',
                 fontSize: '1rem',
-                backgroundColor: '#f5f9f5'
+                backgroundColor: '#FFF5F8'
               }}
             />
           </div>
@@ -215,7 +215,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 <Link 
                   to="/forgot-password" 
                   style={{ 
-                    color: '#6b8e23', 
+                    color: '#D4A017', 
                     textDecoration: 'none',
                     fontSize: '0.9rem'
                   }}
@@ -236,7 +236,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 borderRadius: '4px',
                 border: '1px solid #ddd',
                 fontSize: '1rem',
-                backgroundColor: '#f5f9f5'
+                backgroundColor: '#FFF5F8'
               }}
             />
           </div>
@@ -266,7 +266,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   borderRadius: '4px',
                   border: '1px solid #ddd',
                   fontSize: '1rem',
-                  backgroundColor: '#f5f9f5'
+                  backgroundColor: '#FFF5F8'
                 }}
               />
             </div>
@@ -278,7 +278,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             style={{
               width: '100%',
               padding: '0.75rem',
-              backgroundColor: isLoading ? '#ccc' : '#6b8e23',
+              backgroundColor: isLoading ? '#ccc' : '#D4A017',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
@@ -318,7 +318,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#6b8e23',
+                color: '#D4A017',
                 textDecoration: 'underline',
                 cursor: 'pointer',
                 fontSize: 'inherit'

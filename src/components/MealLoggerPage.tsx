@@ -22,7 +22,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
       const placeholderImage = `data:image/svg+xml;base64,${btoa(`
         <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
           <rect width="300" height="300" fill="#f3f4f6"/>
-          <circle cx="150" cy="120" r="40" fill="#6b8e23"/>
+          <circle cx="150" cy="120" r="40" fill="#D4A017"/>
           <rect x="110" y="160" width="80" height="60" rx="10" fill="#8b4513"/>
           <circle cx="120" cy="180" r="8" fill="#ff6b6b"/>
           <circle cx="180" cy="180" r="8" fill="#4ecdc4"/>
@@ -138,7 +138,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
                 padding: '10px 20px',
                 borderRadius: '25px',
                 border: 'none',
-                backgroundColor: selectedMealType === type ? '#6b8e23' : '#f3f4f6',
+                backgroundColor: selectedMealType === type ? '#D4A017' : '#f3f4f6',
                 color: selectedMealType === type ? 'white' : '#333',
                 fontWeight: selectedMealType === type ? 'bold' : 'normal',
                 whiteSpace: 'nowrap',
@@ -163,7 +163,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
         <div style={{ 
           width: '100%',
           aspectRatio: '1',
-          border: '3px dashed #6b8e23',
+          border: '3px dashed #D4A017',
           borderRadius: '12px',
           display: 'flex',
           alignItems: 'center',
@@ -191,7 +191,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
               <div style={{
                 width: '50px',
                 height: '50px',
-                border: '4px solid #6b8e23',
+                border: '4px solid #D4A017',
                 borderTopColor: 'transparent',
                 borderRadius: '50%',
                 animation: 'spin 1s linear infinite',
@@ -228,7 +228,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
               width: '80px',
               height: '80px',
               borderRadius: '50%',
-              backgroundColor: isProcessing ? '#9ca3af' : '#6b8e23',
+              backgroundColor: isProcessing ? '#9ca3af' : '#D4A017',
               border: '6px solid white',
               cursor: isProcessing ? 'not-allowed' : 'pointer',
               boxShadow: '0 4px 12px rgba(107, 142, 35, 0.3)',
@@ -271,9 +271,9 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
             style={{
               padding: '12px 20px',
               borderRadius: '8px',
-              border: '2px solid #6b8e23',
+              border: '2px solid #D4A017',
               backgroundColor: 'transparent',
-              color: '#6b8e23',
+              color: '#D4A017',
               fontWeight: 'bold',
               cursor: isProcessing ? 'not-allowed' : 'pointer',
               transition: 'all 0.3s ease',
@@ -292,9 +292,9 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
             style={{
               padding: '12px 20px',
               borderRadius: '8px',
-              border: '2px solid #6b8e23',
+              border: '2px solid #D4A017',
               backgroundColor: 'transparent',
-              color: '#6b8e23',
+              color: '#D4A017',
               fontWeight: 'bold',
               cursor: isProcessing ? 'not-allowed' : 'pointer',
               transition: 'all 0.3s ease',
@@ -342,7 +342,7 @@ const MealLoggerPage: React.FC<MealLoggerPageProps> = () => {
         </Link>
         <Link to="/meal-logger" style={{ 
           textDecoration: 'none', 
-          color: '#6b8e23',
+          color: '#D4A017',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

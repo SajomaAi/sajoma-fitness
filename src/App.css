@@ -1,12 +1,15 @@
 /* Global styles for Sajoma Fitness */
 
 :root {
-  --primary-color: #556B2F; /* Olive green */
-  --primary-light: #E8F0E0; /* Light olive green */
-  --dark-color: #1A1A1A; /* Black */
+  --primary-color: #D4A017; /* Warm gold */
+  --primary-light: #FFF5F8; /* Very light pink */
+  --primary-pink: #F8B4C8; /* Soft pink */
+  --primary-gold: #D4A017; /* Gold accent */
+  --primary-gradient: linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%);
+  --dark-color: #3E2723; /* Dark brown/charcoal */
   --light-color: #FFFFFF; /* White */
-  --gray-color: #E0E0E0; /* Light gray */
-  --text-gray: #6B6B6B; /* Text gray */
+  --gray-color: #E8E0E0; /* Warm light gray */
+  --text-gray: #7B6B6B; /* Warm text gray */
 }
 
 body {
@@ -67,7 +70,8 @@ body {
 .card {
   background-color: var(--light-color);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(212, 160, 23, 0.08);
+  border: 1px solid rgba(248, 180, 200, 0.2);
   padding: 24px;
   margin-bottom: 24px;
 }

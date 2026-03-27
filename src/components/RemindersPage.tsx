@@ -102,7 +102,7 @@ const RemindersPage: React.FC = () => {
       {showSuccess && (
         <div style={{
           position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
-          backgroundColor: '#4CAF50', color: 'white', padding: '12px 24px',
+          backgroundColor: '#D4A017', color: 'white', padding: '12px 24px',
           borderRadius: '12px', zIndex: 1000, fontWeight: '600', fontSize: '0.9rem',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}>
@@ -209,7 +209,7 @@ const RemindersPage: React.FC = () => {
         {reminders.filter(r => r.id === 'morning_checkin').map(reminder => (
           <div key={reminder.id} className="card" style={{
             padding: '14px 16px', marginBottom: '8px',
-            background: 'linear-gradient(135deg, #E8F5E8 0%, #f0f7f0 100%)',
+            background: 'linear-gradient(135deg, #FFF5F8 0%, #FFF0E8 100%)',
             border: '1px solid #c8e6c9',
             opacity: reminder.enabled ? 1 : 0.6,
           }}>

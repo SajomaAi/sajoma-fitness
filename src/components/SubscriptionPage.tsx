@@ -182,7 +182,7 @@ const SubscriptionPage: React.FC = () => {
                       {billingCycle === 'monthly' ? t('per_month') : t('per_year')}
                     </p>
                     {savings > 0 && (
-                      <p style={{ margin: '2px 0 0', fontSize: '0.7rem', color: '#4CAF50', fontWeight: '600' }}>
+                      <p style={{ margin: '2px 0 0', fontSize: '0.7rem', color: '#D4A017', fontWeight: '600' }}>
                         Save {savings}%
                       </p>
                     )}

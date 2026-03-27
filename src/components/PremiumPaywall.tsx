@@ -121,7 +121,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
               marginBottom: '12px'
             }}>
               <span style={{ 
-                color: '#4CAF50',
+                color: '#D4A017',
                 marginRight: '12px',
                 fontSize: '1.2rem'
               }}>✓</span>
@@ -133,7 +133,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
               marginBottom: '12px'
             }}>
               <span style={{ 
-                color: '#4CAF50',
+                color: '#D4A017',
                 marginRight: '12px',
                 fontSize: '1.2rem'
               }}>✓</span>
@@ -145,7 +145,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
               marginBottom: '12px'
             }}>
               <span style={{ 
-                color: '#4CAF50',
+                color: '#D4A017',
                 marginRight: '12px',
                 fontSize: '1.2rem'
               }}>✓</span>
@@ -157,7 +157,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
               marginBottom: '12px'
             }}>
               <span style={{ 
-                color: '#4CAF50',
+                color: '#D4A017',
                 marginRight: '12px',
                 fontSize: '1.2rem'
               }}>✓</span>
@@ -168,7 +168,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
               alignItems: 'center'
             }}>
               <span style={{ 
-                color: '#4CAF50',
+                color: '#D4A017',
                 marginRight: '12px',
                 fontSize: '1.2rem'
               }}>✓</span>
@@ -180,7 +180,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
         {/* Pricing */}
         <div style={{ marginBottom: '24px' }}>
           <div style={{
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#D4A017',
             color: 'white',
             padding: '16px',
             borderRadius: '12px',
@@ -204,7 +204,7 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
             onClick={handleUpgrade}
             disabled={isProcessing}
             style={{
-              backgroundColor: '#4CAF50',
+              backgroundColor: '#D4A017',
               color: 'white',
               border: 'none',
               padding: '16px 24px',

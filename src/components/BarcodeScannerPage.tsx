@@ -189,7 +189,7 @@ const BarcodeScannerPage: React.FC = () => {
       {showAdded && (
         <div style={{
           position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
-          backgroundColor: '#4CAF50', color: 'white', padding: '12px 24px',
+          backgroundColor: '#D4A017', color: 'white', padding: '12px 24px',
           borderRadius: '12px', zIndex: 1000, fontWeight: '600', fontSize: '0.9rem',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}>
@@ -236,7 +236,7 @@ const BarcodeScannerPage: React.FC = () => {
             {isScanning && (
               <div style={{
                 position: 'absolute', top: '50%', left: '10%', right: '10%', height: '2px',
-                backgroundColor: '#4CAF50', boxShadow: '0 0 10px #4CAF50',
+                backgroundColor: '#F8B4C8', boxShadow: '0 0 10px #F8B4C8',
                 animation: 'scanLine 2s ease-in-out infinite',
               }} />
             )}
@@ -344,7 +344,7 @@ const BarcodeScannerPage: React.FC = () => {
                   { label: t('protein'), value: food.protein, color: '#1E88E5' },
                   { label: t('carbs'), value: food.carbs, color: '#FB8C00' },
                   { label: t('fat'), value: food.fat, color: '#8E24AA' },
-                  { label: t('fiber'), value: food.fiber, color: '#43A047' },
+                  { label: t('fiber'), value: food.fiber, color: '#C4900A' },
                 ].map((n, i) => (
                   <div key={i} style={{ textAlign: 'center', padding: '4px', backgroundColor: n.color + '10', borderRadius: '6px' }}>
                     <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '600', color: n.color }}>{n.value}g</p>

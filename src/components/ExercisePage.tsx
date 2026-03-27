@@ -19,7 +19,7 @@ const EXERCISE_CATEGORIES = [
   { key: 'cardio', icon: '🏃', color: '#E53935' },
   { key: 'strength', icon: '🏋️', color: '#1E88E5' },
   { key: 'flexibility', icon: '🧘', color: '#8E24AA' },
-  { key: 'sports', icon: '⚽', color: '#43A047' },
+  { key: 'sports', icon: '⚽', color: '#C4900A' },
   { key: 'walking_running', icon: '🚶', color: '#FB8C00' },
 ];
 
@@ -113,7 +113,7 @@ const ExercisePage: React.FC = () => {
       <div className="card" style={{
         padding: '14px 16px',
         marginBottom: '20px',
-        background: 'linear-gradient(135deg, #E8F5E8 0%, #f0f7f0 100%)',
+        background: 'linear-gradient(135deg, #FFF5F8 0%, #FFF0E8 100%)',
         border: '1px solid #c8e6c9',
         display: 'flex',
         alignItems: 'center',
@@ -135,7 +135,7 @@ const ExercisePage: React.FC = () => {
             padding: '8px 16px',
             borderRadius: '20px',
             border: 'none',
-            backgroundColor: healthKitConnected ? '#4CAF50' : 'var(--primary-color)',
+            background: healthKitConnected ? 'linear-gradient(135deg, #D4A017, #C4900A)' : 'linear-gradient(135deg, #F8B4C8, #D4A017)',
             color: 'white',
             fontSize: '0.8rem',
             fontWeight: '600',
@@ -176,7 +176,7 @@ const ExercisePage: React.FC = () => {
       {showSuccess && (
         <div style={{
           position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
-          backgroundColor: '#4CAF50', color: 'white', padding: '12px 24px',
+          backgroundColor: '#D4A017', color: 'white', padding: '12px 24px',
           borderRadius: '12px', zIndex: 1000, fontWeight: '600', fontSize: '0.9rem',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         }}>
@@ -253,7 +253,7 @@ const ExercisePage: React.FC = () => {
             <label style={{ fontWeight: '600', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>{t('intensity')}</label>
             <div style={{ display: 'flex', gap: '8px' }}>
               {(['low', 'medium', 'high'] as const).map(level => {
-                const colors: Record<string, string> = { low: '#4CAF50', medium: '#FF9800', high: '#E53935' };
+                const colors: Record<string, string> = { low: '#D4A017', medium: '#FF9800', high: '#E53935' };
                 return (
                   <button
                     key={level}
@@ -326,7 +326,7 @@ const ExercisePage: React.FC = () => {
                   <div style={{
                     padding: '4px 10px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: '600',
                     backgroundColor: w.intensity === 'high' ? '#FFEBEE' : w.intensity === 'medium' ? '#FFF3E0' : '#E8F5E9',
-                    color: w.intensity === 'high' ? '#C62828' : w.intensity === 'medium' ? '#E65100' : '#2E7D32',
+                    color: w.intensity === 'high' ? '#C62828' : w.intensity === 'medium' ? '#E65100' : '#B8860B',
                   }}>
                     {t(w.intensity)}
                   </div>
@@ -347,7 +347,7 @@ const ExercisePage: React.FC = () => {
               { label: t('total_workouts'), value: weekStats.total, icon: '🎯', color: '#1E88E5' },
               { label: t('total_duration'), value: `${weekStats.duration} ${t('min')}`, icon: '⏱️', color: '#8E24AA' },
               { label: t('total_calories_burned'), value: weekStats.calories, icon: '🔥', color: '#E53935' },
-              { label: t('avg_intensity'), value: weekWorkouts.length > 0 ? (() => { const avg = weekWorkouts.reduce((s, w) => s + ({ low: 1, medium: 2, high: 3 }[w.intensity] || 2), 0) / weekWorkouts.length; return avg < 1.5 ? t('low') : avg < 2.5 ? t('medium') : t('high'); })() : '—', icon: '📊', color: '#43A047' },
+              { label: t('avg_intensity'), value: weekWorkouts.length > 0 ? (() => { const avg = weekWorkouts.reduce((s, w) => s + ({ low: 1, medium: 2, high: 3 }[w.intensity] || 2), 0) / weekWorkouts.length; return avg < 1.5 ? t('low') : avg < 2.5 ? t('medium') : t('high'); })() : '—', icon: '📊', color: '#C4900A' },
             ].map((stat, i) => (
               <div key={i} className="card" style={{ padding: '16px', textAlign: 'center' }}>
                 <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '6px' }}>{stat.icon}</span>
