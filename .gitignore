@@ -1,3 +1,26 @@
+# Dependencies
 node_modules
 
+# Build output
+dist
 
+# iOS
+ios/App/App/public
+ios/App/Pods
+ios/capacitor-cordova-ios-plugins/pods
+*.xcworkspace
+xcuserdata
+*.xcuserdatad
+DerivedData
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
