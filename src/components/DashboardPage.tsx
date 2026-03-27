@@ -3,370 +3,180 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import BottomNav from './BottomNav';
 
-interface DashboardPageProps {}
-
-const DashboardPage: React.FC<DashboardPageProps> = () => {
+const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
-  // Mock data with goals
-  const [userData] = useState({
-    name: 'Sarah',
-    goals: {
-      calories: 2000,
-      water: 64, // oz
-      meals: 3
-    },
-    todayStats: {
-      calories: 850,
-      water: 24,
-      meals: 2
-    },
-    recentMeals: [
-      {
-        id: 1,
-        type: 'Breakfast',
-        time: '8:30 AM',
-        timestamp: new Date().setHours(8, 30, 0, 0),
-        calories: 420,
-        quality: 'good'
-      },
-      {
-        id: 2,
-        type: 'Lunch',
-        time: '12:45 PM',
-        timestamp: new Date().setHours(12, 45, 0, 0),
-        calories: 430,
-        quality: 'excellent'
-      }
-    ]
-  });
+  const userName = localStorage.getItem('userName') || 'Sarah';
+  const [greeting, setGreeting] = useState('');
 
-  const [timeSinceLastMeal, setTimeSinceLastMeal] = useState('');
-
-  // Calculate time since last meal
   useEffect(() => {
-    const calculateTimeSinceLastMeal = () => {
-      if (userData.recentMeals.length === 0) return;
-      
-      const lastMeal = userData.recentMeals[userData.recentMeals.length - 1];
-      const now = new Date().getTime();
-      const timeDiff = now - lastMeal.timestamp;
-      
-      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-      
-      if (hours > 0) {
-        setTimeSinceLastMeal(`${hours}h ${minutes}m ago`);
-      } else {
-        setTimeSinceLastMeal(`${minutes}m ago`);
-      }
-    };
+    const h = new Date().getHours();
+    if (h < 12) setGreeting(t('good_morning') || 'Good morning');
+    else if (h < 17) setGreeting(t('good_afternoon') || 'Good afternoon');
+    else setGreeting(t('good_evening') || 'Good evening');
+  }, [t]);
 
-    calculateTimeSinceLastMeal();
-    const interval = setInterval(calculateTimeSinceLastMeal, 60000); // Update every minute
-    
-    return () => clearInterval(interval);
-  }, [userData.recentMeals]);
+  const stats = {
+    calories: { current: 850, goal: 2000, icon: '🔥', label: t('calories') || 'Calories' },
+    water: { current: 4, goal: 8, icon: '💧', label: t('water') || 'Water', unit: 'glasses' },
+    steps: { current: 4250, goal: 10000, icon: '👟', label: t('steps') || 'Steps' },
+    sleep: { current: 7.5, goal: 8, icon: '😴', label: t('sleep') || 'Sleep', unit: 'hrs' },
+  };
 
-  // Progress ring component
-  const ProgressRing: React.FC<{
-    value: number;
-    goal: number;
-    size: number;
-    strokeWidth: number;
-    color: string;
-    label: string;
-    unit?: string;
-  }> = ({ value, goal, size, strokeWidth, label, unit = '' }) => {
-    const radius = (size - strokeWidth) / 2;
-    const circumference = radius * 2 * Math.PI;
-    const percentage = Math.min((value / goal) * 100, 100);
-    const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
-    
-    // Color coding based on percentage
-    const getColor = (percent: number) => {
-      if (percent >= 80) return '#D4A017'; // Gold
-      if (percent >= 60) return '#E8B960'; // Light gold
-      if (percent >= 40) return '#F8B4C8'; // Pink
-      if (percent >= 20) return '#FF9800'; // Orange
-      return '#FF5722'; // Red
-    };
+  const recentMeals = [
+    { type: 'Breakfast', time: '8:30 AM', cal: 420, emoji: '🥣' },
+    { type: 'Lunch', time: '12:45 PM', cal: 430, emoji: '🥗' },
+  ];
 
-    const ringColor = getColor(percentage);
+  const quickActions = [
+    { to: '/meal-logger', icon: '📷', label: t('log_meal') || 'Log Meal', color: '#FFF0F5' },
+    { to: '/water-tracker', icon: '💧', label: t('add_water') || 'Water', color: '#F0F8FF' },
+    { to: '/exercise', icon: '💪', label: t('exercise') || 'Exercise', color: '#FFF8E1' },
+    { to: '/barcode-scanner', icon: '📱', label: t('scan') || 'Scan', color: '#F3E5F5' },
+  ];
 
+  const wellnessTips = [
+    "Start your day with 16oz of water to kickstart metabolism.",
+    "Include protein in every meal for stable blood sugar.",
+    "Take a 10-minute walk after meals for better digestion.",
+    "Practice deep breathing for 5 minutes to reduce stress.",
+    "Aim for 7-9 hours of quality sleep tonight.",
+    "Choose whole foods over processed for lasting energy.",
+    "Avoid eating past 8PM to support hormone balance.",
+  ];
+  const tip = wellnessTips[new Date().getDay()];
+
+  const ProgressRing = ({ value, goal, size = 56, color = '#C5961B' }: { value: number; goal: number; size?: number; color?: string }) => {
+    const pct = Math.min((value / goal) * 100, 100);
+    const r = (size - 6) / 2;
+    const circ = r * 2 * Math.PI;
+    const dash = `${(pct / 100) * circ} ${circ}`;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ position: 'relative', width: size, height: size }}>
-          <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-            {/* Background circle */}
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke="#e0e0e0"
-              strokeWidth={strokeWidth}
-              fill="transparent"
-            />
-            {/* Progress circle */}
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke={ringColor}
-              strokeWidth={strokeWidth}
-              fill="transparent"
-              strokeDasharray={strokeDasharray}
-              strokeLinecap="round"
-              style={{
-                transition: 'stroke-dasharray 0.5s ease-in-out'
-              }}
-            />
-          </svg>
-          {/* Center text */}
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', lineHeight: '1.2' }}>
-              {value}{unit} of {goal}{unit}
-            </div>
-            <div style={{ fontSize: '0.7rem', color: '#666' }}>
-              {Math.round(percentage)}%
-            </div>
-          </div>
-        </div>
-        <div style={{ marginTop: '8px', fontSize: '0.9rem', color: '#666', textAlign: 'center' }}>
-          {label}
-        </div>
-      </div>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size/2} cy={size/2} r={r} stroke="#FFD6E0" strokeWidth={5} fill="none" />
+        <circle cx={size/2} cy={size/2} r={r} stroke={color} strokeWidth={5} fill="none"
+          strokeDasharray={dash} strokeLinecap="round" style={{ transition: 'stroke-dasharray 0.6s ease' }} />
+      </svg>
     );
   };
 
-  const getQualityColor = (quality: string): string => {
-    switch(quality) {
-      case 'excellent': return '#D4A017';
-      case 'good': return '#E8B960';
-      case 'average': return '#F8B4C8';
-      case 'poor': return '#FF5722';
-      default: return '#E8B960';
-    }
-  };
-
-  const formatDate = (): string => {
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    return new Date().toLocaleDateString('en-US', options);
-  };
-
-  // Wellness tips of the day (7 static tips for rotation)
-  const wellnessTips = [
-    "✅ Avoid eating past 8PM — fasting supports hormone reset.",
-    "✅ Start your day with 16oz of water to kickstart metabolism and hydration.",
-    "✅ Include protein in every meal to maintain stable blood sugar levels.",
-    "✅ Take a 10-minute walk after meals to improve digestion and blood sugar.",
-    "✅ Choose whole foods over processed — your body will thank you.",
-    "✅ Practice deep breathing for 5 minutes daily to reduce stress hormones.",
-    "✅ Aim for 7-9 hours of quality sleep for optimal hormone regulation."
-  ];
-
-  const getDailyWellnessTip = (): string => {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    return wellnessTips[dayOfWeek];
-  };
-
   return (
-    <div className="container" style={{ padding: '20px', paddingBottom: '80px' }}>
+    <div className="page">
       {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>{t('hello_name', { name: userData.name })}</h1>
-        <p style={{ color: 'var(--text-gray)' }}>{t('today_date', { date: formatDate() })}</p>
-      </div>
-
-      {/* Today's Progress Card with Progress Rings */}
-      <div className="card" style={{ 
-        backgroundColor: 'var(--primary-light)', 
-        marginBottom: '24px',
-        padding: '20px'
-      }}>
-        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>{t('todays_progress')}</h2>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-around',
-          alignItems: 'center'
-        }}>
-          <ProgressRing
-            value={userData.todayStats.calories}
-            goal={userData.goals.calories}
-            size={80}
-            strokeWidth={6}
-            color="#D4A017"
-            label={t("calories")}
-          />
-          <ProgressRing
-            value={userData.todayStats.water}
-            goal={userData.goals.water}
-            size={80}
-            strokeWidth={6}
-            color="#2196F3"
-            label={t("water")}
-            unit=" oz"
-          />
-          <ProgressRing
-            value={userData.todayStats.meals}
-            goal={userData.goals.meals}
-            size={80}
-            strokeWidth={6}
-            color="#FF9800"
-            label={t("meals")}
-          />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div>
+          <h1 className="page-title">{greeting},</h1>
+          <h1 className="page-title" style={{ color: '#C5961B' }}>{userName} ✨</h1>
+          <p className="page-subtitle" style={{ marginTop: 4 }}>
+            {t('maintain_healthy') || 'Maintain a healthy lifestyle'}
+          </p>
         </div>
+        <Link to="/settings" style={{
+          width: 44, height: 44, borderRadius: 14,
+          background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(62,39,35,0.06)', border: '1px solid rgba(197,150,27,0.1)',
+          textDecoration: 'none', fontSize: '1.2rem',
+        }}>🔔</Link>
       </div>
 
-      {/* Recent Meals */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '16px' }}>{t('recent_meals')}</h2>
-      <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '20px', lineHeight: '1.4' }}>
-        {t('meal_quality_legend')}
-        <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#D4A017', marginLeft: '10px', marginRight: '5px' }}></span> {t('low_carb_clean_meal')}
-        <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#FFC107', marginLeft: '10px', marginRight: '5px' }}></span> {t('moderate_meal')}
-        <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#FF5722', marginLeft: '10px', marginRight: '5px' }}></span> {t('flagged_meal')}
-      </div>
-      
-      {userData.recentMeals.map(meal => (
-        <div key={meal.id} className="card" style={{ 
-          marginBottom: '16px',
-          padding: '16px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <div style={{ 
-            width: '48px', 
-            height: '48px', 
-            backgroundColor: 'var(--gray-color)',
-            borderRadius: '8px',
-            marginRight: '16px'
-          }}></div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontWeight: 'bold', margin: '0' }}>{meal.type}</p>
-            <p style={{ color: 'var(--text-gray)', margin: '0', fontSize: '0.9rem' }}>
-              {meal.time} · {meal.calories} cal
-            </p>
-          </div>
-          <div style={{ 
-            width: '16px', 
-            height: '16px', 
-            borderRadius: '50%', 
-            backgroundColor: getQualityColor(meal.quality)
-          }}></div>
-        </div>
-      ))}
-
-      {/* Time Since Last Meal */}
-      <div className="card" style={{ 
-        marginBottom: '24px',
-        padding: '16px',
-        backgroundColor: '#f8f9fa',
-        border: '1px solid #e9ecef'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <h3 style={{ margin: '0', fontSize: '1rem', color: '#495057' }}>{t('time_since_last_meal')}</h3>
-            <p style={{ margin: '4px 0 0 0', fontSize: '1.2rem', fontWeight: 'bold', color: '#212529' }}>
-              {timeSinceLastMeal}
-            </p>
-          </div>
-          <div style={{ fontSize: '1.5rem' }}>🍽️</div>
-        </div>
-        <p style={{ margin: '8px 0 0 0', fontSize: '0.8rem', color: '#6c757d' }}>
-          {t('gentle_fasting_guidance_soon')}
-        </p>
+      {/* Main Stats Grid */}
+      <div className="stat-grid" style={{ marginBottom: 20 }}>
+        {Object.entries(stats).map(([key, s]) => {
+          const pct = Math.round((s.current / s.goal) * 100);
+          return (
+            <div key={key} className="stat-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="stat-icon" style={{
+                  background: key === 'calories' ? '#FFF0F5' : key === 'water' ? '#E3F2FD' : key === 'steps' ? '#FFF8E1' : '#F3E5F5',
+                }}>{s.icon}</div>
+                <ProgressRing value={s.current} goal={s.goal} size={40}
+                  color={key === 'calories' ? '#C5961B' : key === 'water' ? '#42A5F5' : key === 'steps' ? '#FF9800' : '#AB47BC'} />
+              </div>
+              <div className="stat-value">
+                {key === 'sleep' ? s.current + 'h' : s.current.toLocaleString()}
+              </div>
+              <div className="stat-label">{s.label} · {pct}%</div>
+              <div className="stat-progress">
+                <div className="stat-progress-bar" style={{ width: `${Math.min(pct, 100)}%` }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Action Buttons */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '16px',
-        marginBottom: '24px'
-      }}>
-        <Link to="/meal-logger" className="btn" style={{ textAlign: "center" }}>
-          {t("log_meal")}
-        </Link>
-        <Link to="/water-tracker" className="btn" style={{ textAlign: "center" }}>
-          {t("add_water")}
-        </Link>
-      </div>
-
-      {/* Mood and Energy Buttons */}
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '16px',
-        marginBottom: '24px'
-      }}>
-        <button 
-          className="btn" 
-          style={{ 
-            background: 'linear-gradient(135deg, #FFF5F8, #FFF0E8)',
-            color: '#B8860B',
-            border: '1px solid rgba(212,160,23,0.3)'
-          }}
-          onClick={() => alert(t("mood_logging_coming_soon"))}
-        >
-          {t("log_mood")}
-        </button>
-        <button 
-          className="btn" 
-          style={{ 
-            backgroundColor: "#FFF3E0",
-            color: "#E65100",
-            border: "1px solid #FF9800"
-          }}
-          onClick={() => alert(t("energy_logging_coming_soon"))}
-        >
-          {t("log_energy")}
-        </button>
-      </div>
-
-      {/* Quick Access Grid */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: '12px' }}>{t('quick_actions')}</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
-        {[
-          { to: '/exercise', icon: '💪', label: t('exercise'), color: '#E53935' },
-          { to: '/barcode-scanner', icon: '📱', label: t('barcode_scanner'), color: '#1E88E5' },
-          { to: '/journal', icon: '📓', label: t('journal'), color: '#8E24AA' },
-          { to: '/progress-photos', icon: '📸', label: t('progress_photos'), color: '#FB8C00' },
-          { to: '/reminders', icon: '🔔', label: t('reminders'), color: '#C4900A' },
-          { to: '/subscription', icon: '⭐', label: t('premium'), color: '#FF9800' },
-        ].map((item, i) => (
-          <Link key={i} to={item.to} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="card" style={{ padding: '14px 8px', textAlign: 'center', transition: 'transform 0.2s ease' }}>
-              <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '6px' }}>{item.icon}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#495057' }}>{item.label}</span>
+      {/* Quick Actions */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 20 }}>
+        {quickActions.map(a => (
+          <Link key={a.to} to={a.to} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="sf-card" style={{ padding: '14px 8px', textAlign: 'center' }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 12, background: a.color,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 8px', fontSize: '1.3rem',
+              }}>{a.icon}</div>
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#5D4037' }}>{a.label}</span>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* Wellness Tip of the Day */}
-      <div className="card" style={{ 
-        marginBottom: '24px',
-        padding: '20px',
-        background: 'linear-gradient(135deg, #FFF5F8 0%, #FFF0E8 100%)',
-        border: '1px solid rgba(212,160,23,0.3)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '12px' }}>🌟</span>
-          <h3 style={{ margin: "0", fontSize: "1.1rem", color: "#B8860B" }}>{t("wellness_tip_of_the_day")}</h3>
+      {/* Recent Meals */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <h2 className="section-title" style={{ marginBottom: 0 }}>{t('recent_meals') || 'Recent Meals'}</h2>
+          <Link to="/meal-logger" style={{ fontSize: '0.8rem', color: '#C5961B', fontWeight: 600, textDecoration: 'none' }}>
+            {t('see_all') || 'See all'}
+          </Link>
         </div>
-        <p style={{ margin: '0', fontSize: '0.95rem', color: '#5D4037', lineHeight: '1.5', fontWeight: '500' }}>
-          {getDailyWellnessTip()}
-        </p>
+        {recentMeals.map((meal, i) => (
+          <div key={i} className="sf-card" style={{
+            display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', marginBottom: 8,
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 12, background: '#FFF0F5',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem',
+            }}>{meal.emoji}</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontWeight: 600, fontSize: '0.95rem', margin: 0 }}>{meal.type}</p>
+              <p style={{ color: '#8D6E63', fontSize: '0.8rem', margin: 0 }}>{meal.time}</p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ fontWeight: 700, fontSize: '0.95rem', margin: 0, color: '#C5961B' }}>{meal.cal}</p>
+              <p style={{ color: '#BCAAA4', fontSize: '0.7rem', margin: 0 }}>kcal</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Wellness Tip */}
+      <div className="sf-card sf-card-pink" style={{ padding: 18, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <span style={{ fontSize: '1.3rem' }}>🌟</span>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3E2723', margin: 0 }}>
+            {t('wellness_tip_of_the_day') || 'Wellness Tip'}
+          </h3>
+        </div>
+        <p style={{ fontSize: '0.88rem', color: '#5D4037', lineHeight: 1.6, margin: 0 }}>{tip}</p>
+      </div>
+
+      {/* More Features */}
+      <div style={{ marginBottom: 20 }}>
+        <h2 className="section-title">{t('explore') || 'Explore'}</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {[
+            { to: '/journal', icon: '📓', label: t('journal') || 'Journal', desc: t('daily_journal') || 'Daily wellness' },
+            { to: '/progress-photos', icon: '📸', label: t('progress_photos') || 'Photos', desc: t('weekly_progress') || 'Track progress' },
+            { to: '/reminders', icon: '🔔', label: t('reminders') || 'Reminders', desc: t('notification_settings') || 'Stay on track' },
+            { to: '/subscription', icon: '⭐', label: t('premium') || 'Premium', desc: t('upgrade_to_premium') || 'Unlock all' },
+          ].map(f => (
+            <Link key={f.to} to={f.to} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="sf-card" style={{ padding: 16 }}>
+                <span style={{ fontSize: '1.5rem' }}>{f.icon}</span>
+                <p style={{ fontWeight: 700, fontSize: '0.9rem', margin: '8px 0 2px', color: '#3E2723' }}>{f.label}</p>
+                <p style={{ fontSize: '0.75rem', color: '#8D6E63', margin: 0 }}>{f.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <BottomNav />

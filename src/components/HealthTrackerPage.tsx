@@ -1,226 +1,82 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
+import BottomNav from './BottomNav';
 
-interface HealthTrackerPageProps {}
-
-const HealthTrackerPage: React.FC<HealthTrackerPageProps> = () => {
-  const [weight, setWeight] = useState('');
-  const [mood, setMood] = useState(3);
+const HealthTrackerPage: React.FC = () => {
+  const { t } = useTranslation();
+  const [weight, setWeight] = useState('145');
+  const [mood, setMood] = useState(4);
   const [energy, setEnergy] = useState(3);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const moodLabels = ['Poor', 'Low', 'Okay', 'Good', 'Great'];
-  const energyLabels = ['Low', 'Mild', 'Moderate', 'High', 'Excellent'];
-  const moodEmojis = ['😞', '😐', '🙂', '😊', '😁'];
-  const energyEmojis = ['🔋', '🔋', '🔋', '🔋', '🔋'];
-  
-  const handleSave = (): void => {
-    setIsLoading(true);
-    
-    // Simulate saving data
-    setTimeout(() => {
-      setIsLoading(false);
-      // Show success message or redirect
-    }, 1000);
-  };
+
+  const metrics = [
+    { label: t('weight') || 'Weight', value: weight + ' lbs', icon: '⚖️', color: '#FFF8E1' },
+    { label: t('mood') || 'Mood', value: ['😢','😟','😐','😊','🤩'][mood-1], icon: '🧠', color: '#FFF0F5' },
+    { label: t('energy') || 'Energy', value: energy + '/5', icon: '⚡', color: '#E3F2FD' },
+    { label: t('sleep') || 'Sleep', value: '7.5 hrs', icon: '😴', color: '#F3E5F5' },
+  ];
 
   return (
-    <div className="container" style={{ padding: '20px' }}>
-      {/* Header */}
-      <h1 style={{ fontSize: '1.8rem', marginBottom: '24px', textAlign: 'center' }}>Health Tracker</h1>
-      
-      {/* Weight Section */}
-      <div style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '12px' }}>Weight</h2>
-        <div style={{ position: 'relative' }}>
-          <input
-            type="number"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            placeholder="Enter weight in lbs"
-            style={{
-              width: '100%',
-              padding: '12px',
-              paddingRight: '40px',
-              borderRadius: '8px',
-              border: '1px solid var(--gray-color)',
-              fontSize: '1rem'
-            }}
-          />
-          <span style={{
-            position: 'absolute',
-            right: '12px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'var(--text-gray)'
-          }}>
-            lbs
-          </span>
+    <div className="page">
+      <h1 className="page-title" style={{ marginBottom: 4 }}>📊 {t('health_tracker') || 'Health'}</h1>
+      <p className="page-subtitle" style={{ marginBottom: 24 }}>{t('health_subtitle') || 'Monitor your vital metrics'}</p>
+
+      <div className="stat-grid" style={{ marginBottom: 24 }}>
+        {metrics.map((m, i) => (
+          <div key={i} className="stat-card">
+            <div className="stat-icon" style={{ background: m.color }}>{m.icon}</div>
+            <div className="stat-value">{m.value}</div>
+            <div className="stat-label">{m.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="sf-card" style={{ padding: 20, marginBottom: 24 }}>
+        <h3 className="section-title">{t('log_today_metrics') || 'Log Today\'s Metrics'}</h3>
+        
+        <div style={{ marginBottom: 16 }}>
+          <label className="sf-label">{t('current_weight') || 'Current Weight (lbs)'}</label>
+          <input className="sf-input" type="number" value={weight} onChange={e => setWeight(e.target.value)} />
         </div>
-      </div>
-      
-      {/* Mood Section */}
-      <div style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '12px' }}>Mood</h2>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}>
-          {moodLabels.map((label, index) => (
-            <div 
-              key={label}
-              onClick={() => setMood(index + 1)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                cursor: 'pointer'
-              }}
-            >
-              <div style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '50%',
-                backgroundColor: mood === index + 1 ? 'var(--primary-color)' : 'var(--gray-color)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '8px',
-                fontSize: '24px'
-              }}>
-                {moodEmojis[index]}
-              </div>
-              <span style={{
-                fontSize: '12px',
-                color: mood === index + 1 ? 'var(--primary-color)' : 'var(--text-gray)',
-                fontWeight: mood === index + 1 ? 'bold' : 'normal'
-              }}>
-                {label}
-              </span>
-            </div>
-          ))}
+
+        <div style={{ marginBottom: 16 }}>
+          <label className="sf-label">{t('how_is_mood') || 'How is your mood?'}</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {[1,2,3,4,5].map(i => (
+              <button key={i} onClick={() => setMood(i)} style={{
+                flex: 1, padding: '12px 0', borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: mood === i ? 'linear-gradient(135deg, #D4A017, #C5961B)' : '#FFF0F5',
+                fontSize: '1.2rem', transition: 'all 0.2s', transform: mood === i ? 'scale(1.1)' : 'scale(1)',
+              }}>{['😢','😟','😐','😊','🤩'][i-1]}</button>
+            ))}
+          </div>
         </div>
-      </div>
-      
-      {/* Energy Section */}
-      <div style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '12px' }}>Energy</h2>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}>
-          {energyLabels.map((label, index) => (
-            <div 
-              key={label}
-              onClick={() => setEnergy(index + 1)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                cursor: 'pointer'
-              }}
-            >
-              <div style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '50%',
-                backgroundColor: energy === index + 1 ? 'var(--primary-color)' : 'var(--gray-color)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '8px',
-                fontSize: '24px'
-              }}>
-                {energyEmojis[index]}
-              </div>
-              <span style={{
-                fontSize: '12px',
-                color: energy === index + 1 ? 'var(--primary-color)' : 'var(--text-gray)',
-                fontWeight: energy === index + 1 ? 'bold' : 'normal'
-              }}>
-                {label}
-              </span>
-            </div>
-          ))}
+
+        <div style={{ marginBottom: 20 }}>
+          <label className="sf-label">{t('energy_level') || 'Energy Level'}</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {[1,2,3,4,5].map(i => (
+              <button key={i} onClick={() => setEnergy(i)} style={{
+                flex: 1, padding: '12px 0', borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: energy >= i ? 'linear-gradient(135deg, #F8B4C8, #D4A017)' : '#FFF0F5',
+                color: energy >= i ? 'white' : '#BCAAA4', fontWeight: 700,
+              }}>{i}</button>
+            ))}
+          </div>
         </div>
+
+        <button className="sf-btn sf-btn-gold sf-btn-full sf-btn-lg">
+          {t('save_metrics') || 'Save Metrics'}
+        </button>
       </div>
-      
-      {/* Save Button */}
-      <button
-        className="btn btn-full"
-        onClick={handleSave}
-        disabled={isLoading}
-        style={{
-          marginBottom: '32px',
-          opacity: isLoading ? 0.7 : 1
-        }}
-      >
-        {isLoading ? 'Saving...' : 'SAVE'}
-      </button>
-      
-      {/* History Chart Placeholder */}
-      <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '12px' }}>History</h2>
-      <div style={{
-        height: '200px',
-        backgroundColor: 'var(--gray-color)',
-        borderRadius: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: '24px'
-      }}>
-        <p style={{ color: 'var(--text-gray)' }}>Health History Chart</p>
+
+      <div className="sf-card sf-card-pink" style={{ padding: 20, marginBottom: 24 }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 10 }}>{t('health_insight') || 'Health Insight'}</h3>
+        <p style={{ fontSize: '0.88rem', color: '#5D4037', lineHeight: 1.6, margin: 0 }}>
+          {t('health_insight_msg') || 'Your energy levels seem to correlate with your sleep quality. Try to maintain a consistent sleep schedule this week.'}
+        </p>
       </div>
-      
-      {/* Bottom Navigation */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-around',
-        marginTop: '40px',
-        padding: '16px 0',
-        borderTop: '1px solid var(--gray-color)'
-      }}>
-        <Link to="/dashboard" style={{ 
-          textDecoration: 'none', 
-          color: 'var(--text-gray)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '4px' }}>🏠</span>
-          <span style={{ fontSize: '0.8rem' }}>Home</span>
-        </Link>
-        <Link to="/meal-logger" style={{ 
-          textDecoration: 'none', 
-          color: 'var(--text-gray)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '4px' }}>📷</span>
-          <span style={{ fontSize: '0.8rem' }}>Meals</span>
-        </Link>
-        <Link to="/water-tracker" style={{ 
-          textDecoration: 'none', 
-          color: 'var(--text-gray)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '4px' }}>💧</span>
-          <span style={{ fontSize: '0.8rem' }}>Water</span>
-        </Link>
-        <Link to="/health-tracker" style={{ 
-          textDecoration: 'none', 
-          color: 'var(--primary-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '4px' }}>📊</span>
-          <span style={{ fontSize: '0.8rem' }}>Health</span>
-        </Link>
-      </div>
+
+      <BottomNav />
     </div>
   );
 };

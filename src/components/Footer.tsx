@@ -20,7 +20,7 @@ const Footer: React.FC<FooterProps> = () => {
           <div style={{ flex: '1', minWidth: '250px', marginBottom: '30px', paddingRight: '20px' }}>
             <h2 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>Sajoma Fitness</h2>
             <p style={{ color: 'var(--gray-color)', lineHeight: '1.6' }}>
-              Wellness simplified for adults 40+. Track meals, monitor health metrics, and receive expert-backed suggestions.
+              Wellness simplified for adults. Track meals, monitor health metrics, and receive expert-backed suggestions.
             </p>
           </div>
           

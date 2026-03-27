@@ -1,336 +1,103 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
-interface HomePageProps {}
+const HomePage: React.FC = () => {
+  const { t } = useTranslation();
 
-const HomePage: React.FC<HomePageProps> = () => {
+  const features = [
+    { icon: '📷', title: t('meal_analysis') || 'Meal Analysis', desc: t('meal_analysis_desc') || 'Photo-based nutrition tracking with AI analysis' },
+    { icon: '💧', title: t('water_tracking') || 'Water Tracking', desc: t('water_tracking_desc') || 'Stay hydrated with smart reminders' },
+    { icon: '💪', title: t('exercise_tracking') || 'Exercise Tracking', desc: t('exercise_tracking_desc') || 'Log workouts and track progress' },
+    { icon: '📓', title: t('journal') || 'Wellness Journal', desc: t('journal_desc') || 'Daily mood, energy and gratitude tracking' },
+    { icon: '📱', title: t('barcode_scanner') || 'Barcode Scanner', desc: t('barcode_scanner_desc') || 'Scan food for instant nutrition info' },
+    { icon: '📸', title: t('progress_photos') || 'Progress Photos', desc: t('progress_photos_desc') || 'Visual progress tracking over time' },
+  ];
+
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="section hero-section" style={{ 
-        background: 'linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%)',
-        padding: '80px 0'
-      }}>
-        <div className="container">
-          <div className="flex-container" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ flex: '1', padding: '0 20px' }}>
-              <h1 style={{ fontSize: '3rem', marginBottom: '1.5rem', color: 'var(--dark-color)' }}>
-                Sajoma Fitness
-              </h1>
-              <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--dark-color)' }}>
-                Track meals, monitor health metrics, and receive expert-backed wellness suggestions tailored for your body's changing needs.
-              </p>
-              <div>
-                <Link to="/login" className="btn mb-2 mr-2" style={{ marginRight: '1rem' }}>
-                  Get Started
-                </Link>
-                <a href="#features" className="btn btn-secondary">
-                  Learn More
-                </a>
-              </div>
-            </div>
-            <div style={{ flex: '1', padding: '0 20px', textAlign: 'center' }}>
-              <img 
-                src="/images/dashboard_screen.png" 
-                alt="Sajoma Fitness App Dashboard" 
-                style={{ 
-                  maxWidth: '100%', 
-                  height: 'auto',
-                  borderRadius: '12px',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-                }} 
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="section">
-        <div className="container">
-          <h2 className="section-title">Key Features</h2>
-          <p className="section-subtitle">
-            Sajoma Fitness combines cutting-edge technology with expert nutritional guidance to help adults achieve their wellness goals.
-          </p>
-
-          <div className="flex-container features-container" style={{ justifyContent: 'space-between' }}>
-            {/* Feature 1 */}
-            <div style={{ flex: '1', minWidth: '300px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                  <img 
-                    src="/images/meal_logger_screen.png" 
-                    alt="Meal Analysis" 
-                    style={{ width: '80%', borderRadius: '8px' }} 
-                  />
-                </div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Meal Photo Analysis</h3>
-                <p>
-                  Simply take a photo of your meal and Sajoma Fitness identifies ingredients, analyzes nutritional content, and provides expert-backed suggestions.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 2 */}
-            <div style={{ flex: '1', minWidth: '300px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                  <img 
-                    src="/images/water_tracker_screen.png" 
-                    alt="Water Tracking" 
-                    style={{ width: '80%', borderRadius: '8px' }} 
-                  />
-                </div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Water Intake Tracking</h3>
-                <p>
-                  Track your daily water consumption with a simple tap-to-add interface. Stay hydrated with personalized reminders based on your activity level.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div style={{ flex: '1', minWidth: '300px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                  <img 
-                    src="/images/health_tracker_screen.png" 
-                    alt="Health Tracking" 
-                    style={{ width: '80%', borderRadius: '8px' }} 
-                  />
-                </div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Health Metrics Monitoring</h3>
-                <p>
-                  Monitor weight, mood, energy levels, and other key health indicators. Visualize trends and correlate them with your nutrition habits.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="section" style={{ backgroundColor: 'var(--primary-light)' }}>
-        <div className="container">
-          <h2 className="section-title">How It Works</h2>
-          <p className="section-subtitle">
-            Sajoma Fitness makes wellness tracking simple and effective with a user-friendly approach designed for all adults.
-          </p>
-
-          <div className="flex-container" style={{ justifyContent: 'center' }}>
-            {/* Step 1 */}
-            <div className="how-it-works-step" style={{ flex: '1', maxWidth: '250px', padding: '20px', textAlign: 'center' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--primary-color)', 
-                color: 'white', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '2rem', 
-                margin: '0 auto 1.5rem' 
-              }}>
-                1
-              </div>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Log Your Meals</h3>
-              <p>
-                Take a photo of your meal or log it manually to track your nutrition intake.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="how-it-works-step" style={{ flex: '1', maxWidth: '250px', padding: '20px', textAlign: 'center' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--primary-color)', 
-                color: 'white', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '2rem', 
-                margin: '0 auto 1.5rem' 
-              }}>
-                2
-              </div>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Track Your Health</h3>
-              <p>
-                Monitor water intake, weight, mood, and energy levels to build a complete wellness profile.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="how-it-works-step" style={{ flex: '1', maxWidth: '250px', padding: '20px', textAlign: 'center' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--primary-color)', 
-                color: 'white', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '2rem', 
-                margin: '0 auto 1.5rem' 
-              }}>
-                3
-              </div>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Get Insights</h3>
-              <p>
-                Receive personalized suggestions from nutrition experts like Dr. Berg and Dr. Gundry.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="how-it-works-step" style={{ flex: '1', maxWidth: '250px', padding: '20px', textAlign: 'center' }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--primary-color)', 
-                color: 'white', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '2rem', 
-                margin: '0 auto 1.5rem' 
-              }}>
-                4
-              </div>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Improve Daily</h3>
-              <p>
-                Make small, sustainable changes guided by your personal data and expert recommendations.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="section">
-        <div className="container">
-          <h2 className="section-title">What Our Users Say</h2>
-          <p className="section-subtitle">
-            Hear from adults who have transformed their wellness journey with Sajoma Fitness.
-          </p>
-
-          <div className="flex-container" style={{ justifyContent: 'center' }}>
-            {/* Testimonial 1 */}
-            <div className="testimonial-card" style={{ flex: '1', minWidth: '300px', maxWidth: '400px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                  "Sajoma Fitness has completely changed how I approach nutrition. The meal analysis feature helped me identify inflammatory foods that were causing my joint pain."
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{ 
-                    width: '50px', 
-                    height: '50px', 
-                    borderRadius: '50%', 
-                    backgroundColor: 'var(--primary-color)', 
-                    marginRight: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}>
-                    JM
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: 'bold', margin: 0 }}>Janet M.</p>
-                    <p style={{ margin: 0, color: 'var(--text-gray)' }}>Age 52</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div className="testimonial-card" style={{ flex: '1', minWidth: '300px', maxWidth: '400px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                  "The water tracking feature is so simple yet effective. I've increased my daily water intake by 40% and my energy levels have improved dramatically."
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{ 
-                    width: '50px', 
-                    height: '50px', 
-                    borderRadius: '50%', 
-                    backgroundColor: 'var(--primary-color)', 
-                    marginRight: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}>
-                    RK
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: 'bold', margin: 0 }}>Robert K.</p>
-                    <p style={{ margin: 0, color: 'var(--text-gray)' }}>Age 47</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="testimonial-card" style={{ flex: '1', minWidth: '300px', maxWidth: '400px', padding: '20px' }}>
-              <div className="card" style={{ height: '100%' }}>
-                <p style={{ fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                  "As someone over 60, I appreciate how Sajoma Fitness is designed with simplicity in mind. The expert tips have helped me make better choices without feeling overwhelmed."
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{ 
-                    width: '50px', 
-                    height: '50px', 
-                    borderRadius: '50%', 
-                    backgroundColor: 'var(--primary-color)', 
-                    marginRight: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}>
-                    SL
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: 'bold', margin: 0 }}>Susan L.</p>
-                    <p style={{ margin: 0, color: 'var(--text-gray)' }}>Age 63</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="section" style={{ 
-        background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%)',
-        color: 'white',
-        textAlign: 'center',
-        padding: '80px 0'
-      }}>
-        <div className="container">
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>
-            Start Your Wellness Journey Today
-          </h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '2rem', maxWidth: '700px', margin: '0 auto 2rem' }}>
-            Join thousands of adults who are taking control of their health with Sajoma Fitness' personalized approach to wellness.
-          </p>
-          <Link to="/login" className="btn" style={{ 
-            backgroundColor: 'white', 
-            color: 'var(--primary-color)',
-            padding: '15px 40px',
-            fontSize: '1.2rem'
-          }}>
-            Get Started Now
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #FFF5F8 0%, #FFFAF0 100%)' }}>
+      {/* Hero */}
+      <div style={{ padding: '60px 20px 40px', textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: 24,
+          background: 'linear-gradient(135deg, #F8B4C8, #D4A017)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 20px', boxShadow: '0 8px 24px rgba(212,160,23,0.25)',
+          fontSize: '2rem', color: 'white', fontWeight: 800,
+        }}>S</div>
+        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#3E2723', letterSpacing: '-0.03em', marginBottom: 12 }}>
+          Sajoma Fitness
+        </h1>
+        <p style={{ fontSize: '1rem', color: '#8D6E63', lineHeight: 1.6, maxWidth: 340, margin: '0 auto 28px' }}>
+          {t('app_description') || 'Track meals, monitor health metrics, and receive expert wellness suggestions.'}
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link to="/signup" className="sf-btn sf-btn-gold sf-btn-lg" style={{ minWidth: 160 }}>
+            {t('get_started') || 'Get Started'}
+          </Link>
+          <Link to="/login" className="sf-btn sf-btn-outline sf-btn-lg" style={{ minWidth: 160 }}>
+            {t('login') || 'Log In'}
           </Link>
         </div>
-      </section>
+      </div>
+
+      {/* Features */}
+      <div style={{ padding: '20px 20px 40px', maxWidth: 480, margin: '0 auto' }}>
+        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#3E2723', textAlign: 'center', marginBottom: 20 }}>
+          {t('key_features') || 'Key Features'}
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {features.map((f, i) => (
+            <div key={i} className="sf-card" style={{ padding: 16 }}>
+              <span style={{ fontSize: '1.5rem' }}>{f.icon}</span>
+              <p style={{ fontWeight: 700, fontSize: '0.88rem', margin: '10px 0 4px', color: '#3E2723' }}>{f.title}</p>
+              <p style={{ fontSize: '0.75rem', color: '#8D6E63', margin: 0, lineHeight: 1.5 }}>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Testimonials */}
+      <div style={{ padding: '20px 20px 40px', maxWidth: 480, margin: '0 auto' }}>
+        <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#3E2723', textAlign: 'center', marginBottom: 20 }}>
+          {t('what_users_say') || 'What Our Users Say'}
+        </h2>
+        {[
+          { text: 'Sajoma Fitness helped me identify foods causing my joint pain. Game changer!', name: 'Maria G.', rating: 5 },
+          { text: 'The water tracking is so simple. My energy levels improved dramatically.', name: 'Carmen R.', rating: 5 },
+          { text: 'Love how it supports both English and Spanish. Finally an app for us!', name: 'Ana L.', rating: 5 },
+        ].map((t, i) => (
+          <div key={i} className="sf-card" style={{ padding: 18, marginBottom: 10 }}>
+            <div style={{ display: 'flex', gap: 2, marginBottom: 8 }}>
+              {Array(t.rating).fill(0).map((_, j) => <span key={j} style={{ color: '#C5961B', fontSize: '0.9rem' }}>★</span>)}
+            </div>
+            <p style={{ fontSize: '0.88rem', color: '#5D4037', lineHeight: 1.6, margin: '0 0 8px' }}>"{t.text}"</p>
+            <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#C5961B', margin: 0 }}>— {t.name}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div style={{
+        padding: '32px 20px 48px', textAlign: 'center', maxWidth: 480, margin: '0 auto',
+      }}>
+        <div className="sf-card sf-card-gold" style={{ padding: 28, textAlign: 'center' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 8 }}>
+            {t('start_journey') || 'Start Your Wellness Journey'}
+          </h3>
+          <p style={{ fontSize: '0.88rem', opacity: 0.9, marginBottom: 20 }}>
+            {t('join_thousands') || 'Join thousands taking control of their health'}
+          </p>
+          <Link to="/signup" className="sf-btn sf-btn-lg" style={{
+            background: 'white', color: '#C5961B', fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}>
+            {t('get_started_free') || 'Get Started Free'}
+          </Link>
+        </div>
+        <p style={{ marginTop: 20, fontSize: '0.75rem', color: '#BCAAA4' }}>
+          © {new Date().getFullYear()} Sajoma Fitness. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 };

@@ -6,46 +6,26 @@ const BottomNav: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
 
-  const navItems = [
-    { path: '/dashboard', icon: '🏠', label: t('home') },
-    { path: '/meal-logger', icon: '📷', label: t('meals') },
-    { path: '/exercise', icon: '💪', label: t('exercise') },
-    { path: '/water-tracker', icon: '💧', label: t('water_nav') },
-    { path: '/journal', icon: '📓', label: t('journal') },
+  const items = [
+    { to: '/dashboard', icon: '🏠', label: t('home') },
+    { to: '/meal-logger', icon: '🍽️', label: t('meals') },
+    { to: '/exercise', icon: '💪', label: t('exercise') },
+    { to: '/journal', icon: '📓', label: t('journal') },
+    { to: '/settings', icon: '⚙️', label: t('settings') },
   ];
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-around',
-      padding: '12px 0',
-      borderTop: '1px solid var(--gray-color)',
-      backgroundColor: 'white',
-      position: 'sticky',
-      bottom: 0,
-      zIndex: 100,
-    }}>
-      {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
+    <nav className="bottom-nav">
+      {items.map(item => {
+        const isActive = location.pathname === item.to;
         return (
-          <Link
-            key={item.path}
-            to={item.path}
-            style={{
-              textDecoration: 'none',
-              color: isActive ? 'var(--primary-color)' : 'var(--text-gray)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              transition: 'color 0.2s ease',
-            }}
-          >
-            <span style={{ fontSize: '1.4rem', marginBottom: '2px' }}>{item.icon}</span>
-            <span style={{ fontSize: '0.7rem', fontWeight: isActive ? '700' : '500' }}>{item.label}</span>
+          <Link key={item.to} to={item.to} className={`bottom-nav-item ${isActive ? 'active' : ''}`}>
+            <span className="nav-icon">{item.icon}</span>
+            <span className="nav-label">{item.label}</span>
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 };
 

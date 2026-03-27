@@ -1,343 +1,199 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
-interface LoginPageProps {
-  onLogin: () => void;
-}
+interface LoginPageProps { onLogin: () => void; }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isSignUpRoute = location.pathname === '/signup';
+
+  const [isSignUp, setIsSignUp] = useState(isSignUpRoute);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
-  const navigate = useNavigate();
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password: string) => {
-    return password.length >= 6;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-    
-    // Validation
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      setIsLoading(false);
-      return;
-    }
 
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError('Password must be at least 6 characters long');
-      setIsLoading(false);
-      return;
-    }
+    if (!email || !password) { setError('Please fill in all fields'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('Please enter a valid email'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
 
     if (isSignUp) {
-      if (!name.trim()) {
-        setError('Please enter your name');
-        setIsLoading(false);
-        return;
-      }
-      
-      if (password !== confirmPassword) {
-        setError('Passwords do not match');
-        setIsLoading(false);
-        return;
-      }
+      if (!name.trim()) { setError('Please enter your name'); return; }
+      if (password !== confirmPassword) { setError('Passwords do not match'); return; }
     }
-    
-    // Simulate API call
+
+    setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, accept any valid credentials
+      await new Promise(r => setTimeout(r, 1200));
+      if (isSignUp && name) {
+        localStorage.setItem('userName', name);
+      }
       onLogin();
       navigate('/dashboard');
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch {
+      setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const toggleMode = () => {
-    setIsSignUp(!isSignUp);
-    setError('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setName('');
-  };
-
   return (
     <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #FFF5F8 0%, #FFFAF0 50%, #FFF0F5 100%)',
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection: 'column',
       alignItems: 'center',
-      padding: '2rem 1rem',
-      minHeight: 'calc(100vh - 200px)'
+      justifyContent: 'center',
+      padding: '24px 20px',
     }}>
-      <div style={{
-        maxWidth: '450px',
-        width: '100%',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '2rem',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            width: '100px',
-            height: '100px',
-            borderRadius: '22px',
-            background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%)',
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.5rem',
-            fontWeight: 'bold',
-            margin: '0 auto 1rem',
-            boxShadow: '0 4px 12px rgba(212,160,23,0.4)'
-          }}>
-            🏃‍♀️
-          </div>
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>
-            {isSignUp ? 'Join Sajoma Fitness' : 'Welcome to Sajoma Fitness'}
-          </h2>
-          <p style={{ color: '#666', fontSize: '0.9rem' }}>
-            {isSignUp ? 'Start your wellness journey today' : 'Your wellness journey starts here'}
-          </p>
-        </div>
+      {/* Logo */}
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: 24,
+          background: 'linear-gradient(135deg, #F8B4C8 0%, #D4A017 100%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(212,160,23,0.25)',
+          fontSize: '2rem', color: 'white', fontWeight: 800,
+        }}>S</div>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#3E2723', letterSpacing: '-0.02em' }}>
+          Sajoma Fitness
+        </h1>
+        <p style={{ color: '#8D6E63', fontSize: '0.9rem', marginTop: 4 }}>
+          {isSignUp ? t('create_account') || 'Create your account' : t('welcome_back') || 'Welcome back'}
+        </p>
+      </div>
 
-        {error && (
-          <div style={{
-            backgroundColor: '#ffebee',
-            color: '#c62828',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            fontSize: '0.9rem'
-          }}>
-            {error}
-          </div>
-        )}
+      {/* Form Card */}
+      <div style={{
+        width: '100%', maxWidth: 400,
+        background: 'white',
+        borderRadius: 20,
+        padding: '28px 24px',
+        boxShadow: '0 4px 20px rgba(62,39,35,0.08)',
+        border: '1px solid rgba(197,150,27,0.1)',
+      }}>
+        {/* Tab Toggle */}
+        <div className="sf-tabs" style={{ marginBottom: 20 }}>
+          <button
+            className={`sf-tab ${!isSignUp ? 'active' : ''}`}
+            onClick={() => { setIsSignUp(false); setError(''); }}
+          >
+            {t('login') || 'Log In'}
+          </button>
+          <button
+            className={`sf-tab ${isSignUp ? 'active' : ''}`}
+            onClick={() => { setIsSignUp(true); setError(''); }}
+          >
+            {t('sign_up') || 'Sign Up'}
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit}>
           {isSignUp && (
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label 
-                htmlFor="name" 
-                style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  fontWeight: 'bold',
-                  color: '#333'
-                }}
-              >
-                Full Name
-              </label>
+            <div style={{ marginBottom: 14 }}>
+              <label className="sf-label">{t('full_name') || 'Full Name'}</label>
               <input
-                id="name"
+                className="sf-input"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Maria Garcia"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '4px',
-                  border: '1px solid #ddd',
-                  fontSize: '1rem',
-                  backgroundColor: '#FFF5F8'
-                }}
+                onChange={e => setName(e.target.value)}
               />
             </div>
           )}
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label 
-              htmlFor="email" 
-              style={{ 
-                display: 'block', 
-                marginBottom: '0.5rem',
-                fontWeight: 'bold',
-                color: '#333'
-              }}
-            >
-              Email
-            </label>
+          <div style={{ marginBottom: 14 }}>
+            <label className="sf-label">{t('email') || 'Email'}</label>
             <input
-              id="email"
+              className="sf-input"
               type="email"
-              placeholder="Enter your email"
+              placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '4px',
-                border: '1px solid #ddd',
-                fontSize: '1rem',
-                backgroundColor: '#FFF5F8'
-              }}
+              onChange={e => setEmail(e.target.value)}
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <label 
-                htmlFor="password" 
-                style={{ 
-                  fontWeight: 'bold',
-                  color: '#333'
-                }}
-              >
-                Password
-              </label>
-              {!isSignUp && (
-                <Link 
-                  to="/forgot-password" 
-                  style={{ 
-                    color: '#D4A017', 
-                    textDecoration: 'none',
-                    fontSize: '0.9rem'
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              )}
-            </div>
+          <div style={{ marginBottom: 14 }}>
+            <label className="sf-label">{t('password') || 'Password'}</label>
             <input
-              id="password"
+              className="sf-input"
               type="password"
-              placeholder="Enter your password"
+              placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '4px',
-                border: '1px solid #ddd',
-                fontSize: '1rem',
-                backgroundColor: '#FFF5F8'
-              }}
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
 
           {isSignUp && (
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label 
-                htmlFor="confirmPassword" 
-                style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  fontWeight: 'bold',
-                  color: '#333'
-                }}
-              >
-                Confirm Password
-              </label>
+            <div style={{ marginBottom: 14 }}>
+              <label className="sf-label">{t('confirm_password') || 'Confirm Password'}</label>
               <input
-                id="confirmPassword"
+                className="sf-input"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="••••••••"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '4px',
-                  border: '1px solid #ddd',
-                  fontSize: '1rem',
-                  backgroundColor: '#FFF5F8'
-                }}
+                onChange={e => setConfirmPassword(e.target.value)}
               />
+            </div>
+          )}
+
+          {error && (
+            <div style={{
+              background: '#FFF0F0', color: '#C62828', padding: '10px 14px',
+              borderRadius: 10, fontSize: '0.85rem', marginBottom: 14,
+              border: '1px solid #FFCDD2',
+            }}>
+              {error}
             </div>
           )}
 
           <button
             type="submit"
+            className="sf-btn sf-btn-gold sf-btn-full sf-btn-lg"
             disabled={isLoading}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              backgroundColor: isLoading ? '#ccc' : '#D4A017',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
+            style={{ marginTop: 4, opacity: isLoading ? 0.7 : 1 }}
           >
-            {isLoading ? (
-              <>
-                <div style={{
-                  width: '20px',
-                  height: '20px',
-                  border: '2px solid #ffffff',
-                  borderTop: '2px solid transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  marginRight: '10px'
-                }}></div>
-                {isSignUp ? 'Creating Account...' : 'Signing In...'}
-              </>
-            ) : (
-              isSignUp ? 'CREATE ACCOUNT' : 'LOG IN'
-            )}
+            {isLoading ? '...' : isSignUp ? (t('sign_up') || 'Sign Up') : (t('login') || 'Log In')}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ color: '#666', fontSize: '0.9rem' }}>
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button
-              onClick={toggleMode}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#D4A017',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-                fontSize: 'inherit'
-              }}
-            >
-              {isSignUp ? 'Sign in' : 'Sign up'}
-            </button>
+        {!isSignUp && (
+          <p style={{ textAlign: 'center', marginTop: 14, fontSize: '0.85rem', color: '#8D6E63' }}>
+            <a href="#" style={{ color: '#C5961B', textDecoration: 'none', fontWeight: 600 }}>
+              {t('forgot_password') || 'Forgot password?'}
+            </a>
           </p>
-        </div>
+        )}
       </div>
 
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
+      {/* Social Login */}
+      <div style={{ width: '100%', maxWidth: 400, marginTop: 20, textAlign: 'center' }}>
+        <p style={{ color: '#BCAAA4', fontSize: '0.8rem', marginBottom: 12 }}>
+          {t('or_continue_with') || 'or continue with'}
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          {['Google', 'Apple'].map(provider => (
+            <button
+              key={provider}
+              className="sf-btn sf-btn-outline sf-btn-sm"
+              style={{ flex: 1, maxWidth: 160 }}
+              onClick={() => { onLogin(); navigate('/dashboard'); }}
+            >
+              {provider}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

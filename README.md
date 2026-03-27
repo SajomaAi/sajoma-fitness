@@ -6,7 +6,7 @@
 
 ### Phase 1 (Current)
 - **Exercise Tracking** — Log workouts by type, duration, calories, and intensity; Apple HealthKit integration; weekly summaries
-- **Barcode Food Scanner** — Scan barcodes via camera; OpenFoodFacts API lookup; 40+ Latino/Hispanic cultural foods database
+- **Barcode Food Scanner** — Scan barcodes via camera; OpenFoodFacts API lookup; Latino/Hispanic cultural foods database
 - **Push Notification Reminders** — Configurable meal, water, and workout reminders; morning wellness check-in
 - **Progress Photos** — Take/upload weekly photos; before/after comparison view; local storage
 - **Journaling** — Daily mood, energy, gratitude entries; rotating prompts; searchable history

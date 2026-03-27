@@ -1,262 +1,38 @@
-import React, { useState } from 'react';
-// import { useTranslation } from '../hooks/useTranslation'; // Commented out as not currently used
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
-interface PremiumPaywallProps {
-  isOpen: boolean;
-  onClose: () => void;
-  feature: string;
-}
-
-const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, feature }) => {
-  // const { t } = useTranslation(); // Commented out as not currently used
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  if (!isOpen) return null;
-
-  const handleUpgrade = async () => {
-    setIsProcessing(true);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      alert('Premium upgrade coming soon! This feature will be available in the next update.');
-      setIsProcessing(false);
-      onClose();
-    }, 2000);
-  };
-
-  const getFeatureDescription = (feature: string) => {
-    switch (feature) {
-      case 'unlimited_scans':
-        return 'Unlimited ingredient scanning and meal analysis';
-      case 'wearable_sync':
-        return 'Sync with Apple Watch, Whoop, and other wearables';
-      case 'advanced_tips':
-        return 'Personalized nutrition tips and expert guidance';
-      case 'meal_history':
-        return 'Access to complete meal history and trends';
-      default:
-        return 'Premium features and enhanced functionality';
-    }
-  };
+const PremiumPaywall: React.FC = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '20px'
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        padding: '32px',
-        maxWidth: '400px',
-        width: '100%',
-        textAlign: 'center',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
-      }}>
-        {/* Header */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            backgroundColor: '#FFD700',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 16px auto',
-            fontSize: '2rem'
-          }}>
-            👑
-          </div>
-          <h2 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 'bold', 
-            margin: '0 0 8px 0',
-            color: '#1a1a1a'
-          }}>
-            Upgrade to Premium
-          </h2>
-          <p style={{ 
-            color: '#666', 
-            margin: 0,
-            fontSize: '0.9rem'
-          }}>
-            Unlock {getFeatureDescription(feature)}
-          </p>
-        </div>
-
-        {/* Features List */}
-        <div style={{ 
-          textAlign: 'left', 
-          marginBottom: '24px',
-          backgroundColor: '#f8f9fa',
-          padding: '20px',
-          borderRadius: '12px'
-        }}>
-          <h3 style={{ 
-            fontSize: '1rem', 
-            fontWeight: 'bold', 
-            margin: '0 0 16px 0',
-            color: '#1a1a1a'
-          }}>
-            Premium includes:
-          </h3>
-          <ul style={{ 
-            listStyleType: 'none',
-            padding: 0,
-            margin: 0
-          }}>
-            <li style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              marginBottom: '12px'
-            }}>
-              <span style={{ 
-                color: '#D4A017',
-                marginRight: '12px',
-                fontSize: '1.2rem'
-              }}>✓</span>
-              <span style={{ fontSize: '0.9rem' }}>Unlimited ingredient scanning</span>
-            </li>
-            <li style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              marginBottom: '12px'
-            }}>
-              <span style={{ 
-                color: '#D4A017',
-                marginRight: '12px',
-                fontSize: '1.2rem'
-              }}>✓</span>
-              <span style={{ fontSize: '0.9rem' }}>Wearable device integration</span>
-            </li>
-            <li style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              marginBottom: '12px'
-            }}>
-              <span style={{ 
-                color: '#D4A017',
-                marginRight: '12px',
-                fontSize: '1.2rem'
-              }}>✓</span>
-              <span style={{ fontSize: '0.9rem' }}>Personalized meal suggestions</span>
-            </li>
-            <li style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              marginBottom: '12px'
-            }}>
-              <span style={{ 
-                color: '#D4A017',
-                marginRight: '12px',
-                fontSize: '1.2rem'
-              }}>✓</span>
-              <span style={{ fontSize: '0.9rem' }}>Expert nutritional guidance</span>
-            </li>
-            <li style={{ 
-              display: 'flex', 
-              alignItems: 'center'
-            }}>
-              <span style={{ 
-                color: '#D4A017',
-                marginRight: '12px',
-                fontSize: '1.2rem'
-              }}>✓</span>
-              <span style={{ fontSize: '0.9rem' }}>Ad-free experience</span>
-            </li>
+    <div className="page" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 40, background: 'white' }}>
+      <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ fontSize: '5rem', marginBottom: 32 }}>⭐</div>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3E2723', marginBottom: 16 }}>{t('premium_feature') || 'Premium Feature'}</h1>
+        <p style={{ fontSize: '1rem', color: '#8D6E63', lineHeight: 1.6, marginBottom: 40 }}>
+          {t('premium_feature_desc') || 'This feature is only available to our Premium members. Upgrade now to unlock full access.'}
+        </p>
+        
+        <div className="sf-card sf-card-pink" style={{ padding: 20, textAlign: 'left', marginBottom: 32 }}>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3E2723', marginBottom: 12 }}>{t('premium_benefits') || 'Premium Benefits:'}</h3>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {['AI Meal Analysis', 'Personalized Plans', 'Advanced Analytics', 'Priority Support'].map((b, i) => (
+              <li key={i} style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ color: '#C5961B' }}>✓</span> {b}
+              </li>
+            ))}
           </ul>
         </div>
+      </div>
 
-        {/* Pricing */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{
-            backgroundColor: '#D4A017',
-            color: 'white',
-            padding: '16px',
-            borderRadius: '12px',
-            marginBottom: '12px'
-          }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>$9.99</div>
-            <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>per month</div>
-          </div>
-          <p style={{ 
-            fontSize: '0.8rem', 
-            color: '#666', 
-            margin: 0 
-          }}>
-            Cancel anytime • 7-day free trial
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <button
-            onClick={handleUpgrade}
-            disabled={isProcessing}
-            style={{
-              backgroundColor: '#D4A017',
-              color: 'white',
-              border: 'none',
-              padding: '16px 24px',
-              borderRadius: '12px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              cursor: isProcessing ? 'not-allowed' : 'pointer',
-              opacity: isProcessing ? 0.7 : 1,
-              transition: 'all 0.2s ease'
-            }}
-          >
-            {isProcessing ? 'Processing...' : 'Start Free Trial'}
-          </button>
-          
-          <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'transparent',
-              color: '#666',
-              border: '1px solid #ddd',
-              padding: '12px 24px',
-              borderRadius: '12px',
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Maybe Later
-          </button>
-        </div>
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            background: 'none',
-            border: 'none',
-            fontSize: '1.5rem',
-            cursor: 'pointer',
-            color: '#999',
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          ×
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
+        <button className="sf-btn sf-btn-gold sf-btn-full sf-btn-lg" onClick={() => navigate('/subscription')}>
+          {t('upgrade_now') || 'Upgrade Now'}
+        </button>
+        <button className="sf-btn sf-btn-outline sf-btn-full sf-btn-lg" onClick={() => navigate(-1)}>
+          {t('go_back') || 'Go Back'}
         </button>
       </div>
     </div>
@@ -264,4 +40,3 @@ const PremiumPaywall: React.FC<PremiumPaywallProps> = ({ isOpen, onClose, featur
 };
 
 export default PremiumPaywall;
-

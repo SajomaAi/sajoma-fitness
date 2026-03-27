@@ -1,5 +1,3 @@
-import Navbar from './components/Navbar';
-import { Footer } from './components/Footer';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import HomePage from './components/HomePage';
@@ -28,18 +26,13 @@ function App() {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
     setIsLoggedIn(loggedIn);
-    if (loggedIn && !hasCompletedOnboarding) {
-      setShowOnboarding(true);
-    }
+    if (loggedIn && !hasCompletedOnboarding) setShowOnboarding(true);
   }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
-    const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
-    if (!hasCompletedOnboarding) {
-      setShowOnboarding(true);
-    }
+    if (localStorage.getItem('hasCompletedOnboarding') !== 'true') setShowOnboarding(true);
   };
 
   const handleLogout = () => {
@@ -48,77 +41,34 @@ function App() {
   };
 
   const handleOnboardingComplete = (preferences: any) => {
-    console.log('Onboarding completed with preferences:', preferences);
     localStorage.setItem('hasCompletedOnboarding', 'true');
     localStorage.setItem('userPreferences', JSON.stringify(preferences));
     setShowOnboarding(false);
   };
 
+  const P = ({ children }: { children: React.ReactNode }) =>
+    isLoggedIn ? <>{children}</> : <Navigate to="/login" />;
+
   return (
     <Router>
-      <div className="App">
-        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-            <Route
-              path="/dashboard"
-              element={isLoggedIn ? <DashboardPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/water-tracker"
-              element={isLoggedIn ? <WaterTrackerPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/meal-logger"
-              element={isLoggedIn ? <MealLoggerPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/meal-result"
-              element={isLoggedIn ? <MealResultScreen /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/health-tracker"
-              element={isLoggedIn ? <HealthTrackerPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/settings"
-              element={isLoggedIn ? <SettingsPage onLogout={handleLogout} /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/exercise"
-              element={isLoggedIn ? <ExercisePage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/barcode-scanner"
-              element={isLoggedIn ? <BarcodeScannerPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/reminders"
-              element={isLoggedIn ? <RemindersPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/progress-photos"
-              element={isLoggedIn ? <ProgressPhotosPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/journal"
-              element={isLoggedIn ? <JournalPage /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/subscription"
-              element={isLoggedIn ? <SubscriptionPage /> : <Navigate to="/login" />}
-            />
-          </Routes>
-        </main>
-        <Footer />
-
-        {/* Onboarding Wizard */}
-        {showOnboarding && (
-          <OnboardingWizard onComplete={handleOnboardingComplete} />
-        )}
-      </div>
+      <Routes>
+        <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <HomePage />} />
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/dashboard" element={<P><DashboardPage /></P>} />
+        <Route path="/water-tracker" element={<P><WaterTrackerPage /></P>} />
+        <Route path="/meal-logger" element={<P><MealLoggerPage /></P>} />
+        <Route path="/meal-result" element={<P><MealResultScreen /></P>} />
+        <Route path="/health-tracker" element={<P><HealthTrackerPage /></P>} />
+        <Route path="/settings" element={<P><SettingsPage onLogout={handleLogout} /></P>} />
+        <Route path="/exercise" element={<P><ExercisePage /></P>} />
+        <Route path="/barcode-scanner" element={<P><BarcodeScannerPage /></P>} />
+        <Route path="/reminders" element={<P><RemindersPage /></P>} />
+        <Route path="/progress-photos" element={<P><ProgressPhotosPage /></P>} />
+        <Route path="/journal" element={<P><JournalPage /></P>} />
+        <Route path="/subscription" element={<P><SubscriptionPage /></P>} />
+      </Routes>
+      {showOnboarding && <OnboardingWizard onComplete={() => handleOnboardingComplete({})} />}
     </Router>
   );
 }
