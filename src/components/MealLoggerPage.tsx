@@ -93,34 +93,34 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
 
       {/* Active Meal */}
       <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 20 }}>
-        <div style={{ padding: '16px 18px', borderBottom: '1px solid rgba(212,160,23,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '16px 18px', borderBottom: '1px solid rgba(212,175,55,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 2 }}>{activeMealData.icon} {activeMealData.label}</h3>
-            <p style={{ fontSize: '0.75rem', color: '#8D6E63', margin: 0 }}>{activeMealData.time}</p>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#212529', marginBottom: 2 }}>{activeMealData.icon} {activeMealData.label}</h3>
+            <p style={{ fontSize: '0.75rem', color: '#6C757D', margin: 0 }}>{activeMealData.time}</p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#D4A017' }}>{activeMealData.cal}</div>
-            <div style={{ fontSize: '0.68rem', color: '#8D6E63' }}>kcal</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#D4AF37' }}>{activeMealData.cal}</div>
+            <div style={{ fontSize: '0.68rem', color: '#6C757D' }}>kcal</div>
           </div>
         </div>
         {activeMealData.items.length === 0 ? (
           <div style={{ padding: 32, textAlign: 'center' }}>
             <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>{activeMealData.icon}</p>
-            <p style={{ color: '#8D6E63', fontSize: '0.85rem', marginBottom: 16 }}>No foods logged yet</p>
+            <p style={{ color: '#6C757D', fontSize: '0.85rem', marginBottom: 16 }}>No foods logged yet</p>
             <button className="btn btn-gold btn-sm" onClick={() => navigate('/barcode-scanner')}>+ Add Food</button>
           </div>
         ) : (
           <>
             {activeMealData.items.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: i < activeMealData.items.length - 1 ? '1px solid rgba(212,160,23,0.06)' : 'none' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: i < activeMealData.items.length - 1 ? '1px solid rgba(212,175,55,0.06)' : 'none' }}>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{item.name}</div>
-                  <div style={{ fontSize: '0.72rem', color: '#BCAAA4' }}>{item.qty}</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#212529' }}>{item.name}</div>
+                  <div style={{ fontSize: '0.72rem', color: '#ADB5BD' }}>{item.qty}</div>
                 </div>
-                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4A017' }}>{item.cal} cal</div>
+                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4AF37' }}>{item.cal} cal</div>
               </div>
             ))}
-            <div style={{ padding: '12px 18px', borderTop: '1px solid rgba(212,160,23,0.08)' }}>
+            <div style={{ padding: '12px 18px', borderTop: '1px solid rgba(212,175,55,0.08)' }}>
               <button className="btn btn-pink btn-sm btn-full" onClick={() => navigate('/barcode-scanner')}>+ Add More</button>
             </div>
           </>

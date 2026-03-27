@@ -35,7 +35,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} style={{
       width: 48, height: 28, borderRadius: 14, border: 'none', cursor: 'pointer',
-      background: on ? 'var(--gold-gradient)' : '#E0D6D0',
+      background: on ? 'var(--gold-gradient)' : '#CED4DA',
       position: 'relative', transition: 'background 0.3s ease',
     }}>
       <div style={{
@@ -49,11 +49,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
   const SettingRow = ({ icon, label, onClick, right, danger }: { icon: string; label: string; onClick?: () => void; right?: React.ReactNode; danger?: boolean }) => (
     <div onClick={onClick} style={{
       display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0',
-      borderBottom: '1px solid rgba(212,160,23,0.06)', cursor: onClick ? 'pointer' : 'default',
+      borderBottom: '1px solid rgba(212,175,55,0.06)', cursor: onClick ? 'pointer' : 'default',
     }}>
-      <div style={{ width: 36, height: 36, borderRadius: 10, background: danger ? 'rgba(229,57,53,0.08)' : 'rgba(212,160,23,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>{icon}</div>
-      <span style={{ flex: 1, fontSize: '0.88rem', fontWeight: 600, color: danger ? '#E53935' : '#3E2723' }}>{label}</span>
-      {right || (onClick && <span style={{ color: '#BCAAA4', fontSize: '1rem' }}>&#8250;</span>)}
+      <div style={{ width: 36, height: 36, borderRadius: 10, background: danger ? 'rgba(229,57,53,0.08)' : 'rgba(212,175,55,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>{icon}</div>
+      <span style={{ flex: 1, fontSize: '0.88rem', fontWeight: 600, color: danger ? '#E53935' : '#212529' }}>{label}</span>
+      {right || (onClick && <span style={{ color: '#ADB5BD', fontSize: '1rem' }}>&#8250;</span>)}
     </div>
   );
 
@@ -79,10 +79,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
       <div className="card" style={{ padding: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }} onClick={() => navigate('/subscription')}>
         <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'var(--shadow-gold)' }}>👑</div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#3E2723' }}>{t('upgrade_premium') || 'Upgrade to Premium'}</div>
-          <div style={{ fontSize: '0.75rem', color: '#8D6E63' }}>{t('unlock_all_features') || 'Unlock all features'} &middot; 30-day free trial</div>
+          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#212529' }}>{t('upgrade_premium') || 'Upgrade to Premium'}</div>
+          <div style={{ fontSize: '0.75rem', color: '#6C757D' }}>{t('unlock_all_features') || 'Unlock all features'} &middot; 30-day free trial</div>
         </div>
-        <span style={{ color: '#D4A017', fontWeight: 700 }}>&#8250;</span>
+        <span style={{ color: '#D4AF37', fontWeight: 700 }}>&#8250;</span>
       </div>
 
       {/* Settings Groups */}
@@ -114,7 +114,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
         <SettingRow icon="🚪" label={t('log_out') || 'Log Out'} onClick={handleLogout} danger />
       </div>
 
-      <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#BCAAA4', marginBottom: 20 }}>Sajoma Fitness v1.0.0</p>
+      <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#ADB5BD', marginBottom: 20 }}>Sajoma Fitness v1.0.0</p>
 
       <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={handleLogout} />
       <BottomNav />

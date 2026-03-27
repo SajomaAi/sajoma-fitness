@@ -30,7 +30,7 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
     { val: 2, emoji: '😕', label: t('mood_low') || 'Low', color: '#FFB74D' },
     { val: 3, emoji: '😊', label: t('mood_good') || 'Good', color: '#FFD54F' },
     { val: 4, emoji: '😄', label: t('mood_great') || 'Great', color: '#81C784' },
-    { val: 5, emoji: '🤩', label: t('mood_amazing') || 'Amazing', color: '#D4A017' },
+    { val: 5, emoji: '🤩', label: t('mood_amazing') || 'Amazing', color: '#D4AF37' },
   ];
 
   const energyLevels = [
@@ -97,7 +97,7 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
                   transition: 'all 0.2s ease', fontFamily: 'inherit',
                 }}>
                   <div style={{ fontSize: '1.6rem', marginBottom: 4 }}>{m.emoji}</div>
-                  <div style={{ fontSize: '0.62rem', fontWeight: 600, color: mood === m.val ? m.color : '#8D6E63' }}>{m.label}</div>
+                  <div style={{ fontSize: '0.62rem', fontWeight: 600, color: mood === m.val ? m.color : '#6C757D' }}>{m.label}</div>
                 </button>
               ))}
             </div>
@@ -110,12 +110,12 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
               {energyLevels.map(e => (
                 <button key={e.val} onClick={() => setEnergy(e.val)} style={{
                   flex: 1, padding: '10px 4px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                  background: energy === e.val ? 'rgba(212,160,23,0.1)' : 'transparent',
-                  boxShadow: energy === e.val ? '0 0 0 2px #D4A017' : 'none',
+                  background: energy === e.val ? 'rgba(212,175,55,0.1)' : 'transparent',
+                  boxShadow: energy === e.val ? '0 0 0 2px #D4AF37' : 'none',
                   transition: 'all 0.2s ease', fontFamily: 'inherit',
                 }}>
                   <div style={{ fontSize: '1.2rem', marginBottom: 2 }}>{e.emoji}</div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 600, color: energy === e.val ? '#D4A017' : '#8D6E63' }}>{e.label}</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 600, color: energy === e.val ? '#D4AF37' : '#6C757D' }}>{e.label}</div>
                 </button>
               ))}
             </div>
@@ -148,26 +148,26 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           {filteredEntries.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2rem', marginBottom: 8 }}>📓</p>
-              <p style={{ color: '#8D6E63' }}>{t('no_entries') || 'No journal entries yet'}</p>
+              <p style={{ color: '#6C757D' }}>{t('no_entries') || 'No journal entries yet'}</p>
             </div>
           ) : filteredEntries.map(entry => (
             <div key={entry.id} className="card" style={{ padding: 18, marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span style={{ fontSize: '0.78rem', color: '#8D6E63', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.78rem', color: '#6C757D', fontWeight: 600 }}>
                   {new Date(entry.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                 </span>
                 <div style={{ display: 'flex', gap: 6 }}>
                   <span style={{ fontSize: '1.1rem' }}>{moods.find(m => m.val === entry.mood)?.emoji}</span>
-                  <span style={{ fontSize: '0.75rem', color: '#D4A017', fontWeight: 700 }}>⚡{entry.energy}/5</span>
+                  <span style={{ fontSize: '0.75rem', color: '#D4AF37', fontWeight: 700 }}>⚡{entry.energy}/5</span>
                 </div>
               </div>
               {entry.gratitude && (
-                <div style={{ background: 'rgba(212,160,23,0.06)', borderRadius: 12, padding: '10px 14px', marginBottom: 8 }}>
-                  <p style={{ fontSize: '0.72rem', color: '#D4A017', fontWeight: 600, marginBottom: 2 }}>{t('gratitude') || 'Gratitude'}</p>
-                  <p style={{ fontSize: '0.82rem', color: '#3E2723', margin: 0, lineHeight: 1.4 }}>{entry.gratitude}</p>
+                <div style={{ background: 'rgba(212,175,55,0.06)', borderRadius: 12, padding: '10px 14px', marginBottom: 8 }}>
+                  <p style={{ fontSize: '0.72rem', color: '#D4AF37', fontWeight: 600, marginBottom: 2 }}>{t('gratitude') || 'Gratitude'}</p>
+                  <p style={{ fontSize: '0.82rem', color: '#212529', margin: 0, lineHeight: 1.4 }}>{entry.gratitude}</p>
                 </div>
               )}
-              {entry.notes && <p style={{ fontSize: '0.85rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>{entry.notes}</p>}
+              {entry.notes && <p style={{ fontSize: '0.85rem', color: '#495057', lineHeight: 1.5, margin: 0 }}>{entry.notes}</p>}
             </div>
           ))}
         </>

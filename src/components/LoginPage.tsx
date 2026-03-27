@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { assetUrl } from '../lib/basePath';
 
 interface LoginPageProps { onLogin: () => void; }
 
@@ -36,18 +37,18 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FFE4EC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
+    <div style={{ minHeight: '100vh', background: '#F8F9FA', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
       {/* Logo */}
       <div style={{ textAlign: 'center', marginBottom: 32, animation: 'fadeIn 0.5s ease' }}>
-        <img src="/sajoma-logo.jpg" alt="Sajoma Fitness" style={{ width: 90, height: 90, borderRadius: 24, boxShadow: '0 8px 32px rgba(212,160,23,0.25)', marginBottom: 16 }} />
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#3E2723' }}>Sajoma Fitness</h1>
-        <p style={{ fontSize: '0.88rem', color: '#8D6E63', marginTop: 4 }}>
+        <img src={assetUrl('/sajoma-logo.jpg')} alt="Sajoma Fitness" style={{ width: 100, height: 100, borderRadius: 24, boxShadow: '0 8px 32px rgba(212,175,55,0.25)', marginBottom: 16 }} />
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#212529' }}>Sajoma Fitness</h1>
+        <p style={{ fontSize: '0.88rem', color: '#6C757D', marginTop: 4 }}>
           {isSignUp ? (t('create_account') || 'Create your account') : (t('welcome_back') || 'Welcome back')}
         </p>
       </div>
 
       {/* Form Card */}
-      <div style={{ background: 'white', borderRadius: 24, padding: '32px 24px', width: '100%', maxWidth: 380, boxShadow: '0 8px 40px rgba(62,39,35,0.08)' }}>
+      <div style={{ background: 'white', borderRadius: 24, padding: '32px 24px', width: '100%', maxWidth: 380, boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
         <div className="tabs" style={{ marginBottom: 24 }}>
           <button className={`tab ${!isSignUp ? 'active' : ''}`} onClick={() => { setIsSignUp(false); setError(''); }}>{t('sign_in') || 'Sign In'}</button>
           <button className={`tab ${isSignUp ? 'active' : ''}`} onClick={() => { setIsSignUp(true); setError(''); }}>{t('sign_up') || 'Sign Up'}</button>
@@ -77,13 +78,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
           {!isSignUp && (
             <div style={{ textAlign: 'right', marginBottom: 16 }}>
-              <button type="button" style={{ background: 'none', border: 'none', color: '#D4A017', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+              <button type="button" style={{ background: 'none', border: 'none', color: '#D4AF37', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 {t('forgot_password') || 'Forgot password?'}
               </button>
             </div>
           )}
 
-          {error && <div style={{ background: '#FFF0F0', color: '#C62828', padding: '10px 14px', borderRadius: 10, fontSize: '0.82rem', marginBottom: 14, border: '1px solid #FFCDD2' }}>{error}</div>}
+          {error && <div style={{ background: '#F0F1F3', color: '#C62828', padding: '10px 14px', borderRadius: 10, fontSize: '0.82rem', marginBottom: 14, border: '1px solid #FFCDD2' }}>{error}</div>}
 
           <button type="submit" className="btn btn-gold btn-full btn-lg" disabled={isLoading} style={{ marginBottom: 16 }}>
             {isLoading ? '...' : isSignUp ? (t('create_account') || 'Create Account') : (t('sign_in') || 'Sign In')}
@@ -91,22 +92,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         </form>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '8px 0 16px' }}>
-          <div style={{ flex: 1, height: 1, background: 'rgba(212,160,23,0.1)' }} />
-          <span style={{ fontSize: '0.75rem', color: '#BCAAA4' }}>{t('or') || 'or'}</span>
-          <div style={{ flex: 1, height: 1, background: 'rgba(212,160,23,0.1)' }} />
+          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.06)' }} />
+          <span style={{ fontSize: '0.75rem', color: '#ADB5BD' }}>{t('or') || 'or'}</span>
+          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.06)' }} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <button className="btn btn-full" onClick={() => { onLogin(); navigate('/dashboard'); }} style={{ background: 'white', border: '1.5px solid rgba(212,160,23,0.15)', color: '#3E2723', fontSize: '0.85rem' }}>
+          <button className="btn btn-full" onClick={() => { onLogin(); navigate('/dashboard'); }} style={{ background: 'white', border: '1.5px solid rgba(0,0,0,0.1)', color: '#212529', fontSize: '0.85rem' }}>
             🍎 {t('continue_with_apple') || 'Continue with Apple'}
           </button>
-          <button className="btn btn-full" onClick={() => { onLogin(); navigate('/dashboard'); }} style={{ background: 'white', border: '1.5px solid rgba(212,160,23,0.15)', color: '#3E2723', fontSize: '0.85rem' }}>
+          <button className="btn btn-full" onClick={() => { onLogin(); navigate('/dashboard'); }} style={{ background: 'white', border: '1.5px solid rgba(0,0,0,0.1)', color: '#212529', fontSize: '0.85rem' }}>
             📧 {t('continue_with_google') || 'Continue with Google'}
           </button>
         </div>
       </div>
 
-      <p style={{ fontSize: '0.72rem', color: '#BCAAA4', marginTop: 24, textAlign: 'center', lineHeight: 1.5 }}>
+      <p style={{ fontSize: '0.72rem', color: '#ADB5BD', marginTop: 24, textAlign: 'center', lineHeight: 1.5 }}>
         {t('terms_notice') || 'By continuing, you agree to our Terms and Privacy Policy'}
       </p>
     </div>

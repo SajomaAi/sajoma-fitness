@@ -42,10 +42,10 @@ const DashboardPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   ];
 
   const stats = [
-    { label: t('burned') || 'Burned', value: '450', unit: 'kcal', icon: '🔥', color: '#FFF5F8' },
+    { label: t('burned') || 'Burned', value: '450', unit: 'kcal', icon: '🔥', color: '#F0F1F3' },
     { label: t('consumed') || 'Consumed', value: '1,240', unit: 'kcal', icon: '🍎', color: '#E3F2FD' },
     { label: t('steps') || 'Steps', value: '8,420', unit: 'Steps', icon: '👟', color: '#F1F8E9' },
-    { label: t('heart_rate') || 'Heart Rate', value: '72', unit: 'bpm', icon: '❤️', color: '#FFF0F0' },
+    { label: t('heart_rate') || 'Heart Rate', value: '72', unit: 'bpm', icon: '❤️', color: '#F0F1F3' },
   ];
 
   return (

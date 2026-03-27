@@ -53,24 +53,24 @@ const MealResultScreen: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) => {
         ].map(m => (
           <div key={m.label} className="card" style={{ padding: 12, textAlign: 'center' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: 800, color: m.color }}>{m.val}</div>
-            <div style={{ fontSize: '0.62rem', color: '#8D6E63', fontWeight: 600 }}>{m.label}</div>
+            <div style={{ fontSize: '0.62rem', color: '#6C757D', fontWeight: 600 }}>{m.label}</div>
           </div>
         ))}
       </div>
 
       {/* Detected Items */}
       <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 20 }}>
-        <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(212,160,23,0.08)' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#3E2723', margin: 0 }}>Detected Ingredients</h3>
+        <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(212,175,55,0.08)' }}>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#212529', margin: 0 }}>Detected Ingredients</h3>
         </div>
         {result.items.map((item, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < result.items.length - 1 ? '1px solid rgba(212,160,23,0.06)' : 'none' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < result.items.length - 1 ? '1px solid rgba(212,175,55,0.06)' : 'none' }}>
             <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#3E2723' }}>{item.name}</div>
-              <div style={{ fontSize: '0.72rem', color: '#BCAAA4' }}>{item.amount}</div>
+              <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#212529' }}>{item.name}</div>
+              <div style={{ fontSize: '0.72rem', color: '#ADB5BD' }}>{item.amount}</div>
             </div>
-            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4A017' }}>{item.cal} cal</span>
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4AF37' }}>{item.cal} cal</span>
           </div>
         ))}
       </div>
@@ -79,9 +79,9 @@ const MealResultScreen: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) => {
       <div className="card card-pink" style={{ padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontSize: '1.1rem' }}>💡</span>
-          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#3E2723' }}>Expert Suggestion</span>
+          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#212529' }}>Expert Suggestion</span>
         </div>
-        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: '0.82rem', color: '#495057', lineHeight: 1.5, margin: 0 }}>
           This is a well-balanced meal! The high protein and healthy fats from avocado will keep you satiated. Consider adding more leafy greens for extra fiber.
         </p>
       </div>

@@ -114,7 +114,7 @@ const MeditationPage: React.FC<MeditationPageProps> = ({ onOpenMenu }) => {
               width: '160px',
               height: '160px',
               borderRadius: '50%',
-              border: '2px solid var(--primary-gold)',
+              border: '2px solid var(--gold-metallic)',
               opacity: 0.3,
               zIndex: 1,
               animation: isBreathing ? 'breatheOuter 8s ease-in-out infinite' : 'none'
@@ -122,7 +122,7 @@ const MeditationPage: React.FC<MeditationPageProps> = ({ onOpenMenu }) => {
           />
         </div>
 
-        <h2 style={{ color: 'var(--text-dark)', marginBottom: '8px', fontWeight: 800 }}>
+        <h2 style={{ color: 'var(--text)', marginBottom: '8px', fontWeight: 800 }}>
           {isBreathing ? t('breathe_deeply') || 'Breathe Deeply' : t('ready_to_start') || 'Ready to start?'}
         </h2>
         <p style={{ color: 'var(--text-light)', marginBottom: '32px', maxWidth: '280px', fontSize: '0.95rem' }}>
@@ -146,9 +146,9 @@ const MeditationPage: React.FC<MeditationPageProps> = ({ onOpenMenu }) => {
               style={{
                 padding: '10px 18px',
                 borderRadius: '20px',
-                border: '1.5px solid var(--primary-gold)',
+                border: '1.5px solid var(--gold-metallic)',
                 background: selectedTime === option.value ? 'var(--gold-gradient)' : 'white',
-                color: selectedTime === option.value ? 'white' : 'var(--primary-gold)',
+                color: selectedTime === option.value ? 'white' : 'var(--gold-metallic)',
                 fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',

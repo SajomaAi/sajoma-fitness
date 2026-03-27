@@ -52,7 +52,7 @@ const WaterTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
         ].map(btn => (
           <button key={btn.label} className="card" onClick={() => btn.amount === 0 ? setGlasses(0) : addWater(btn.amount)} style={{ padding: 14, textAlign: 'center', cursor: 'pointer', border: 'none' }}>
             <div style={{ fontSize: '1.3rem', marginBottom: 4 }}>{btn.icon}</div>
-            <div style={{ fontSize: '0.68rem', fontWeight: 600, color: '#5D4037' }}>{btn.label}</div>
+            <div style={{ fontSize: '0.68rem', fontWeight: 600, color: '#495057' }}>{btn.label}</div>
           </button>
         ))}
       </div>
@@ -64,8 +64,8 @@ const WaterTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           {Array.from({ length: Math.max(goal, glasses) }).map((_, i) => (
             <div key={i} style={{
               width: 40, height: 50, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: i < glasses ? 'rgba(212,160,23,0.15)' : 'rgba(188,170,164,0.08)',
-              border: i < glasses ? '2px solid rgba(212,160,23,0.3)' : '2px solid rgba(188,170,164,0.15)',
+              background: i < glasses ? 'rgba(212,175,55,0.15)' : 'rgba(173,181,189,0.08)',
+              border: i < glasses ? '2px solid rgba(212,175,55,0.3)' : '2px solid rgba(173,181,189,0.15)',
               fontSize: '1.2rem', transition: 'all 0.3s ease',
             }}>
               {i < glasses ? '💧' : '○'}
@@ -78,9 +78,9 @@ const WaterTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
       <div className="card card-pink" style={{ padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontSize: '1.1rem' }}>💡</span>
-          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#3E2723' }}>{t('hydration_tip') || 'Hydration Tip'}</span>
+          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#212529' }}>{t('hydration_tip') || 'Hydration Tip'}</span>
         </div>
-        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: '0.82rem', color: '#495057', lineHeight: 1.5, margin: 0 }}>
           {t('hydration_tip_text') || 'Drinking water before meals can help with portion control and improve digestion.'}
         </p>
       </div>

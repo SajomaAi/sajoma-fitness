@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { assetUrl } from '../lib/basePath';
 
 interface PageHeaderProps {
   title?: string;
@@ -21,7 +22,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'var(--bg-pink)',
+      background: 'var(--bg-light-grey)',
       boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
     }}>
       {/* Left: back button or logo */}
@@ -47,14 +48,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
             style={{ cursor: 'pointer' }}
           >
             <img
-              src="/sajoma-icon.png"
+              src={assetUrl('/sajoma-icon.png')}
               alt="Sajoma Fitness"
               style={{ width: 38, height: 38, borderRadius: 10, boxShadow: 'var(--shadow-gold)' }}
             />
           </div>
         )}
         {title && (
-          <h1 style={{ fontSize: '1.1rem', margin: 0, fontWeight: 700, color: 'var(--text-dark)' }}>
+          <h1 style={{ fontSize: '1.1rem', margin: 0, fontWeight: 700, color: 'var(--text)' }}>
             {title}
           </h1>
         )}
@@ -71,7 +72,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
             borderRadius: 20,
             padding: '3px',
             boxShadow: 'var(--shadow-sm)',
-            border: '1.5px solid rgba(212,160,23,0.25)',
+            border: '1.5px solid rgba(0,0,0,0.1)',
           }}
         >
           <button

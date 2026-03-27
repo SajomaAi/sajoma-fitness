@@ -34,7 +34,7 @@ const RemindersPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} style={{
       width: 48, height: 28, borderRadius: 14, border: 'none', cursor: 'pointer',
-      background: on ? 'var(--gold-gradient)' : '#E0D6D0', position: 'relative', transition: 'background 0.3s ease',
+      background: on ? 'var(--gold-gradient)' : '#CED4DA', position: 'relative', transition: 'background 0.3s ease',
     }}>
       <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'white', position: 'absolute', top: 3, left: on ? 23 : 3, transition: 'left 0.3s ease', boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }} />
     </button>
@@ -43,17 +43,17 @@ const RemindersPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const ReminderRow = ({ icon, label, desc, rKey }: { icon: string; label: string; desc: string; rKey: string }) => {
     const r = reminders[rKey as keyof typeof reminders];
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 0', borderBottom: '1px solid rgba(212,160,23,0.06)' }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: r.on ? 'rgba(212,160,23,0.1)' : 'rgba(188,170,164,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>{icon}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 0', borderBottom: '1px solid rgba(212,175,55,0.06)' }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: r.on ? 'rgba(212,175,55,0.1)' : 'rgba(173,181,189,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>{icon}</div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{label}</div>
-          <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>{desc}</div>
+          <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#212529' }}>{label}</div>
+          <div style={{ fontSize: '0.72rem', color: '#6C757D' }}>{desc}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {r.on && r.time && (
             <input type="time" value={r.time} onChange={e => updateTime(rKey, e.target.value)} style={{
-              border: 'none', background: 'rgba(212,160,23,0.06)', borderRadius: 8, padding: '4px 8px',
-              fontSize: '0.78rem', fontWeight: 600, color: '#D4A017', fontFamily: 'inherit',
+              border: 'none', background: 'rgba(212,175,55,0.06)', borderRadius: 8, padding: '4px 8px',
+              fontSize: '0.78rem', fontWeight: 600, color: '#D4AF37', fontFamily: 'inherit',
             }} />
           )}
           <Toggle on={r.on} onToggle={() => toggle(rKey)} />
@@ -98,10 +98,10 @@ const RemindersPage: React.FC<PageProps> = ({ onOpenMenu }) => {
       <div className="card" style={{ padding: '4px 18px', marginBottom: 20 }}>
         <h3 className="section-title" style={{ paddingTop: 12 }}>{t('smart_reminders') || 'Smart Reminders'}</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 0' }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(212,160,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🧠</div>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(212,175,55,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🧠</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{t('ai_smart_reminders') || 'AI Smart Reminders'}</div>
-            <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>{t('ai_smart_reminders_desc') || 'Learns your habits and reminds you at the best times'}</div>
+            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#212529' }}>{t('ai_smart_reminders') || 'AI Smart Reminders'}</div>
+            <div style={{ fontSize: '0.72rem', color: '#6C757D' }}>{t('ai_smart_reminders_desc') || 'Learns your habits and reminds you at the best times'}</div>
           </div>
           <Toggle on={reminders.smart.on} onToggle={() => toggle('smart')} />
         </div>

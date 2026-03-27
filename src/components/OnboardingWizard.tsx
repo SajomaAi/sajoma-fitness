@@ -70,7 +70,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
       padding: '60px 24px 40px'
     }}>
       {/* Progress Bar */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 6, background: 'rgba(212,160,23,0.1)' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 6, background: 'rgba(212,175,55,0.1)' }}>
         <div style={{ 
           width: `${progress}%`, height: '100%', 
           background: 'var(--gold-gradient)', transition: 'width 0.4s ease' 
@@ -97,8 +97,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 setAnswers({ ...answers, [current.key!]: opt });
                 setTimeout(handleNext, 300);
               }} style={{
-                padding: '18px 24px', borderRadius: 20, border: answers[current.key!] === opt ? '2.5px solid var(--gold)' : '1.5px solid rgba(212,160,23,0.1)',
-                background: answers[current.key!] === opt ? 'rgba(212,160,23,0.08)' : 'white',
+                padding: '18px 24px', borderRadius: 20, border: answers[current.key!] === opt ? '2.5px solid var(--gold)' : '1.5px solid rgba(212,175,55,0.1)',
+                background: answers[current.key!] === opt ? 'rgba(212,175,55,0.08)' : 'white',
                 cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
                 boxShadow: answers[current.key!] === opt ? 'var(--shadow-gold)' : 'var(--shadow-sm)',
                 textAlign: 'left', fontWeight: 700, color: 'var(--text)'

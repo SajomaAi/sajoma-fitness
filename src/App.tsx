@@ -57,7 +57,7 @@ function App() {
     isLoggedIn ? <>{children}</> : <Navigate to="/login" />;
 
   return (
-    <Router>
+    <Router basename="/sajoma-fitness">
       <div className="app-container">
         <Routes>
           <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <HomePage />} />

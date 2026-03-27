@@ -56,8 +56,8 @@ const ProgressPhotosPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           {photos.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2.5rem', marginBottom: 12 }}>📸</p>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 6 }}>{t('no_photos_yet') || 'No Photos Yet'}</h3>
-              <p style={{ fontSize: '0.82rem', color: '#8D6E63', marginBottom: 20 }}>{t('take_first_photo') || 'Take your first progress photo to start tracking your journey'}</p>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#212529', marginBottom: 6 }}>{t('no_photos_yet') || 'No Photos Yet'}</h3>
+              <p style={{ fontSize: '0.82rem', color: '#6C757D', marginBottom: 20 }}>{t('take_first_photo') || 'Take your first progress photo to start tracking your journey'}</p>
               <button className="btn btn-gold" onClick={() => setTab('add')}>+ {t('take_photo') || 'Take Photo'}</button>
             </div>
           ) : (
@@ -81,7 +81,7 @@ const ProgressPhotosPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           {photos.length < 2 ? (
             <div className="card" style={{ padding: 32, textAlign: 'center' }}>
               <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>↔️</p>
-              <p style={{ color: '#8D6E63' }}>{t('need_two_photos') || 'Need at least 2 photos to compare'}</p>
+              <p style={{ color: '#6C757D' }}>{t('need_two_photos') || 'Need at least 2 photos to compare'}</p>
             </div>
           ) : (
             <div>
@@ -99,7 +99,7 @@ const ProgressPhotosPage: React.FC<PageProps> = ({ onOpenMenu }) => {
                 </div>
               </div>
               <div className="card card-pink" style={{ padding: 14, textAlign: 'center' }}>
-                <p style={{ fontSize: '0.82rem', color: '#5D4037' }}>
+                <p style={{ fontSize: '0.82rem', color: '#495057' }}>
                   {photos.length} {t('photos_over') || 'photos over'} {Math.ceil((new Date(photos[0].date).getTime() - new Date(photos[photos.length - 1].date).getTime()) / 86400000)} {t('days') || 'days'}
                 </p>
               </div>

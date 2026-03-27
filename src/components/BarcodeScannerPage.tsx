@@ -62,8 +62,8 @@ const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) =>
         <>
           {/* Scanner Area */}
           <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 20 }}>
-            <div style={{ background: 'linear-gradient(135deg, #3E2723, #5D4037)', height: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              <div style={{ width: 180, height: 120, border: '3px solid rgba(212,160,23,0.6)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: 'linear-gradient(135deg, #212529, #495057)', height: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <div style={{ width: 180, height: 120, border: '3px solid rgba(212,175,55,0.6)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontSize: '2rem', opacity: 0.5 }}>📷</span>
               </div>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.78rem', marginTop: 12 }}>Point camera at barcode</p>
@@ -86,8 +86,8 @@ const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) =>
               <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
                 {result.image && <img src={result.image} alt="" style={{ width: 64, height: 64, borderRadius: 14, objectFit: 'cover', background: '#f5f5f5' }} />}
                 <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#3E2723', marginBottom: 2 }}>{result.name}</h3>
-                  {result.brand && <p style={{ fontSize: '0.78rem', color: '#8D6E63', margin: 0 }}>{result.brand}</p>}
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#212529', marginBottom: 2 }}>{result.name}</h3>
+                  {result.brand && <p style={{ fontSize: '0.78rem', color: '#6C757D', margin: 0 }}>{result.brand}</p>}
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
@@ -97,9 +97,9 @@ const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) =>
                   { label: 'Carbs', val: `${result.carbs}g`, unit: '' },
                   { label: 'Fat', val: `${result.fat}g`, unit: '' },
                 ].map(n => (
-                  <div key={n.label} style={{ textAlign: 'center', padding: 10, background: 'rgba(212,160,23,0.05)', borderRadius: 12 }}>
-                    <div style={{ fontSize: '1rem', fontWeight: 800, color: '#D4A017' }}>{n.val}</div>
-                    <div style={{ fontSize: '0.62rem', color: '#8D6E63', fontWeight: 600 }}>{n.label}</div>
+                  <div key={n.label} style={{ textAlign: 'center', padding: 10, background: 'rgba(212,175,55,0.05)', borderRadius: 12 }}>
+                    <div style={{ fontSize: '1rem', fontWeight: 800, color: '#D4AF37' }}>{n.val}</div>
+                    <div style={{ fontSize: '0.62rem', color: '#6C757D', fontWeight: 600 }}>{n.label}</div>
                   </div>
                 ))}
               </div>
@@ -125,11 +125,11 @@ const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) =>
           {searchQuery && filteredFoods.slice(0, 15).map((food, i) => (
             <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 14 }}>
               <div>
-                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{language === 'es' ? food.name_es : food.name_en}</div>
-                <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>{food.serving_size}</div>
+                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#212529' }}>{language === 'es' ? food.name_es : food.name_en}</div>
+                <div style={{ fontSize: '0.72rem', color: '#6C757D' }}>{food.serving_size}</div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4A017' }}>{food.calories} cal</span>
+                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4AF37' }}>{food.calories} cal</span>
                 <button className="btn btn-gold btn-sm" style={{ padding: '6px 12px' }}>+</button>
               </div>
             </div>
@@ -146,11 +146,11 @@ const BarcodeScannerPage: React.FC<PageProps> = ({ onOpenMenu: _onOpenMenu }) =>
           {culturalFoods.map((food, i) => (
             <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 14 }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#3E2723' }}>{language === 'es' ? food.name_es : food.name_en}</div>
-                <div style={{ fontSize: '0.72rem', color: '#8D6E63' }}>{food.serving_size} &middot; P:{food.protein}g C:{food.carbs}g F:{food.fat}g</div>
+                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#212529' }}>{language === 'es' ? food.name_es : food.name_en}</div>
+                <div style={{ fontSize: '0.72rem', color: '#6C757D' }}>{food.serving_size} &middot; P:{food.protein}g C:{food.carbs}g F:{food.fat}g</div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4A017' }}>{food.calories}</span>
+                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#D4AF37' }}>{food.calories}</span>
                 <button className="btn btn-gold btn-sm" style={{ padding: '6px 12px' }}>+</button>
               </div>
             </div>

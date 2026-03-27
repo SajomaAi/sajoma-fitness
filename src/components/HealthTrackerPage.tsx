@@ -44,13 +44,13 @@ const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           { icon: '🔥', label: t('avg_calories') || 'Avg Calories', value: `${avgCal}`, unit: 'kcal/day', color: '#FF9800' },
           { icon: '👣', label: t('avg_steps') || 'Avg Steps', value: avgSteps.toLocaleString(), unit: 'steps/day', color: '#42A5F5' },
           { icon: '💧', label: t('total_water') || 'Total Water', value: `${totalWater}`, unit: 'glasses', color: '#29B6F6' },
-          { icon: '💪', label: t('workouts') || 'Workouts', value: '4', unit: 'this week', color: '#D4A017' },
+          { icon: '💪', label: t('workouts') || 'Workouts', value: '4', unit: 'this week', color: '#D4AF37' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: 16, textAlign: 'center' }}>
             <span style={{ fontSize: '1.3rem' }}>{s.icon}</span>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, color: s.color, marginTop: 4 }}>{s.value}</div>
-            <div style={{ fontSize: '0.65rem', color: '#8D6E63', fontWeight: 600 }}>{s.unit}</div>
-            <div style={{ fontSize: '0.72rem', color: '#5D4037', fontWeight: 600, marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: '0.65rem', color: '#6C757D', fontWeight: 600 }}>{s.unit}</div>
+            <div style={{ fontSize: '0.72rem', color: '#495057', fontWeight: 600, marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -61,19 +61,19 @@ const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 120, marginTop: 12 }}>
           {weekData.map((d, i) => (
             <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span style={{ fontSize: '0.58rem', color: '#8D6E63', fontWeight: 600 }}>{d.cal}</span>
+              <span style={{ fontSize: '0.58rem', color: '#6C757D', fontWeight: 600 }}>{d.cal}</span>
               <div style={{
                 width: '100%', borderRadius: 6, transition: 'height 0.4s ease',
                 height: `${(d.cal / maxCal) * 80}px`,
                 background: d.cal > 2000 ? 'linear-gradient(to top, #FF9800, #FFB74D)' : 'var(--gold-gradient)',
               }} />
-              <span style={{ fontSize: '0.62rem', color: '#8D6E63', fontWeight: 600 }}>{d.day}</span>
+              <span style={{ fontSize: '0.62rem', color: '#6C757D', fontWeight: 600 }}>{d.day}</span>
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(212,160,23,0.05)', borderRadius: 10 }}>
-          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>{t('daily_average') || 'Daily Average'}</span>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4A017' }}>{avgCal} kcal</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(212,175,55,0.05)', borderRadius: 10 }}>
+          <span style={{ fontSize: '0.75rem', color: '#495057' }}>{t('daily_average') || 'Daily Average'}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4AF37' }}>{avgCal} kcal</span>
         </div>
       </div>
 
@@ -88,16 +88,16 @@ const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
                 <div style={{
                   width: '100%', borderRadius: 6, transition: 'height 0.4s ease',
                   height: `${(d.steps / maxSteps) * 70}px`,
-                  background: d.steps >= 10000 ? 'linear-gradient(to top, #66BB6A, #A5D6A7)' : 'linear-gradient(to top, #F8B4C8, #FFD6E0)',
+                  background: d.steps >= 10000 ? 'linear-gradient(to top, #66BB6A, #A5D6A7)' : 'linear-gradient(to top, #D4AF37, #E9ECEF)',
                 }} />
-                <span style={{ fontSize: '0.58rem', color: '#8D6E63' }}>{d.day}</span>
+                <span style={{ fontSize: '0.58rem', color: '#6C757D' }}>{d.day}</span>
               </div>
             );
           })}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(248,180,200,0.1)', borderRadius: 10 }}>
-          <span style={{ fontSize: '0.75rem', color: '#5D4037' }}>{t('daily_average') || 'Daily Average'}</span>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4A017' }}>{avgSteps.toLocaleString()} steps</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, padding: '8px 12px', background: 'rgba(212,175,55,0.1)', borderRadius: 10 }}>
+          <span style={{ fontSize: '0.75rem', color: '#495057' }}>{t('daily_average') || 'Daily Average'}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D4AF37' }}>{avgSteps.toLocaleString()} steps</span>
         </div>
       </div>
 
@@ -105,9 +105,9 @@ const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
       <div className="card card-pink" style={{ padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontSize: '1.1rem' }}>📊</span>
-          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#3E2723' }}>{t('weekly_insight') || 'Weekly Insight'}</span>
+          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#212529' }}>{t('weekly_insight') || 'Weekly Insight'}</span>
         </div>
-        <p style={{ fontSize: '0.82rem', color: '#5D4037', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: '0.82rem', color: '#495057', lineHeight: 1.5, margin: 0 }}>
           {t('weekly_insight_text') || 'You were most active on Saturday with 11,200 steps! Try to maintain that momentum during weekdays too.'}
         </p>
       </div>

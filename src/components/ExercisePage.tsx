@@ -42,7 +42,7 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
     },
     {
       id: 2, name: 'HIIT Burn', duration: '20 min', level: 'Intermediate', calories: 250, icon: '🔥',
-      color: 'linear-gradient(145deg, #F8B4C8 0%, #E090A8 100%)',
+      color: 'linear-gradient(145deg, #D4AF37 0%, #C19A29 100%)',
       videoId: 'ml6cT4AZdqI',
       steps: [
         { name: 'Jumping Jacks', desc: 'Full body warm-up with explosive jumps.' },
@@ -129,7 +129,7 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
                 width: 72, height: 72, borderRadius: '50%',
                 background: 'var(--gold-gradient)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 4px 20px rgba(212,160,23,0.6)',
+                boxShadow: '0 4px 20px rgba(212,175,55,0.6)',
                 fontSize: '1.8rem', paddingLeft: 6,
               }}>▶</div>
               <div style={{
@@ -143,16 +143,16 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
 
         <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '18px 12px', marginBottom: 20 }}>
           <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--gold)' }}>{selectedWorkout.duration.split(' ')[0]}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>min</div></div>
-          <div style={{ width: 1.5, height: 36, background: 'rgba(212,160,23,0.2)' }} />
+          <div style={{ width: 1.5, height: 36, background: 'rgba(212,175,55,0.2)' }} />
           <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>{selectedWorkout.level.split(' ')[0]}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Level</div></div>
-          <div style={{ width: 1.5, height: 36, background: 'rgba(212,160,23,0.2)' }} />
+          <div style={{ width: 1.5, height: 36, background: 'rgba(212,175,55,0.2)' }} />
           <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--gold)' }}>{selectedWorkout.calories}</div><div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Calories</div></div>
         </div>
 
         <div className="card" style={{ padding: '8px 18px', marginBottom: 24 }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 4, color: 'var(--text)', padding: '8px 0' }}>{t('workout_steps') || 'Workout Steps'}</h3>
           {selectedWorkout.steps.map((step, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 0', borderBottom: i < selectedWorkout.steps.length - 1 ? '1px solid rgba(212,160,23,0.08)' : 'none' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 0', borderBottom: i < selectedWorkout.steps.length - 1 ? '1px solid rgba(212,175,55,0.08)' : 'none' }}>
               <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '0.85rem', flexShrink: 0 }}>{i + 1}</div>
               <div><div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text)', marginBottom: 2 }}>{step.name}</div><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{step.desc}</div></div>
             </div>
@@ -190,7 +190,7 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
               <div style={{ width: 72, height: 54, borderRadius: 12, overflow: 'hidden', flexShrink: 0, position: 'relative', boxShadow: 'var(--shadow-sm)' }}>
                 <img src={`https://img.youtube.com/vi/${w.videoId}/mqdefault.jpg`} alt={w.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(212,160,23,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', paddingLeft: 2, color: 'white' }}>▶</div>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(212,175,55,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', paddingLeft: 2, color: 'white' }}>▶</div>
                 </div>
               </div>
               <div style={{ flex: 1 }}><h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: 2, color: 'var(--text)' }}>{w.name}</h3><p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>{w.duration} · {w.level} · {w.calories} cal</p></div>
