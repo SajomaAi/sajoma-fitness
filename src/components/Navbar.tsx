@@ -19,15 +19,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout: _onLogout }) => {
       borderBottom: '1px solid rgba(0,0,0,0.06)',
     }}>
       <Link to="/" style={{ color: '#212529', textDecoration: 'none', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: 10, overflow: 'hidden',
-          background: 'linear-gradient(135deg, #D4AF37, #D4AF37)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <img src={assetUrl('/sajoma-icon.png')} alt="" style={{ width: 32, height: 32 }} onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
-          }} />
-        </div>
+        <img
+          src={assetUrl('/sajoma-logo.png')}
+          alt="Sajoma Fitness"
+          style={{ width: 36, height: 36, filter: 'drop-shadow(0 2px 6px rgba(212,175,55,0.35))' }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
         Sajoma Fitness
       </Link>
       <div style={{ display: 'flex', gap: 8 }}>

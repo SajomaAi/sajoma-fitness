@@ -48,9 +48,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, showBack = false, onOpen
             style={{ cursor: 'pointer' }}
           >
             <img
-              src={assetUrl('/sajoma-icon.png')}
+              src={assetUrl('/sajoma-logo.png')}
               alt="Sajoma Fitness"
-              style={{ width: 38, height: 38, borderRadius: 10, boxShadow: 'var(--shadow-gold)' }}
+              style={{
+                width: 42, height: 42,
+                filter: 'drop-shadow(0 2px 8px rgba(212,175,55,0.4))',
+              }}
             />
           </div>
         )}

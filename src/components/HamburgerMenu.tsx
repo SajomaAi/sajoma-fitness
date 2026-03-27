@@ -57,7 +57,11 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose, onLogout
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src={assetUrl('/sajoma-icon.png')} alt="Sajoma" style={{ width: 36, height: 36, borderRadius: 10 }} />
+            <img
+              src={assetUrl('/sajoma-logo.png')}
+              alt="Sajoma"
+              style={{ width: 40, height: 40, filter: 'drop-shadow(0 2px 6px rgba(212,175,55,0.35))' }}
+            />
             <span style={{ fontWeight: 800, color: 'var(--gold-metallic)', fontSize: '1.1rem' }}>Sajoma Fitness</span>
           </div>
           <button 

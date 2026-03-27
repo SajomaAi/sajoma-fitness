@@ -10,15 +10,19 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', textAlign: 'center' }}>
         {/* Logo */}
-        <div style={{
-          width: 110, height: 110, borderRadius: 28, marginBottom: 24, overflow: 'hidden',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 8px 32px rgba(212,175,55,0.25)',
-        }}>
-          <img src={assetUrl('/sajoma-icon.png')} alt="Sajoma Fitness" style={{ width: 110, height: 110 }} onError={(e) => {
-            const el = e.target as HTMLImageElement; el.style.display = 'none';
-            el.parentElement!.innerHTML = '<span style="font-size:2.5rem;color:#D4AF37;font-weight:900">S</span>';
-          }} />
+        <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            src={assetUrl('/sajoma-logo.png')}
+            alt="Sajoma Fitness"
+            style={{
+              width: 150, height: 150,
+              filter: 'drop-shadow(0 6px 20px rgba(212,175,55,0.35))',
+            }}
+            onError={(e) => {
+              const el = e.target as HTMLImageElement; el.style.display = 'none';
+              el.parentElement!.innerHTML = '<span style="font-size:3rem;color:#D4AF37;font-weight:900">S</span>';
+            }}
+          />
         </div>
 
         <h1 style={{ fontSize: '2rem', fontWeight: 900, color: '#212529', marginBottom: 8 }}>Sajoma Fitness</h1>

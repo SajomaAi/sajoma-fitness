@@ -40,7 +40,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     <div style={{ minHeight: '100vh', background: '#F8F9FA', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
       {/* Logo */}
       <div style={{ textAlign: 'center', marginBottom: 32, animation: 'fadeIn 0.5s ease' }}>
-        <img src={assetUrl('/sajoma-logo.jpg')} alt="Sajoma Fitness" style={{ width: 100, height: 100, borderRadius: 24, boxShadow: '0 8px 32px rgba(212,175,55,0.25)', marginBottom: 16 }} />
+        <img
+          src={assetUrl('/sajoma-logo.png')}
+          alt="Sajoma Fitness"
+          style={{
+            width: 120, height: 120, marginBottom: 16,
+            filter: 'drop-shadow(0 6px 20px rgba(212,175,55,0.35))',
+          }}
+        />
         <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#212529' }}>Sajoma Fitness</h1>
         <p style={{ fontSize: '0.88rem', color: '#6C757D', marginTop: 4 }}>
           {isSignUp ? (t('create_account') || 'Create your account') : (t('welcome_back') || 'Welcome back')}
