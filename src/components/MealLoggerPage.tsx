@@ -5,10 +5,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase } from '../lib/supabase';
 import { analyzeMealPhoto } from '../lib/mealAnalysis';
 import BottomNav from './BottomNav';
 import PageHeader from './PageHeader';
+import { PaywallCard } from './PremiumPaywall';
+
+const FREE_AI_SCANS_PER_DAY = 3;
 
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 
@@ -21,6 +25,7 @@ interface MealLogRow {
   carbs_g: number | null;
   fat_g: number | null;
   serving_size: string | null;
+  source: 'manual' | 'barcode' | 'ai_photo' | 'cultural_db' | null;
   logged_at: string;
 }
 
@@ -28,11 +33,13 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t, language } = useTranslation();
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const { isPremium } = useSubscription();
   const [activeMeal, setActiveMeal] = useState<MealType>('breakfast');
   const [logs, setLogs] = useState<MealLogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
+  const [showPaywall, setShowPaywall] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const startOfDay = new Date();
@@ -42,7 +49,7 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
     const load = async () => {
       const { data } = await supabase
         .from('meal_logs')
-        .select('id, meal_type, name, calories, protein_g, carbs_g, fat_g, serving_size, logged_at')
+        .select('id, meal_type, name, calories, protein_g, carbs_g, fat_g, serving_size, source, logged_at')
         .gte('logged_at', startOfDay.toISOString())
         .order('logged_at', { ascending: false });
       setLogs((data as MealLogRow[]) ?? []);
@@ -51,6 +58,10 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const aiScansToday = logs.filter(l => l.source === 'ai_photo').length;
+  const aiScansRemaining = Math.max(0, FREE_AI_SCANS_PER_DAY - aiScansToday);
+  const aiBlocked = !isPremium && aiScansToday >= FREE_AI_SCANS_PER_DAY;
 
   const goalCal = profile?.daily_calorie_goal ?? 2000;
   const totalCal = logs.reduce((s, l) => s + (l.calories ?? 0), 0);
@@ -97,7 +108,10 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
     });
   };
 
-  const openPhotoPicker = () => fileInputRef.current?.click();
+  const openPhotoPicker = () => {
+    if (aiBlocked) { setShowPaywall(true); return; }
+    fileInputRef.current?.click();
+  };
 
   return (
     <div className="page animate-in">
@@ -147,7 +161,7 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
         style={{ display: 'none' }}
         onChange={e => { const f = e.target.files?.[0]; if (f) handleFilePicked(f); e.target.value = ''; }}
       />
-      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
         <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={openPhotoPicker} disabled={analyzing}>
           {analyzing ? '…' : `📸 ${t('snap_meal') || 'Snap Meal (AI)'}`}
         </button>
@@ -155,6 +169,13 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           📷 {t('scan_barcode') || 'Scan Barcode'}
         </button>
       </div>
+      {!isPremium && (
+        <div style={{ fontSize: '0.72rem', color: aiBlocked ? '#C62828' : '#6C757D', marginBottom: 16, textAlign: 'center' }}>
+          {aiBlocked
+            ? (t('ai_scan_limit_reached') || 'Daily free AI scans used up. Upgrade for unlimited.')
+            : `${aiScansRemaining} / ${FREE_AI_SCANS_PER_DAY} ${t('free_ai_scans_left') || 'free AI scans left today'}`}
+        </div>
+      )}
 
       {error && (
         <div style={{ background: '#FFF3E0', border: '1px solid #FFCC80', borderRadius: 12, padding: '10px 14px', marginBottom: 16, fontSize: '0.82rem', color: '#C62828' }}>
@@ -217,6 +238,24 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
           </>
         )}
       </div>
+
+      {showPaywall && (
+        <div
+          onClick={() => setShowPaywall(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(0,0,0,0.55)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+          }}
+        >
+          <div onClick={e => e.stopPropagation()}>
+            <PaywallCard
+              heading={t('unlimited_ai_scans') || 'Unlimited AI Meal Scans'}
+              body={t('ai_scan_limit_body') || `You've used all ${FREE_AI_SCANS_PER_DAY} free AI meal scans today. Upgrade for unlimited scans, richer analysis, and more.`}
+              onClose={() => setShowPaywall(false)}
+            />
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>

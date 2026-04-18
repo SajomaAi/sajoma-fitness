@@ -20,6 +20,7 @@ import PremiumPaywall from './components/PremiumPaywall';
 import HamburgerMenu from './components/HamburgerMenu';
 import BottomNav from './components/BottomNav';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import { supabase } from './lib/supabase';
 import './App.css';
 import './responsive.css';
@@ -109,7 +110,9 @@ function AppInner() {
 function App() {
   return (
     <AuthProvider>
-      <AppInner />
+      <SubscriptionProvider>
+        <AppInner />
+      </SubscriptionProvider>
     </AuthProvider>
   );
 }
