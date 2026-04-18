@@ -1,14 +1,45 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface OnboardingWizardProps {
   onComplete: () => void;
 }
 
+const GOAL_MAP: Record<string, string> = {
+  'Lose Weight': 'lose_weight',
+  'Build Muscle': 'build_muscle',
+  'Stay Healthy': 'maintain',
+  'Eat Better': 'eat_healthier',
+  'Improve Sleep': 'improve_sleep',
+};
+const LEVEL_MAP: Record<string, string> = {
+  'Beginner': 'beginner',
+  'Intermediate': 'intermediate',
+  'Advanced': 'advanced',
+};
+const ACTIVITY_MAP: Record<string, string> = {
+  'Sedentary': 'sedentary',
+  'Lightly Active': 'light',
+  'Moderately Active': 'moderate',
+  'Very Active': 'very_active',
+};
+const DIET_MAP: Record<string, string> = {
+  'No specific diet': 'none',
+  'Keto': 'keto',
+  'Vegan': 'vegan',
+  'Vegetarian': 'vegetarian',
+  'Mediterranean': 'mediterranean',
+  'Gluten-free': 'gluten_free',
+};
+
 const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const { t: _t } = useTranslation();
+  const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
 
   const steps = [
     {
@@ -54,9 +85,28 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const current = steps[step];
   const progress = ((step + 1) / steps.length) * 100;
 
-  const handleNext = () => {
-    if (step < steps.length - 1) setStep(step + 1);
-    else onComplete();
+  const persistAnswers = async () => {
+    if (!user) return;
+    setSaving(true);
+    try {
+      await supabase.from('profiles').update({
+        goal: answers.goal ? GOAL_MAP[answers.goal] ?? null : null,
+        fitness_level: answers.level ? LEVEL_MAP[answers.level] ?? null : null,
+        activity_level: answers.activity ? ACTIVITY_MAP[answers.activity] ?? null : null,
+        diet_preference: answers.diet ? DIET_MAP[answers.diet] ?? null : null,
+      }).eq('id', user.id);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleNext = async () => {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      await persistAnswers();
+      onComplete();
+    }
   };
 
   const handleBack = () => {
@@ -110,8 +160,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         )}
 
         {(current.type === 'welcome' || current.type === 'complete') && (
-          <button className="btn btn-gold btn-full btn-lg" onClick={handleNext} style={{ maxWidth: 360 }}>
-            {current.type === 'welcome' ? 'Get Started' : "Let's Go!"}
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleNext} disabled={saving} style={{ maxWidth: 360 }}>
+            {saving ? '...' : current.type === 'welcome' ? 'Get Started' : "Let's Go!"}
           </button>
         )}
       </div>
