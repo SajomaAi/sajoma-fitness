@@ -1,29 +1,40 @@
 interface PageProps {
   onOpenMenu: () => void;
 }
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
+import { supabase } from '../lib/supabase';
 import BottomNav from './BottomNav';
 import PageHeader from './PageHeader';
-import HamburgerMenu from './HamburgerMenu';
 
-interface JournalEntry { id: number; date: string; mood: number; energy: number; gratitude: string; notes: string; prompt: string; }
+interface JournalEntry {
+  id: string;
+  entry_date: string;
+  mood: number | null;
+  energy: number | null;
+  gratitude: string | null;
+  notes: string | null;
+  prompt: string | null;
+  created_at: string;
+}
 
 const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tab, setTab] = useState<'write' | 'history'>('write');
-  const [entries, setEntries] = useState<JournalEntry[]>(() => {
-    const saved = localStorage.getItem('sajoma-journal');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const [mood, setMood] = useState(3);
   const [energy, setEnergy] = useState(3);
   const [gratitude, setGratitude] = useState('');
   const [notes, setNotes] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState('');
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 1800);
+  };
 
   const moods = [
     { val: 1, emoji: '😢', label: t('mood_rough') || 'Rough', color: '#E57373' },
@@ -52,20 +63,42 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   ];
   const todayPrompt = prompts[new Date().getDay()];
 
-  const handleSave = () => {
-    const entry: JournalEntry = {
-      id: Date.now(), date: new Date().toISOString(),
-      mood, energy, gratitude, notes, prompt: todayPrompt,
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from('journal_entries')
+        .select('id, entry_date, mood, energy, gratitude, notes, prompt, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      setEntries((data as JournalEntry[]) ?? []);
+      setLoading(false);
+    })();
+  }, []);
+
+  const handleSave = async () => {
+    if (!notes && !gratitude) return;
+    setSaving(true);
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) { setSaving(false); showToast('Not signed in'); return; }
+    const payload = {
+      user_id: userData.user.id,
+      entry_date: new Date().toISOString().slice(0, 10),
+      mood, energy, gratitude: gratitude || null, notes: notes || null, prompt: todayPrompt,
     };
-    const updated = [entry, ...entries];
-    setEntries(updated);
-    localStorage.setItem('sajoma-journal', JSON.stringify(updated));
+    const { data, error } = await supabase.from('journal_entries').insert(payload).select().single();
+    setSaving(false);
+    if (error) { showToast(error.message); return; }
+    setEntries([data as JournalEntry, ...entries]);
     setGratitude(''); setNotes(''); setMood(3); setEnergy(3);
-    alert(t('entry_saved') || 'Journal entry saved!');
+    showToast(t('entry_saved') || 'Journal entry saved!');
+    setTab('history');
   };
 
   const filteredEntries = searchQuery
-    ? entries.filter(e => e.notes.toLowerCase().includes(searchQuery.toLowerCase()) || e.gratitude.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? entries.filter(e =>
+        (e.notes ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (e.gratitude ?? '').toLowerCase().includes(searchQuery.toLowerCase())
+      )
     : entries;
 
   return (
@@ -79,13 +112,11 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
 
       {tab === 'write' && (
         <>
-          {/* Today's Prompt */}
           <div className="card card-gold" style={{ padding: 18, marginBottom: 20, textAlign: 'center' }}>
             <p style={{ fontSize: '0.72rem', opacity: 0.8, marginBottom: 6 }}>{t('todays_prompt') || "Today's Prompt"}</p>
             <p style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4 }}>"{todayPrompt}"</p>
           </div>
 
-          {/* Mood Selector */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
             <h3 className="section-title" style={{ marginBottom: 14 }}>{t('how_feeling') || 'How are you feeling?'}</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
@@ -103,7 +134,6 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
             </div>
           </div>
 
-          {/* Energy Level */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
             <h3 className="section-title" style={{ marginBottom: 14 }}>{t('energy_level') || 'Energy Level'}</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
@@ -121,20 +151,18 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
             </div>
           </div>
 
-          {/* Gratitude */}
           <div className="card" style={{ padding: 20, marginBottom: 16 }}>
             <h3 className="section-title" style={{ marginBottom: 10 }}>🙏 {t('gratitude') || 'Gratitude'}</h3>
             <textarea className="input" rows={3} placeholder={t('gratitude_placeholder') || "What are you grateful for today?"} value={gratitude} onChange={e => setGratitude(e.target.value)} style={{ resize: 'none' }} />
           </div>
 
-          {/* Free Writing */}
           <div className="card" style={{ padding: 20, marginBottom: 20 }}>
             <h3 className="section-title" style={{ marginBottom: 10 }}>📝 {t('journal_entry') || 'Journal Entry'}</h3>
             <textarea className="input" rows={5} placeholder={t('write_something') || "Write freely about your day..."} value={notes} onChange={e => setNotes(e.target.value)} style={{ resize: 'none' }} />
           </div>
 
-          <button className="btn btn-gold btn-full btn-lg" onClick={handleSave} disabled={!notes && !gratitude}>
-            {t('save_entry') || 'Save Entry'}
+          <button className="btn btn-gold btn-full btn-lg" onClick={handleSave} disabled={saving || (!notes && !gratitude)}>
+            {saving ? '…' : (t('save_entry') || 'Save Entry')}
           </button>
         </>
       )}
@@ -145,7 +173,9 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
             <input className="input" placeholder={t('search_entries') || "🔍 Search entries..."} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
           </div>
 
-          {filteredEntries.length === 0 ? (
+          {loading ? (
+            <div className="card" style={{ padding: 32, textAlign: 'center', color: '#6C757D', fontSize: '0.85rem' }}>Loading…</div>
+          ) : filteredEntries.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
               <p style={{ fontSize: '2rem', marginBottom: 8 }}>📓</p>
               <p style={{ color: '#6C757D' }}>{t('no_entries') || 'No journal entries yet'}</p>
@@ -154,11 +184,11 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
             <div key={entry.id} className="card" style={{ padding: 18, marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <span style={{ fontSize: '0.78rem', color: '#6C757D', fontWeight: 600 }}>
-                  {new Date(entry.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                  {new Date(entry.created_at).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
                 </span>
                 <div style={{ display: 'flex', gap: 6 }}>
                   <span style={{ fontSize: '1.1rem' }}>{moods.find(m => m.val === entry.mood)?.emoji}</span>
-                  <span style={{ fontSize: '0.75rem', color: '#D4AF37', fontWeight: 700 }}>⚡{entry.energy}/5</span>
+                  <span style={{ fontSize: '0.75rem', color: '#D4AF37', fontWeight: 700 }}>⚡{entry.energy ?? '—'}/5</span>
                 </div>
               </div>
               {entry.gratitude && (
@@ -173,7 +203,14 @@ const JournalPage: React.FC<PageProps> = ({ onOpenMenu }) => {
         </>
       )}
 
-      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); navigate('/login'); }} />
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 88, left: '50%', transform: 'translateX(-50%)',
+          background: '#212529', color: 'white', padding: '10px 18px', borderRadius: 999,
+          fontSize: '0.85rem', fontWeight: 600, zIndex: 1000, boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+        }}>{toast}</div>
+      )}
+
       <BottomNav />
     </div>
   );
