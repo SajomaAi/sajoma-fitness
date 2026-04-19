@@ -1,4 +1,4 @@
-# RE Assistant — Real Estate Workflow Automation Plan
+# Real Estate Automation — Workflow Automation Plan
 
 ## Overview
 

@@ -9,12 +9,7 @@ import { WorkflowEngine } from "./services/workflow-engine";
 import { Scheduler } from "./services/scheduler";
 import { createAllExecutors } from "./services/integrations";
 
-// ============================================================
-// RE Assistant — Entry Point
-// Wires up the pipeline, workflow engine, and scheduler.
-// ============================================================
-
-export function createREAssistant() {
+export function createRealEstateAutomation() {
   const pipelineManager = new PipelineManager();
   const workflowEngine = new WorkflowEngine();
   const scheduler = new Scheduler();
@@ -110,14 +105,14 @@ export function createREAssistant() {
 
 // ── Boot ──
 if (require.main === module) {
-  console.log("RE Assistant — Real Estate Workflow Automation");
-  console.log("=============================================\n");
+  console.log("Real Estate Automation — Workflow Engine");
+  console.log("========================================\n");
 
-  const assistant = createREAssistant();
+  const assistant = createRealEstateAutomation();
 
   // Print scheduler summary
   const summary = assistant.scheduler.getSummary();
   console.log(`\nRecurring automations: ${summary.totalRecurring}`);
   console.log("By stage:", summary.byStage);
-  console.log("\nRE Assistant ready. Waiting for events...\n");
+  console.log("\nReal Estate Automation ready. Waiting for events...\n");
 }
