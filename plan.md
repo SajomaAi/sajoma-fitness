@@ -1,8 +1,8 @@
-# RE Assistant — Real Estate Workflow Automation Plan
+# Real Estate Automation — Workflow Plan
 
 ## Overview
 
-Build an automation system inside `RE Assistant/` that orchestrates the full real estate agent workflow from **Marketing → Post-Client**, automating green tasks and flagging yellow (manual) tasks for human action.
+Build an automation system inside `Real-Estate-Automation/` that orchestrates the full real estate agent workflow from **Marketing → Post-Client**, automating green tasks and flagging yellow (manual) tasks for human action.
 
 ---
 
@@ -102,7 +102,7 @@ Build an automation system inside `RE Assistant/` that orchestrates the full rea
 ## Architecture
 
 ```
-RE Assistant/
+Real-Estate-Automation/
 ├── README.md                     # Project overview
 ├── package.json                  # Dependencies
 ├── tsconfig.json                 # TypeScript config
@@ -212,7 +212,7 @@ The engine listens for **stage transitions** and fires the corresponding automat
 ## Implementation Order
 
 ### Phase 1: Foundation
-1. Project scaffolding (`RE Assistant/` structure, types, config)
+1. Project scaffolding (`Real-Estate-Automation/` structure, types, config)
 2. Pipeline stage definitions and workflow engine
 3. CRM integration adapter (generic interface)
 4. Email service integration

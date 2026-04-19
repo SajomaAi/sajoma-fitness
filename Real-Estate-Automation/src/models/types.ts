@@ -1,6 +1,4 @@
-// ============================================================
-// RE Assistant — Core Data Models
-// ============================================================
+// Real Estate Automation — Core Data Models
 
 // --- Pipeline Stages ---
 

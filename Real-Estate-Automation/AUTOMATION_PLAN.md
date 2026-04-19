@@ -10,7 +10,7 @@ This system automates the end-to-end real estate agent workflow from lead genera
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                  RE Assistant Engine                 │
+│            Real Estate Automation Engine             │
 │                                                     │
 │  ┌───────────┐  ┌────────────┐  ┌────────────────┐  │
 │  │  Pipeline  │  │  Workflow   │  │   Scheduler    │  │
