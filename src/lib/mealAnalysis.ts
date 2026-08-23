@@ -59,23 +59,21 @@ export async function analyzeMealPhoto(file: Blob, language: 'en' | 'es' = 'en')
     return { ok: false, error: e instanceof Error ? e.message : 'Failed to process image' };
   }
 
-  // Fire upload + analysis in parallel — both are independent
-  const storagePath = `${userId}/${Date.now()}.jpg`;
-  const uploadPromise = supabase.storage.from('meal-photos').upload(storagePath, resized.blob, {
-    contentType: 'image/jpeg',
-    upsert: false,
-  });
-
-  const analysisPromise = supabase.functions.invoke<MealAnalysis | { error: string }>('analyze-meal', {
-    body: { imageBase64: resized.base64, mimeType: 'image/jpeg', language },
-  });
-
-  const [uploadRes, analysisRes] = await Promise.all([uploadPromise, analysisPromise]);
+  // Analyze first — avoids orphan uploads if the AI call fails or the user is over quota.
+  const analysisRes = await supabase.functions.invoke<MealAnalysis | { error: string; quota?: number; tier?: string }>(
+    'analyze-meal',
+    { body: { imageBase64: resized.base64, mimeType: 'image/jpeg', language } }
+  );
 
   if (analysisRes.error) return { ok: false, error: analysisRes.error.message };
   const data = analysisRes.data;
   if (!data) return { ok: false, error: 'Empty response from analyze-meal' };
   if ('error' in data) {
+    if (data.error === 'quota_exceeded') {
+      return { ok: false, error: language === 'es'
+        ? `Límite diario alcanzado (${data.quota ?? '?'} análisis). Actualiza para más.`
+        : `Daily limit reached (${data.quota ?? '?'} scans). Upgrade for more.` };
+    }
     const msg = data.error === 'not_food'
       ? (language === 'es' ? 'La imagen no parece ser comida.' : "That doesn't look like food.")
       : data.error === 'unclear'
@@ -84,6 +82,13 @@ export async function analyzeMealPhoto(file: Blob, language: 'en' | 'es' = 'en')
     return { ok: false, error: msg };
   }
 
+  // Only upload on successful analysis. Best-effort — a failed upload leaves the analysis intact
+  // (photoPath simply stays null; the meal_log row still saves).
+  const storagePath = `${userId}/${Date.now()}.jpg`;
+  const uploadRes = await supabase.storage.from('meal-photos').upload(storagePath, resized.blob, {
+    contentType: 'image/jpeg',
+    upsert: false,
+  });
   const photoPath = uploadRes.error ? null : storagePath;
   return { ok: true, analysis: data, photoPath };
 }

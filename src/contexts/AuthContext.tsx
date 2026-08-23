@@ -9,7 +9,7 @@ interface AuthContextValue {
   profile: Profile | null;
   loading: boolean;
   signInWithPassword: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUpWithPassword: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | null }>;
+  signUpWithPassword: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | null; needsEmailConfirm: boolean }>;
   signInWithApple: () => Promise<{ error: AuthError | null }>;
   signInWithGoogle: () => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
@@ -55,12 +55,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error };
     },
     signUpWithPassword: async (email, password, fullName) => {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { full_name: fullName } },
       });
-      return { error };
+      // Supabase returns a non-null session when email confirmation is disabled in the
+      // project's Auth settings. When confirmation is required, session is null and the
+      // user must click a link in their email before they can sign in.
+      const needsEmailConfirm = !error && !data.session;
+      return { error, needsEmailConfirm };
     },
     signInWithApple: async () => {
       const { error } = await supabase.auth.signInWithOAuth({

@@ -16,6 +16,25 @@
 
 import { corsHeaders } from '../_shared/cors.ts';
 
+// Length-safe, constant-time comparison. Both strings are compared byte-by-byte
+// regardless of any early mismatch, avoiding a timing side-channel on the shared secret.
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const aBuf = new TextEncoder().encode(a);
+  const bBuf = new TextEncoder().encode(b);
+  if (aBuf.length !== bBuf.length) {
+    // Still walk the longer buffer against itself so the operation duration
+    // does not depend on which side was longer.
+    let acc = 1;
+    const len = Math.max(aBuf.length, bBuf.length);
+    for (let i = 0; i < len; i++) acc |= (aBuf[i] ?? 0) ^ (aBuf[i] ?? 0);
+    void acc;
+    return false;
+  }
+  let diff = 0;
+  for (let i = 0; i < aBuf.length; i++) diff |= aBuf[i] ^ bBuf[i];
+  return diff === 0;
+}
+
 const ENTITLEMENT_TO_TIER: Record<string, 'basic_premium' | 'full_premium'> = {
   basic_premium: 'basic_premium',
   full_premium: 'full_premium',
@@ -41,9 +60,10 @@ Deno.serve(async (req: Request) => {
   }
 
   // Shared-secret auth: RevenueCat sends whatever we configured in the Authorization header.
+  // Compared in constant time to avoid leaking the secret via response timing.
   const expected = Deno.env.get('REVENUECAT_WEBHOOK_AUTH');
-  const got = req.headers.get('authorization');
-  if (!expected || got !== expected) {
+  const got = req.headers.get('authorization') ?? '';
+  if (!expected || !timingSafeEqualStr(got, expected)) {
     return new Response('Unauthorized', { status: 401, headers: corsHeaders });
   }
 

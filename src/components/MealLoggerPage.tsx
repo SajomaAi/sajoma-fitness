@@ -40,23 +40,29 @@ const MealLoggerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
   const [showPaywall, setShowPaywall] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
 
   useEffect(() => {
     const load = async () => {
+      const dayStart = new Date();
+      dayStart.setHours(0, 0, 0, 0);
       const { data } = await supabase
         .from('meal_logs')
         .select('id, meal_type, name, calories, protein_g, carbs_g, fat_g, serving_size, source, logged_at')
-        .gte('logged_at', startOfDay.toISOString())
+        .gte('logged_at', dayStart.toISOString())
         .order('logged_at', { ascending: false });
       setLogs((data as MealLogRow[]) ?? []);
       setLoading(false);
     };
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey]);
+
+  // Refetch when the tab becomes visible again — handles crossing midnight while the app is idle.
+  useEffect(() => {
+    const onVis = () => { if (document.visibilityState === 'visible') setRefreshKey(k => k + 1); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
 
   const aiScansToday = logs.filter(l => l.source === 'ai_photo').length;

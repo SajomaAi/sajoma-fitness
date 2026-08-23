@@ -33,10 +33,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setIsLoading(true);
     try {
       if (isSignUp) {
-        const { error: err } = await signUpWithPassword(email, password, name.trim());
+        const { error: err, needsEmailConfirm } = await signUpWithPassword(email, password, name.trim());
         if (err) { setError(err.message); return; }
-        setInfo(t('check_email_confirm') || 'Check your email to confirm your account, then sign in.');
-        setIsSignUp(false);
+        if (needsEmailConfirm) {
+          setInfo(t('check_email_confirm') || 'Check your email to confirm your account, then sign in.');
+          setIsSignUp(false);
+        } else {
+          // Auto sign-in path — AuthContext session change will navigate to /dashboard.
+          onLogin();
+        }
       } else {
         const { error: err } = await signInWithPassword(email, password);
         if (err) { setError(err.message); return; }

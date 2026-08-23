@@ -50,7 +50,9 @@ const WaterTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const addGlasses = async (count: number) => {
     if (working || count <= 0) return;
     setWorking(true);
-    const inserts = Array.from({ length: count }, () => ({ amount_ml: GLASS_ML }));
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) { setWorking(false); return; }
+    const inserts = Array.from({ length: count }, () => ({ user_id: userData.user!.id, amount_ml: GLASS_ML }));
     const { data, error } = await supabase.from('water_logs').insert(inserts).select('id, amount_ml, logged_at');
     setWorking(false);
     if (!error && data) setLogs(prev => [...(data as WaterLog[]), ...prev]);

@@ -91,8 +91,11 @@ export interface DailyTotals {
 }
 
 // Fetch per-day totals for the last N days (inclusive of today).
+// Dates in the result use the user's LOCAL calendar day so they align with
+// HealthTrackerPage's local-date grouping.
 export async function getDailyTotals(days: number): Promise<DailyTotals[]> {
   if (!isNative()) return [];
+  const pad = (n: number) => String(n).padStart(2, '0');
   const today = new Date();
   const results: DailyTotals[] = [];
   for (let i = days - 1; i >= 0; i--) {
@@ -105,7 +108,7 @@ export async function getDailyTotals(days: number): Promise<DailyTotals[]> {
       sumSamples(SampleNames.ACTIVE_ENERGY_BURNED, start.toISOString(), end.toISOString()),
     ]);
     results.push({
-      date: start.toISOString().slice(0, 10),
+      date: `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`,
       steps: Math.round(steps),
       activeEnergyKcal: Math.round(kcal),
     });

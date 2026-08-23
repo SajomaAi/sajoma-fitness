@@ -57,29 +57,36 @@ const HealthTrackerPage: React.FC<PageProps> = ({ onOpenMenu }) => {
 
       if (cancelled) return;
 
+      // Group by LOCAL calendar date so weekday labels align with the user's clock.
+      // Using ISO/UTC would misassign anything logged in the "wrong" side of midnight
+      // for users west of UTC.
+      const pad = (n: number) => String(n).padStart(2, '0');
+      const localDateKey = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
       const byDate = new Map<string, DayAgg>();
       for (let i = 0; i < rangeDays; i++) {
         const d = new Date(start);
         d.setDate(start.getDate() + i);
-        const iso = d.toISOString().slice(0, 10);
-        byDate.set(iso, { date: iso, label: DAYS_OF_WEEK[d.getDay()], cal: 0, steps: 0, water: 0, workouts: 0 });
+        const key = localDateKey(d);
+        byDate.set(key, { date: key, label: DAYS_OF_WEEK[d.getDay()], cal: 0, steps: 0, water: 0, workouts: 0 });
       }
 
       for (const m of meals.data ?? []) {
-        const iso = (m as { logged_at: string }).logged_at.slice(0, 10);
-        const entry = byDate.get(iso);
+        const key = localDateKey(new Date((m as { logged_at: string }).logged_at));
+        const entry = byDate.get(key);
         if (entry) entry.cal += (m as { calories: number | null }).calories ?? 0;
       }
       for (const w of water.data ?? []) {
-        const iso = (w as { logged_at: string }).logged_at.slice(0, 10);
-        const entry = byDate.get(iso);
+        const key = localDateKey(new Date((w as { logged_at: string }).logged_at));
+        const entry = byDate.get(key);
         if (entry) entry.water += ((w as { amount_ml: number }).amount_ml ?? 0) / GLASS_ML;
       }
       for (const wk of workouts.data ?? []) {
-        const iso = (wk as { performed_at: string }).performed_at.slice(0, 10);
-        const entry = byDate.get(iso);
+        const key = localDateKey(new Date((wk as { performed_at: string }).performed_at));
+        const entry = byDate.get(key);
         if (entry) entry.workouts += 1;
       }
+      // HK totals arrive already keyed by local date (see getDailyTotals impl).
       for (const h of hk) {
         const entry = byDate.get(h.date);
         if (entry) entry.steps = h.steps;

@@ -55,18 +55,20 @@ const DashboardPage: React.FC<PageProps> = ({ onOpenMenu }) => {
       setConsumed(Math.round(mealCals));
       setWaterGlasses(Math.round(waterMl / GLASS_ML));
 
-      // HealthKit (native only) — request auth once, then read
-      if (await isHealthKitAvailable()) {
-        const granted = await requestHealthKitAuthorization();
-        if (granted) {
+      // HealthKit (native only) — request auth once, then read.
+      // If HK is unavailable OR the user denied permission, fall back to
+      // burned-calories from today's logged workouts so the tile isn't empty.
+      const hkAvailable = await isHealthKitAvailable();
+      let hkGranted = false;
+      if (hkAvailable) {
+        hkGranted = await requestHealthKitAuthorization();
+        if (hkGranted) {
           const [s, kcal] = await Promise.all([getTodaySteps(), getTodayActiveEnergyKcal()]);
           setSteps(s);
           setBurned(kcal);
         }
       }
-
-      // Fallback: compute burned from today's logged workouts if HealthKit unavailable
-      if (!(await isHealthKitAvailable())) {
+      if (!hkGranted) {
         const { data: wk } = await supabase
           .from('workouts')
           .select('calories_burned')
