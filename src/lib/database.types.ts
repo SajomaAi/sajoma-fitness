@@ -116,9 +116,9 @@ export interface Database {
       progress_photos: TableDef<ProgressPhotoRow>;
       reminders: TableDef<ReminderRow>;
     };
-    Views: { [key: string]: never };
-    Functions: { [key: string]: never };
-    Enums: { [key: string]: never };
-    CompositeTypes: { [key: string]: never };
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 }

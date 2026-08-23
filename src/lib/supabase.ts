@@ -9,8 +9,14 @@ if (!url || !key) {
   );
 }
 
-// TODO: Generate typed schema with `npx supabase gen types typescript --project-id sffqsaysjfnlorbwwvpf > src/lib/database.types.ts`
-// and pass it as generic here. For now row types are imported from database.types.ts where needed.
+// Client is left untyped: the hand-written Database schema in ./database.types.ts
+// does not satisfy postgrest-js's GenericSchema constraint under strict TS (interface
+// row types don't extend Record<string, unknown> without an explicit index signature,
+// and adding one defeats the purpose). Callers cast query results to the exported
+// Row types (ProfileRow, MealLogRow, ...) at read sites.
+// Replace this with the official generator when the CLI can be run:
+//   npx supabase gen types typescript --project-id sffqsaysjfnlorbwwvpf > src/lib/database.types.ts
+// then pass <Database> as the generic and drop the Row-type casts.
 export const supabase = createClient(url, key, {
   auth: {
     persistSession: true,

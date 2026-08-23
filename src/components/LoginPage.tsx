@@ -4,9 +4,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
 import { assetUrl } from '../lib/basePath';
 
-interface LoginPageProps { onLogin: () => void; }
-
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const LoginPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,14 +36,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         if (needsEmailConfirm) {
           setInfo(t('check_email_confirm') || 'Check your email to confirm your account, then sign in.');
           setIsSignUp(false);
-        } else {
-          // Auto sign-in path — AuthContext session change will navigate to /dashboard.
-          onLogin();
         }
+        // Otherwise the AuthContext auth-state listener already has a session;
+        // App.tsx's isLoggedIn check will redirect to /dashboard on the next render.
       } else {
         const { error: err } = await signInWithPassword(email, password);
         if (err) { setError(err.message); return; }
-        onLogin();
         navigate('/dashboard');
       }
     } finally {

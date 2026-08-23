@@ -10,7 +10,7 @@
 //
 // The function runs with the caller's auth — RLS still applies to any DB calls.
 
-import { corsHeaders } from '../_shared/cors.ts';
+import { corsHeadersFor } from '../_shared/cors.ts';
 
 const MODEL = 'claude-sonnet-5';
 const MAX_TOKENS = 1024;
@@ -53,6 +53,7 @@ interface MealAnalysis {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = corsHeadersFor(req);
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }

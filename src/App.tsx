@@ -36,8 +36,6 @@ function AppInner() {
     else setShowOnboarding(false);
   }, [session, profile]);
 
-  const handleLogin = () => { /* Auth state change handled by AuthContext listener */ };
-
   const handleLogout = async () => {
     await signOut();
     setIsMenuOpen(false);
@@ -69,8 +67,8 @@ function AppInner() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <HomePage />} />
-          <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
-          <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />} />
+          <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />} />
           <Route path="/dashboard" element={<P><DashboardPage onOpenMenu={toggleMenu} /></P>} />
           <Route path="/water-tracker" element={<P><WaterTrackerPage onOpenMenu={toggleMenu} /></P>} />
           <Route path="/meal-logger" element={<P><MealLoggerPage onOpenMenu={toggleMenu} /></P>} />
