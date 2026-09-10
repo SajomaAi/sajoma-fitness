@@ -19,35 +19,33 @@ import SubscriptionPage from './components/SubscriptionPage';
 import PremiumPaywall from './components/PremiumPaywall';
 import HamburgerMenu from './components/HamburgerMenu';
 import BottomNav from './components/BottomNav';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
+import { supabase } from './lib/supabase';
 import './App.css';
 import './responsive.css';
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function AppInner() {
+  const { session, profile, loading, signOut, refreshProfile } = useAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isLoggedIn = !!session;
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem('sajoma-loggedIn') === 'true';
-    const onboarded = localStorage.getItem('sajoma-onboarded') === 'true';
-    setIsLoggedIn(loggedIn);
-    if (loggedIn && !onboarded) setShowOnboarding(true);
-  }, []);
+    if (session && profile && !profile.onboarded_at) setShowOnboarding(true);
+    else setShowOnboarding(false);
+  }, [session, profile]);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem('sajoma-loggedIn', 'true');
-    if (localStorage.getItem('sajoma-onboarded') !== 'true') setShowOnboarding(true);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem('sajoma-loggedIn');
+  const handleLogout = async () => {
+    await signOut();
     setIsMenuOpen(false);
   };
 
-  const handleOnboardingComplete = () => {
-    localStorage.setItem('sajoma-onboarded', 'true');
+  const handleOnboardingComplete = async () => {
+    if (session?.user) {
+      await supabase.from('profiles').update({ onboarded_at: new Date().toISOString() }).eq('id', session.user.id);
+      await refreshProfile();
+    }
     setShowOnboarding(false);
   };
 
@@ -56,13 +54,21 @@ function App() {
   const P = ({ children }: { children: React.ReactNode }) =>
     isLoggedIn ? <>{children}</> : <Navigate to="/login" />;
 
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8F9FA' }}>
+        <div style={{ fontSize: '0.9rem', color: '#6C757D' }}>Loading…</div>
+      </div>
+    );
+  }
+
   return (
     <Router basename="/sajoma-fitness">
       <div className="app-container">
         <Routes>
           <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <HomePage />} />
-          <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
-          <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />} />
+          <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />} />
           <Route path="/dashboard" element={<P><DashboardPage onOpenMenu={toggleMenu} /></P>} />
           <Route path="/water-tracker" element={<P><WaterTrackerPage onOpenMenu={toggleMenu} /></P>} />
           <Route path="/meal-logger" element={<P><MealLoggerPage onOpenMenu={toggleMenu} /></P>} />
@@ -80,12 +86,12 @@ function App() {
         </Routes>
 
         {isLoggedIn && !showOnboarding && <BottomNav />}
-        
+
         {isLoggedIn && (
-          <HamburgerMenu 
-            isOpen={isMenuOpen} 
-            onClose={() => setIsMenuOpen(false)} 
-            onLogout={handleLogout} 
+          <HamburgerMenu
+            isOpen={isMenuOpen}
+            onClose={() => setIsMenuOpen(false)}
+            onLogout={handleLogout}
           />
         )}
 
@@ -96,6 +102,16 @@ function App() {
         )}
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <SubscriptionProvider>
+        <AppInner />
+      </SubscriptionProvider>
+    </AuthProvider>
   );
 }
 

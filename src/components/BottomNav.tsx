@@ -14,14 +14,7 @@ const BottomNav: React.FC = () => {
     { path: '/health-tracker', icon: '🧭', label: t('discover') || 'Discover' },
   ];
 
-  const handleNav = (path: string) => {
-    const isLoggedIn = localStorage.getItem('sajoma-loggedIn') === 'true';
-    if (path === '/dashboard') {
-      navigate(isLoggedIn ? '/dashboard' : '/');
-    } else {
-      navigate(path);
-    }
-  };
+  const handleNav = (path: string) => navigate(path);
 
   return (
     <nav className="bottom-nav" style={{ zIndex: 1000 }}>

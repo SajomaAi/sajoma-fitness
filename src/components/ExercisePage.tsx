@@ -1,96 +1,145 @@
 interface PageProps {
   onOpenMenu: () => void;
 }
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
+import { supabase } from '../lib/supabase';
 import BottomNav from './BottomNav';
 import PageHeader from './PageHeader';
-import HamburgerMenu from './HamburgerMenu';
 
-interface Workout { id: number; type: string; category: string; duration: number; calories: number; intensity: string; date: string; }
+interface WorkoutRow {
+  id: string;
+  workout_type: string;
+  duration_min: number;
+  calories_burned: number | null;
+  intensity: 'low' | 'medium' | 'high' | null;
+  notes: string | null;
+  performed_at: string;
+}
+
+const CATEGORIES = [
+  { id: 'cardio', icon: '🏃', labelKey: 'cardio', defaultLabel: 'Cardio' },
+  { id: 'strength', icon: '🏋️', labelKey: 'strength', defaultLabel: 'Strength' },
+  { id: 'flexibility', icon: '🧘', labelKey: 'flexibility', defaultLabel: 'Flexibility' },
+  { id: 'sports', icon: '⚽', labelKey: 'sports', defaultLabel: 'Sports' },
+  { id: 'walking', icon: '🚶', labelKey: 'walking_running', defaultLabel: 'Walking' },
+];
+
+const PRESETS = [
+  { id: 1, name: 'Core Power', duration: '15 min', level: 'All Levels', calories: 150, icon: '💪', videoId: 'DHD1-2P94DI',
+    steps: [
+      { name: 'Plank', desc: 'Hold a strong plank position, engaging your core and maintaining proper form.' },
+      { name: 'Squats', desc: 'Lower your body with controlled movement, keeping your back straight.' },
+      { name: 'Core Crunches', desc: 'Activate your core with dynamic crunches and leg raises.' },
+      { name: 'Cool Down', desc: 'Gentle stretching to relax muscles and improve flexibility.' },
+    ]},
+  { id: 2, name: 'HIIT Burn', duration: '20 min', level: 'Intermediate', calories: 250, icon: '🔥', videoId: 'ml6cT4AZdqI',
+    steps: [
+      { name: 'Jumping Jacks', desc: 'Full body warm-up with explosive jumps.' },
+      { name: 'Burpees', desc: 'High-intensity full body exercise for maximum calorie burn.' },
+      { name: 'Mountain Climbers', desc: 'Fast-paced cardio targeting core and legs.' },
+      { name: 'Sprint Intervals', desc: 'Alternate between sprints and rest periods.' },
+    ]},
+  { id: 3, name: 'Yoga Flow', duration: '30 min', level: 'Beginner', calories: 120, icon: '🧘', videoId: 'v7AYKMP6rOE',
+    steps: [
+      { name: 'Sun Salutation', desc: 'Flowing sequence to warm up the entire body.' },
+      { name: 'Warrior Poses', desc: 'Build strength and balance with warrior series.' },
+      { name: 'Tree Pose', desc: 'Improve balance and focus with this standing pose.' },
+      { name: 'Savasana', desc: 'Final relaxation to absorb the benefits of your practice.' },
+    ]},
+  { id: 4, name: 'Full Body Blast', duration: '25 min', level: 'Advanced', calories: 300, icon: '⚡', videoId: 'UItWltVZZmE',
+    steps: [
+      { name: 'Deadlifts', desc: 'Compound movement targeting posterior chain.' },
+      { name: 'Push-ups', desc: 'Classic upper body strength builder.' },
+      { name: 'Lunges', desc: 'Unilateral leg exercise for balance and strength.' },
+      { name: 'Plank Hold', desc: 'Core stability finisher.' },
+    ]},
+];
 
 const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'browse' | 'log' | 'history'>('browse');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [workouts, setWorkouts] = useState<Workout[]>(() => {
-    const saved = localStorage.getItem('sajoma-workouts');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [form, setForm] = useState({ type: '', category: 'cardio', duration: '', intensity: 'moderate' });
+  const [workouts, setWorkouts] = useState<WorkoutRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({ type: '', category: 'cardio', duration: '', intensity: 'medium' as 'low' | 'medium' | 'high' });
+  const [saving, setSaving] = useState(false);
   const [workoutStarted, setWorkoutStarted] = useState(false);
+  const [selectedWorkout, setSelectedWorkout] = useState<typeof PRESETS[0] | null>(null);
+  const [toast, setToast] = useState('');
 
-  const categories = [
-    { id: 'cardio', icon: '🏃', label: t('cardio') || 'Cardio' },
-    { id: 'strength', icon: '🏋️', label: t('strength') || 'Strength' },
-    { id: 'flexibility', icon: '🧘', label: t('flexibility') || 'Flexibility' },
-    { id: 'sports', icon: '⚽', label: t('sports') || 'Sports' },
-    { id: 'walking', icon: '🚶', label: t('walking_running') || 'Walking' },
-  ];
-
-  const presetWorkouts = [
-    {
-      id: 1, name: 'Core Power', duration: '15 min', level: 'All Levels', calories: 150, icon: '💪',
-      color: 'var(--gold-gradient-card)',
-      videoId: 'DHD1-2P94DI',
-      steps: [
-        { name: 'Plank', desc: 'Hold a strong plank position, engaging your core and maintaining proper form.' },
-        { name: 'Squats', desc: 'Lower your body with controlled movement, keeping your back straight.' },
-        { name: 'Core Crunches', desc: 'Activate your core with dynamic crunches and leg raises.' },
-        { name: 'Cool Down', desc: 'Gentle stretching to relax muscles and improve flexibility.' },
-      ]
-    },
-    {
-      id: 2, name: 'HIIT Burn', duration: '20 min', level: 'Intermediate', calories: 250, icon: '🔥',
-      color: 'linear-gradient(145deg, #D4AF37 0%, #C19A29 100%)',
-      videoId: 'ml6cT4AZdqI',
-      steps: [
-        { name: 'Jumping Jacks', desc: 'Full body warm-up with explosive jumps.' },
-        { name: 'Burpees', desc: 'High-intensity full body exercise for maximum calorie burn.' },
-        { name: 'Mountain Climbers', desc: 'Fast-paced cardio targeting core and legs.' },
-        { name: 'Sprint Intervals', desc: 'Alternate between sprints and rest periods.' },
-      ]
-    },
-    {
-      id: 3, name: 'Yoga Flow', duration: '30 min', level: 'Beginner', calories: 120, icon: '🧘',
-      color: 'linear-gradient(145deg, #A8D8A8 0%, #7CB87C 100%)',
-      videoId: 'v7AYKMP6rOE',
-      steps: [
-        { name: 'Sun Salutation', desc: 'Flowing sequence to warm up the entire body.' },
-        { name: 'Warrior Poses', desc: 'Build strength and balance with warrior series.' },
-        { name: 'Tree Pose', desc: 'Improve balance and focus with this standing pose.' },
-        { name: 'Savasana', desc: 'Final relaxation to absorb the benefits of your practice.' },
-      ]
-    },
-    {
-      id: 4, name: 'Full Body Blast', duration: '25 min', level: 'Advanced', calories: 300, icon: '⚡',
-      color: 'linear-gradient(145deg, #B8A0D8 0%, #9080B8 100%)',
-      videoId: 'UItWltVZZmE',
-      steps: [
-        { name: 'Deadlifts', desc: 'Compound movement targeting posterior chain.' },
-        { name: 'Push-ups', desc: 'Classic upper body strength builder.' },
-        { name: 'Lunges', desc: 'Unilateral leg exercise for balance and strength.' },
-        { name: 'Plank Hold', desc: 'Core stability finisher.' },
-      ]
-    },
-  ];
-
-  const [selectedWorkout, setSelectedWorkout] = useState<typeof presetWorkouts[0] | null>(null);
-
-  const estimateCal = () => {
-    const d = parseInt(form.duration) || 0;
-    const mult = form.intensity === 'light' ? 4 : form.intensity === 'moderate' ? 7 : form.intensity === 'intense' ? 10 : 13;
-    return d * mult;
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 1800);
   };
 
-  const handleLog = () => {
-    if (!form.type || !form.duration) return;
-    const w: Workout = { id: Date.now(), type: form.type, category: form.category, duration: parseInt(form.duration), calories: Number(estimateCal()), intensity: form.intensity, date: new Date().toISOString() };
-    const updated = [w, ...workouts];
-    setWorkouts(updated);
-    localStorage.setItem('sajoma-workouts', JSON.stringify(updated));
-    setForm({ type: '', category: 'cardio', duration: '', intensity: 'moderate' });
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from('workouts')
+        .select('id, workout_type, duration_min, calories_burned, intensity, notes, performed_at')
+        .order('performed_at', { ascending: false })
+        .limit(50);
+      setWorkouts((data as WorkoutRow[]) ?? []);
+      setLoading(false);
+    })();
+  }, []);
+
+  const estimateCal = (duration: number, intensity: 'low' | 'medium' | 'high'): number => {
+    const mult = intensity === 'low' ? 4 : intensity === 'medium' ? 7 : 10;
+    return duration * mult;
+  };
+
+  const handleLog = async () => {
+    const duration = parseInt(form.duration);
+    if (!form.type || !duration) return;
+    setSaving(true);
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) { setSaving(false); showToast('Not signed in'); return; }
+    const payload = {
+      user_id: userData.user.id,
+      workout_type: `${form.category}:${form.type}`,
+      duration_min: duration,
+      calories_burned: estimateCal(duration, form.intensity),
+      intensity: form.intensity,
+      notes: null,
+      performed_at: new Date().toISOString(),
+    };
+    const { data, error } = await supabase.from('workouts').insert(payload).select().single();
+    setSaving(false);
+    if (error) { showToast(error.message); return; }
+    setWorkouts([data as WorkoutRow, ...workouts]);
+    setForm({ type: '', category: 'cardio', duration: '', intensity: 'medium' });
+    showToast(t('workout_logged') || 'Workout logged!');
     setActiveTab('history');
+  };
+
+  const logPreset = async (preset: typeof PRESETS[0]) => {
+    setSaving(true);
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) { setSaving(false); showToast('Not signed in'); return; }
+    const duration = parseInt(preset.duration) || 20;
+    const { data, error } = await supabase.from('workouts').insert({
+      user_id: userData.user.id,
+      workout_type: `preset:${preset.name}`,
+      duration_min: duration,
+      calories_burned: preset.calories,
+      intensity: 'medium' as const,
+      notes: null,
+      performed_at: new Date().toISOString(),
+    }).select().single();
+    setSaving(false);
+    if (error) { showToast(error.message); return; }
+    setWorkouts([data as WorkoutRow, ...workouts]);
+    showToast(t('workout_logged') || 'Workout logged!');
+  };
+
+  const displayName = (w: WorkoutRow): string => {
+    const parts = w.workout_type.split(':');
+    return parts.length > 1 ? parts[1] : w.workout_type;
+  };
+  const displayCategory = (w: WorkoutRow): string => {
+    const parts = w.workout_type.split(':');
+    return parts.length > 1 ? parts[0] : 'other';
   };
 
   if (selectedWorkout) {
@@ -98,7 +147,6 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
       <div className="page animate-in">
         <PageHeader title={selectedWorkout.name} showBack onOpenMenu={onOpenMenu} />
 
-        {/* YouTube Video Embed - 16:9 responsive */}
         <div style={{
           borderRadius: 20, overflow: 'hidden', marginBottom: 20,
           boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
@@ -159,11 +207,23 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
           ))}
         </div>
 
-        <button className="btn btn-gold btn-full btn-lg" onClick={() => { setWorkoutStarted(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          {t('start_workout') || 'START WORKOUT'}
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+          <button className="btn btn-gold btn-lg" style={{ flex: 2 }} onClick={() => { setWorkoutStarted(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            {t('start_workout') || 'START WORKOUT'}
+          </button>
+          <button className="btn btn-pink btn-lg" style={{ flex: 1 }} onClick={() => logPreset(selectedWorkout)} disabled={saving}>
+            {saving ? '…' : (t('log_it') || 'Log it')}
+          </button>
+        </div>
 
-        <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); window.location.href = '/login'; }} />
+        {toast && (
+          <div style={{
+            position: 'fixed', bottom: 88, left: '50%', transform: 'translateX(-50%)',
+            background: '#212529', color: 'white', padding: '10px 18px', borderRadius: 999,
+            fontSize: '0.85rem', fontWeight: 600, zIndex: 1000, boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+          }}>{toast}</div>
+        )}
+
         <BottomNav />
       </div>
     );
@@ -185,7 +245,7 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
               <button key={cat} className={`btn ${i === 0 ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flexShrink: 0 }}>{cat}</button>
             ))}
           </div>
-          {presetWorkouts.map(w => (
+          {PRESETS.map(w => (
             <div key={w.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, cursor: 'pointer', marginBottom: 12 }} onClick={() => { setSelectedWorkout(w); setWorkoutStarted(false); }}>
               <div style={{ width: 72, height: 54, borderRadius: 12, overflow: 'hidden', flexShrink: 0, position: 'relative', boxShadow: 'var(--shadow-sm)' }}>
                 <img src={`https://img.youtube.com/vi/${w.videoId}/mqdefault.jpg`} alt={w.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -204,30 +264,77 @@ const ExercisePage: React.FC<PageProps> = ({ onOpenMenu }) => {
         <div className="card" style={{ padding: 24 }}>
           <h3 className="section-title">{t('log_workout') || 'Log Workout'}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div><label className="label">{t('category') || 'Category'}</label><div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{categories.map(c => (<button key={c.id} onClick={() => setForm({ ...form, category: c.id })} className={`btn ${form.category === c.id ? 'btn-gold' : 'btn-pink'} btn-sm`}>{c.icon} {c.label}</button>))}</div></div>
-            <div><label className="label">{t('exercise_type') || 'Exercise Type'}</label><input className="input" placeholder="e.g. Running..." value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} /></div>
-            <div><label className="label">{t('duration_minutes') || 'Duration (min)'}</label><input className="input" type="number" placeholder="30" value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} /></div>
-            <button className="btn btn-gold btn-full btn-lg" onClick={handleLog} disabled={!form.type || !form.duration}>{t('log_workout') || 'Log Workout'}</button>
+            <div>
+              <label className="label">{t('category') || 'Category'}</label>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {CATEGORIES.map(c => (
+                  <button key={c.id} onClick={() => setForm({ ...form, category: c.id })} className={`btn ${form.category === c.id ? 'btn-gold' : 'btn-pink'} btn-sm`}>
+                    {c.icon} {t(c.labelKey) || c.defaultLabel}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="label">{t('exercise_type') || 'Exercise Type'}</label>
+              <input className="input" placeholder="e.g. Running..." value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} />
+            </div>
+            <div>
+              <label className="label">{t('duration_minutes') || 'Duration (min)'}</label>
+              <input className="input" type="number" placeholder="30" value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} />
+            </div>
+            <div>
+              <label className="label">{t('intensity') || 'Intensity'}</label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {(['low', 'medium', 'high'] as const).map(i => (
+                  <button key={i} onClick={() => setForm({ ...form, intensity: i })} className={`btn ${form.intensity === i ? 'btn-gold' : 'btn-pink'} btn-sm`} style={{ flex: 1 }}>
+                    {t(`intensity_${i}`) || i}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button className="btn btn-gold btn-full btn-lg" onClick={handleLog} disabled={saving || !form.type || !form.duration}>
+              {saving ? '…' : (t('log_workout') || 'Log Workout')}
+            </button>
           </div>
         </div>
       )}
 
       {activeTab === 'history' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {workouts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}><div style={{ fontSize: '3rem', marginBottom: 16 }}>📅</div><h3 style={{ marginBottom: 8 }}>No workouts yet</h3><p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Complete your first workout to see your history here.</p></div>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#6C757D', fontSize: '0.85rem' }}>Loading…</div>
+          ) : workouts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+              <div style={{ fontSize: '3rem', marginBottom: 16 }}>📅</div>
+              <h3 style={{ marginBottom: 8 }}>{t('no_workouts_yet') || 'No workouts yet'}</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('complete_first_workout') || 'Complete your first workout to see your history here.'}</p>
+            </div>
           ) : (
             workouts.map(w => (
               <div key={w.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16 }}>
-                <div style={{ width: 50, height: 50, borderRadius: 12, background: 'var(--bg-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>{categories.find(c => c.id === w.category)?.icon || '💪'}</div>
-                <div style={{ flex: 1 }}><h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: 2 }}>{w.type}</h3><p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{w.duration} min · {w.calories} kcal · {new Date(w.date).toLocaleDateString()}</p></div>
+                <div style={{ width: 50, height: 50, borderRadius: 12, background: 'var(--bg-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>
+                  {CATEGORIES.find(c => c.id === displayCategory(w))?.icon || '💪'}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: 2 }}>{displayName(w)}</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    {w.duration_min} min · {w.calories_burned ?? 0} kcal · {new Date(w.performed_at).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
             ))
           )}
         </div>
       )}
 
-      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={() => { localStorage.removeItem('sajoma-loggedIn'); window.location.href = '/login'; }} />
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 88, left: '50%', transform: 'translateX(-50%)',
+          background: '#212529', color: 'white', padding: '10px 18px', borderRadius: 999,
+          fontSize: '0.85rem', fontWeight: 600, zIndex: 1000, boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+        }}>{toast}</div>
+      )}
+
       <BottomNav />
     </div>
   );

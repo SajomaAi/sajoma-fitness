@@ -55,6 +55,10 @@
 	<string>Sajoma Fitness needs permission to save photos to your photo library.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Sajoma Fitness would like to send you reminders for meals, water intake, and health check-ins.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Sajoma Fitness reads your steps, active calories, and workouts to personalize your dashboard and progress insights.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Sajoma Fitness writes your logged workouts and water intake to Apple Health so your data stays unified.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

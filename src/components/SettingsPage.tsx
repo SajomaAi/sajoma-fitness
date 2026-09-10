@@ -5,30 +5,29 @@ interface SettingsPageProps {
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import BottomNav from './BottomNav';
 import PageHeader from './PageHeader';
-import HamburgerMenu from './HamburgerMenu';
-
 
 const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => {
   const { t, language, changeLanguage } = useTranslation();
+  const { user, profile, signOut } = useAuth();
+  const { tier } = useSubscription();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  const userName = (() => {
-    try { const u = localStorage.getItem('sajoma-user'); return u ? JSON.parse(u).name : 'User'; } catch { return 'User'; }
-  })();
-  const userEmail = (() => {
-    try { const u = localStorage.getItem('sajoma-user'); return u ? JSON.parse(u).email : ''; } catch { return ''; }
-  })();
+  const userName = profile?.full_name || user?.email?.split('@')[0] || 'User';
+  const userEmail = user?.email ?? '';
+  const planLabel =
+    tier === 'full_premium' ? (t('full_premium') || 'Full Premium')
+    : tier === 'basic_premium' ? (t('basic_premium') || 'Basic Premium')
+    : (t('free_plan') || 'Free Plan');
 
-  const handleLogout = () => {
-    localStorage.removeItem('sajoma-token');
-    localStorage.removeItem('sajoma-user');
-    localStorage.removeItem('sajoma-loggedIn');
-    if (onLogout) onLogout();
+  const handleLogout = async () => {
+    await signOut();
+    onLogout?.();
     navigate('/login');
   };
 
@@ -61,7 +60,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
     <div className="page animate-in">
       <PageHeader title={t('settings') || 'Settings'} onOpenMenu={onOpenMenu} />
 
-      {/* Profile Card */}
       <div className="card card-gold" style={{ padding: 22, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ width: 60, height: 60, borderRadius: 20, background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, border: '2px solid rgba(255,255,255,0.4)' }}>
           {userName.charAt(0).toUpperCase()}
@@ -70,22 +68,22 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
           <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 2 }}>{userName}</h2>
           <p style={{ fontSize: '0.78rem', opacity: 0.8 }}>{userEmail}</p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.2)', padding: '3px 10px', borderRadius: 8, marginTop: 4, fontSize: '0.68rem', fontWeight: 600 }}>
-            ⭐ {t('free_plan') || 'Free Plan'}
+            {tier === 'free' ? '⭐' : '👑'} {planLabel}
           </div>
         </div>
       </div>
 
-      {/* Subscription Banner */}
-      <div className="card" style={{ padding: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }} onClick={() => navigate('/subscription')}>
-        <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'var(--shadow-gold)' }}>👑</div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#212529' }}>{t('upgrade_premium') || 'Upgrade to Premium'}</div>
-          <div style={{ fontSize: '0.75rem', color: '#6C757D' }}>{t('unlock_all_features') || 'Unlock all features'} &middot; 30-day free trial</div>
+      {tier === 'free' && (
+        <div className="card" style={{ padding: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }} onClick={() => navigate('/subscription')}>
+          <div style={{ width: 44, height: 44, borderRadius: 14, background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: 'var(--shadow-gold)' }}>👑</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#212529' }}>{t('upgrade_premium') || 'Upgrade to Premium'}</div>
+            <div style={{ fontSize: '0.75rem', color: '#6C757D' }}>{t('unlock_all_features') || 'Unlock all features'}</div>
+          </div>
+          <span style={{ color: '#D4AF37', fontWeight: 700 }}>&#8250;</span>
         </div>
-        <span style={{ color: '#D4AF37', fontWeight: 700 }}>&#8250;</span>
-      </div>
+      )}
 
-      {/* Settings Groups */}
       <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
         <SettingRow icon="🌐" label={t('language') || 'Language'} right={
           <div className="tabs" style={{ width: 'auto', marginBottom: 0 }}>
@@ -98,16 +96,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
       </div>
 
       <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
-        <SettingRow icon="🎯" label={t('goals') || 'Goals & Targets'} onClick={() => {}} />
         <SettingRow icon="📊" label={t('health_data') || 'Health Data'} onClick={() => navigate('/health-tracker')} />
         <SettingRow icon="🔔" label={t('reminders') || 'Reminders'} onClick={() => navigate('/reminders')} />
         <SettingRow icon="📸" label={t('progress_photos') || 'Progress Photos'} onClick={() => navigate('/progress-photos')} />
-      </div>
-
-      <div className="card" style={{ padding: '4px 18px', marginBottom: 16 }}>
-        <SettingRow icon="❓" label={t('help_support') || 'Help & Support'} onClick={() => {}} />
-        <SettingRow icon="📋" label={t('terms_of_service') || 'Terms of Service'} onClick={() => {}} />
-        <SettingRow icon="🔒" label={t('privacy_policy') || 'Privacy Policy'} onClick={() => {}} />
+        <SettingRow icon="👑" label={t('subscription') || 'Subscription'} onClick={() => navigate('/subscription')} />
       </div>
 
       <div className="card" style={{ padding: '4px 18px', marginBottom: 20 }}>
@@ -116,7 +108,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout, onOpenMenu }) => 
 
       <p style={{ textAlign: 'center', fontSize: '0.72rem', color: '#ADB5BD', marginBottom: 20 }}>Sajoma Fitness v1.0.0</p>
 
-      <HamburgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onLogout={handleLogout} />
       <BottomNav />
     </div>
   );
